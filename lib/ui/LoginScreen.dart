@@ -1,7 +1,11 @@
 import 'package:after_init/after_init.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_mmhelper/Models/FacebookModel.dart';
+import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
+import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -24,13 +28,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   String _message = '';
   String _verificationId;
   bool isShowSms = false;
+  Facebookdata facebookdata = Facebookdata();
 
   @override
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
   }
-
 
   void _verifyPhoneNumber() async {
     var getCountryList = Provider.of<GetCountryListService>(context);
@@ -109,17 +113,16 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         final FirebaseUser currentUser = await _firebaseAuth.currentUser();
         assert(user.uid == currentUser.uid);
 
-          if (user != null) {
-            print("Successfully");
-            _message = 'Successfully signed in, uid: ' + user.uid;
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) {
-              return Dashboard();
-            }), (Route<dynamic> route) => false);
-          } else {
-            _message = 'Sign in failed';
-          }
-
+        if (user != null) {
+          print("Successfully");
+          _message = 'Successfully signed in, uid: ' + user.uid;
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) {
+            return Dashboard();
+          }), (Route<dynamic> route) => false);
+        } else {
+          _message = 'Sign in failed';
+        }
       } on PlatformException catch (e) {
         PlatformExceptionAlertDialog(
           title: 'Operation failed',
@@ -134,23 +137,53 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   }
 
   @override
-  Future<User> createUserWithEmailAndPassword(
-      {String email, String password}) async {
-    try {
-      final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return null;
-    } on PlatformException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      PlatformExceptionAlertDialog(
-        title: 'Operation failed',
-        exception: e,
-      ).show(context);
-      FocusScope.of(context).requestFocus(FocusNode());
+  Future<User> signInWithFacebook() async {
+    final database = Provider.of<FirestoreDatabase>(context);
+    final facebookLogin = FacebookLogin();
+
+    final result = await facebookLogin.logIn(
+      ['email'],
+    );
+
+    if (result.status == FacebookLoginStatus.loggedIn) {
+      if (result.accessToken != null) {
+        final authResult = await _firebaseAuth.signInWithCredential(
+          FacebookAuthProvider.getCredential(
+            accessToken: result.accessToken.token,
+          ),
+        );
+        database
+            .facebookCall(scaffoldKey, result.accessToken.token)
+            .then((onValue) async {
+          final flContent = FlContent(
+            name: onValue.name ?? "",
+            email: onValue.email ?? "",
+          );
+          await database.createUser(flContent);
+        });
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) {
+          return Dashboard();
+        }), (Route<dynamic> route) => false);
+        return _userFromFirebase(authResult.user);
+      } else {
+        throw PlatformException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+      }
+    } else {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(result.status.toString()),
+      ));
+    }
+  }
+
+  User _userFromFirebase(FirebaseUser user) {
+    if (user == null) {
       return null;
     }
+    return User(uid: user.uid);
   }
 
   @override
@@ -294,47 +327,70 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                       ),
                     ],
                   ),
-                  isShowSms? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black.withOpacity(0.3)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              color: Colors.white),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: TextFormField(
-                              controller: _smsController,
-                              keyboardType: TextInputType.numberWithOptions(
-                                  signed: false, decimal: false),
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.sms),
-                                  hintText: "Enter SMS code",
-                                  border: InputBorder.none),
+                  isShowSms
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(0.3)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: TextFormField(
+                                        controller: _smsController,
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                signed: false, decimal: false),
+                                        cursorColor:
+                                            Theme.of(context).accentColor,
+                                        decoration: InputDecoration(
+                                            prefixIcon: Icon(Icons.sms),
+                                            hintText: "Enter SMS code",
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ):SizedBox(),
+                            GestureDetector(
+                              onTap: () {
+                                _verifyPhoneNumber();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Not received? Resend SMS",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      : SizedBox(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: FlatButton(
-                        onPressed:(){
-                          if(isShowSms){
+                        onPressed: () {
+                          if (isShowSms) {
                             _signInWithPhoneNumber();
-                          }else{
+                          } else {
                             _verifyPhoneNumber();
                           }
-                        } ,
+                        },
                         child: Center(
                             child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -354,20 +410,59 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return SignUpScreen();
-                          }));
-                        },
-                        child: Text(
-                          "SignUp",
-                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),
-                        )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: FlatButton(
+                            onPressed: () {
+                              signInWithFacebook();
+                            },
+                            child: Center(
+                                child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 100, vertical: 20),
+                              child: Text(
+                                "Facebook",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            )),
+                            shape: RoundedRectangleBorder(),
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return SignUpScreen();
+                              }));
+                            },
+                            child: Center(
+                                child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 100, vertical: 20),
+                              child: Text(
+                                "SignUp",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            )),
+                            shape: RoundedRectangleBorder(),
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -17,18 +17,6 @@ class User {
 }
 
 class SignUpScreen extends StatefulWidget {
-  /* const SignUpScreen({Key key, @required this.database}) : super(key: key);
-  final Database database;
-
-  static Future<void> show(BuildContext context) async {
-    final database = Provider.of<Database>(context);
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SignUpScreen(database: database),
-        fullscreenDialog: true,
-      ),
-    );
-  }*/
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
