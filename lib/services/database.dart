@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'api_path.dart';
 import 'firestore_service.dart';
 
-String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
+
 
 class FirestoreDatabase with ChangeNotifier {
   /*FirestoreDatabase({@required this.uid}) : assert(uid != null);
@@ -16,6 +16,12 @@ class FirestoreDatabase with ChangeNotifier {
 */
   final _service = FirestoreService.instance;
   var dio = Dio();
+  String lastUserId;
+
+  String documentIdFromCurrentDate() {
+    lastUserId = DateTime.now().toIso8601String();
+    return lastUserId;
+  }
 
   Future<void> createUser(FlContent flContent) async => await _service.setData(
         path: APIPath.newCandidate(documentIdFromCurrentDate()),

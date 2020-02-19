@@ -2,7 +2,7 @@ class FlContent {
   final String education;
   final String email;
   final String gender;
-
+  final String profileImageUrl;
   final String name;
   final String nationality;
   final int order;
@@ -17,7 +17,7 @@ class FlContent {
     this.education,
     this.email,
     this.gender,
-
+    this.profileImageUrl,
     this.name,
     this.nationality,
     this.order,
@@ -33,7 +33,7 @@ class FlContent {
         education: data["education"],
         email: data["email"],
         gender: data["gender"],
-
+        profileImageUrl: data["profileImageUrl"],
         name: data["name"],
         nationality: data["nationality"],
         order: data["order"],
@@ -49,7 +49,7 @@ class FlContent {
         "education": education,
         "email": email,
         "gender": gender,
-
+        "profileImageUrl": profileImageUrl,
         "name": name,
         "nationality": nationality,
         "order": order,
