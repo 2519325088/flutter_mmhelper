@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           _message = 'Successfully signed in, uid: ' + user.uid;
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard();
+            return Dashboard(isFromLogin: true,);
           }), (Route<dynamic> route) => false);
         } else {
           _message = 'Sign in failed';
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         });
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-          return Dashboard();
+          return Dashboard(isFromLogin: true,);
         }), (Route<dynamic> route) => false);
         return _userFromFirebase(authResult.user);
       } else {

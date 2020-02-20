@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
+  Dashboard({this.isFromLogin});
+  bool isFromLogin;
 }
 
 class _DashboardState extends State<Dashboard> {
@@ -34,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
           } else {
             return Container(
               width: MediaQuery.of(context).size.width,
-              child: Column(
+              child: !widget.isFromLogin?Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   CachedNetworkImage(
@@ -53,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
                             child: Center(
                                 child: Icon(Icons
                                     .error))),
-                    imageUrl: snapshot.data["profileImageUrl"],
+                    imageUrl: snapshot.data["profileImageUrl"]??"",
                     imageBuilder: (context,image){
                       return CircleAvatar(
                         radius: 50,
@@ -61,10 +63,10 @@ class _DashboardState extends State<Dashboard> {
                       );
                     },
                   ),
-                  Text("Name:${snapshot.data["name"]}"),
-                  Text("Nationality:${snapshot.data["nationality"]}"),
-                  Text("Religion:${snapshot.data["religion"]}"),
-                  Text("Gender:${snapshot.data["gender"]}"),
+                  Text("Name:${snapshot.data["name"]??""}"),
+                  Text("Nationality:${snapshot.data["nationality"]??""}"),
+                  Text("Religion:${snapshot.data["religion"]??""}"),
+                  Text("Gender:${snapshot.data["gender"]??""}"),
                   FlatButton(
                     onPressed: () {
                       database.lastUserId = null;
@@ -79,7 +81,24 @@ class _DashboardState extends State<Dashboard> {
                     color: Colors.pink,
                   ),
                 ],
-              ),
+              ):Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      database.lastUserId = null;
+                      _firebaseAuth.signOut();
+                      facebookLogin.logOut();
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                            return LoginScreen();
+                          }), (Route<dynamic> route) => false);
+                    },
+                    child: Text("Logout",style: TextStyle(color: Colors.white),),
+                    color: Colors.pink,
+                  ),
+                ],
+              )
             );
           }
         },

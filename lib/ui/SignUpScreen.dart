@@ -82,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             data: flContent.toMap());
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-              return Dashboard();
+              return Dashboard(isFromLogin: false,);
             }), (Route<dynamic> route) => false);
       } else {
         scaffoldKey.currentState.showSnackBar(SnackBar(
