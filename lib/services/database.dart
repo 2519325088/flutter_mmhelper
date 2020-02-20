@@ -28,10 +28,10 @@ class FirestoreDatabase with ChangeNotifier {
         data: flContent.toMap(),
       );
 
-  /* Stream<List<FlContent>> flContentsStream() => _service.collectionStream(
-    path: APIPath.candidateList(uid),
-    builder: (data) => FlContent.fromMap(data),
-  );*/
+   Stream<List<FlContent>> flContentsStream() => _service.collectionStream(
+    path: APIPath.candidateList(),
+    builder: (data,documentId) => FlContent.fromMap(data,documentId),
+  );
 
   Future<Facebookdata> facebookCall(
     _scaffoldKey,

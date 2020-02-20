@@ -12,8 +12,10 @@ class FlContent {
   final String religion;
   final String type;
   final String whatsApp;
+  final String id;
 
   FlContent({
+    this.id,
     this.education,
     this.email,
     this.gender,
@@ -29,7 +31,8 @@ class FlContent {
     this.whatsApp,
   });
 
-  factory FlContent.fromMap(Map<String, dynamic> data) => FlContent(
+  factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
+      FlContent(
         education: data["education"],
         email: data["email"],
         gender: data["gender"],
@@ -43,6 +46,7 @@ class FlContent {
         religion: data["religion"],
         type: data["type"],
         whatsApp: data["whatsApp"],
+        id: documentId,
       );
 
   Map<String, dynamic> toMap() => {

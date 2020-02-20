@@ -6,7 +6,9 @@ import 'package:flutter_mmhelper/Models/FacebookModel.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/database.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
+import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'Dashboard.dart';
@@ -29,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   String _verificationId;
   bool isShowSms = false;
   Facebookdata facebookdata = Facebookdata();
+  final _service = FirestoreService.instance;
 
   @override
   void didInitState() {
@@ -100,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   }
 
   void _signInWithPhoneNumber() async {
+    final database = Provider.of<FirestoreDatabase>(context);
     if (_smsController.text != "") {
       print("sms");
       final AuthCredential credential = PhoneAuthProvider.getCredential(
@@ -118,8 +122,21 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           _message = 'Successfully signed in, uid: ' + user.uid;
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard(isFromLogin: true,);
+            return Dashboard(
+              isFromLogin: true,
+            );
           }), (Route<dynamic> route) => false);
+          /*final Contents = await database
+              .flContentsStream()
+              .first;
+          final allPhone = Contents.map((contents) => contents.phone).toList();
+          if (allPhone.contains(_phoneNumberController.text)){
+            final Contents = await database
+                .flContentsStream()
+                .first;
+            final id = Contents.map((contents) => contents.id).toList();
+            print(id);
+          }*/
         } else {
           _message = 'Sign in failed';
         }
@@ -152,19 +169,34 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
             accessToken: result.accessToken.token,
           ),
         );
+
         database
             .facebookCall(scaffoldKey, result.accessToken.token)
             .then((onValue) async {
-          final flContent = FlContent(
-            name: onValue.name ?? "",
-            email: onValue.email ?? "",
-          );
-          await database.createUser(flContent);
+          final emails = await database.flContentsStream().first;
+          final allemail = emails.map((job) => job.email).toList();
+          if (allemail.contains(onValue.email)) {
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return Dashboard(
+                isFromLogin: true,
+              );
+            }), (Route<dynamic> route) => false);
+          } else {
+            final flContent = FlContent(
+              name: onValue.name ?? "",
+              email: onValue.email ?? "",
+            );
+            await database.createUser(flContent);
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return Dashboard(
+                isFromLogin: true,
+              );
+            }), (Route<dynamic> route) => false);
+          }
         });
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-          return Dashboard(isFromLogin: true,);
-        }), (Route<dynamic> route) => false);
+
         return _userFromFirebase(authResult.user);
       } else {
         throw PlatformException(
@@ -410,59 +442,61 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: FlatButton(
-                            onPressed: () {
-                              signInWithFacebook();
-                            },
-                            child: Center(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 100, vertical: 20),
-                              child: Text(
-                                "Facebook",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            )),
-                            shape: RoundedRectangleBorder(),
-                            color: Colors.indigo,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: FlatButton(
+                              onPressed: () {
+                                signInWithFacebook();
+                              },
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 20),
+                                child: Text(
+                                  "Facebook",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              )),
+                              shape: RoundedRectangleBorder(),
+                              color: Colors.indigo,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: FlatButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return SignUpScreen();
-                              }));
-                            },
-                            child: Center(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 100, vertical: 20),
-                              child: Text(
-                                "SignUp",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            )),
-                            shape: RoundedRectangleBorder(),
-                            color: Colors.red,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return SignUpScreen();
+                                }));
+                              },
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 20),
+                                child: Text(
+                                  "SignUp",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              )),
+                              shape: RoundedRectangleBorder(),
+                              color: Colors.red,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
