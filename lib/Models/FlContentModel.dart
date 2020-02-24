@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
 class FlContent {
+  final List<ImageDeck> imageDeck;
   final String education;
   final String email;
   final String gender;
@@ -15,7 +19,7 @@ class FlContent {
   final String id;
 
   FlContent({
-    this.id,
+    this.imageDeck,
     this.education,
     this.email,
     this.gender,
@@ -29,10 +33,13 @@ class FlContent {
     this.religion,
     this.type,
     this.whatsApp,
+    this.id,
   });
 
   factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
       FlContent(
+        imageDeck: List<ImageDeck>.from(
+            data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
         education: data["education"],
         email: data["email"],
         gender: data["gender"],
@@ -64,4 +71,39 @@ class FlContent {
         "type": type,
         "whatsApp": whatsApp,
       };
+}
+
+class ImageDeck with ChangeNotifier {
+  final String description;
+  final List<dynamic> image;
+  List<String> imageUrl = [];
+  final String title;
+  final String uniqueKey;
+
+  ImageDeck({
+    this.description,
+    this.image,
+    this.imageUrl,
+    this.title,
+    this.uniqueKey,
+  });
+
+  factory ImageDeck.fromMap(Map<dynamic, dynamic> json) => ImageDeck(
+        description: json["description"],
+        image: List<dynamic>.from(json["image"].map((x) => x)),
+        imageUrl: List<String>.from(json["image"].map((x) {
+          return x.toString();
+        })),
+        title: json["title"],
+        uniqueKey: json["uniqueKey"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "description": description,
+        "image": List<dynamic>.from(image.map((x) => x)),
+        "title": title,
+        "uniqueKey": uniqueKey,
+      };
+
+
 }

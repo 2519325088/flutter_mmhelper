@@ -77,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             order: 0,
             parentId: 0,
             whatsApp: "",
-            profileImageUrl: imageUrl);
+        );
         _service.setData(path: APIPath.newCandidate(database.lastUserId),
             data: flContent.toMap());
         Navigator.pushAndRemoveUntil(context,
@@ -161,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                 order: 0,
                 parentId: 0,
                 whatsApp: "",
-                profileImageUrl: "");
+            );
             await database.createUser(flContent);
             uploadFile();
 

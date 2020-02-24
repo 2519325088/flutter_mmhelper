@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
             .then((onValue) async {
           final emails = await database.flContentsStream().first;
           final allemail = emails.map((job) => job.email).toList();
-          if (allemail.contains(onValue.email)) {
+          /*if (allemail.contains(onValue.email)) {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Dashboard(
@@ -194,7 +194,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                 isFromLogin: true,
               );
             }), (Route<dynamic> route) => false);
-          }
+          }*/
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) {
+                return Dashboard(
+                  isFromLogin: true,
+                );
+              }), (Route<dynamic> route) => false);
         });
 
         return _userFromFirebase(authResult.user);
