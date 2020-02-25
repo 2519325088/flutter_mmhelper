@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/database.dart';
+import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
 
@@ -118,6 +119,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<FirestoreDatabase>(context);
+    SizeConfig().init(context);
     return Scaffold(
         appBar: AppBar(
           title: Text("Dashboard"),
@@ -138,7 +140,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.8, crossAxisCount: 2),
+                    childAspectRatio: SizeConfig.safeBlockHorizontal/4.7, crossAxisCount: 2),
                 children: gridListData,
               )
             : Center(
