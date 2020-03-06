@@ -42,7 +42,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   madeGridList() async {
     final database = Provider.of<FirestoreDatabase>(context);
     database.flContentsStream().first.then((contents) {
-      contents.forEach((contents) async {
+      int i = 0;
+      contents.forEach((element) async {
         gridListData.add(Card(
           elevation: 3,
           child: Column(
@@ -67,7 +68,12 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                       ),
                     ),
                     imageUrl: await getImageUrl(
-                        contents.imageDeck[0].image[0] as DocumentReference),
+                            element.imageDeck[0].image[0] as DocumentReference)
+                        .then((imagePath) {
+                      i += 1;
+                      print(i);
+                      return imagePath;
+                    }),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -79,16 +85,16 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        contents.name ?? "No name",
+                        element.name ?? "No name",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        contents.nationality ?? "No nationality",
+                        element.nationality ?? "No nationality",
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w500),
                       ),
-                      Text(contents.gender ?? "No gender"),
+                      Text(element.gender ?? "No gender"),
                     ],
                   ),
                 ),
@@ -96,8 +102,9 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             ],
           ),
         ));
-        await Future.delayed(Duration(seconds: 1));
-        this.setState(() {});
+        if (contents.length == i) {
+          setState(() {});
+        }
       });
     });
   }
@@ -140,7 +147,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: SizeConfig.safeBlockHorizontal/4.7, crossAxisCount: 2),
+                    childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
+                    crossAxisCount: 2),
                 children: gridListData,
               )
             : Center(
