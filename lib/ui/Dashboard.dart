@@ -6,13 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
+
+import 'index.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -131,6 +131,13 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
         appBar: AppBar(
           title: Text("Dashboard"),
           actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.video_call),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return IndexPage();
+                  }));
+                }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
                 onPressed: () {
