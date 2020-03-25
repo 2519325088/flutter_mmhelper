@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MM Helper</string>
+    <string name="facebook_app_id">638932603576266</string>
+    <string name="fb_login_protocol_scheme">fb638932603576266</string>
+</resources>

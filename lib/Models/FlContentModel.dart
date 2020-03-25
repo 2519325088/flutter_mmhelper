@@ -7,7 +7,10 @@ class FlContent {
   final String email;
   final String gender;
   final String profileImageUrl;
-  final String name;
+  final String lastname;
+  final String firstname;
+  final String username;
+//  final String role;
   final String nationality;
   final int order;
   final int parentId;
@@ -24,7 +27,10 @@ class FlContent {
     this.email,
     this.gender,
     this.profileImageUrl,
-    this.name,
+    this.lastname,
+    this.firstname,
+    this.username,
+//    this.role,
     this.nationality,
     this.order,
     this.parentId,
@@ -44,7 +50,10 @@ class FlContent {
         email: data["email"],
         gender: data["gender"],
         profileImageUrl: data["profileImageUrl"],
-        name: data["name"],
+        lastname: data["lsatname"],
+        firstname: data["firstname"],
+        username: data["username"],
+//        role: data["role"],
         nationality: data["nationality"],
         order: data["order"],
         parentId: data["parentId"],
@@ -61,7 +70,10 @@ class FlContent {
         "email": email,
         "gender": gender,
         "profileImageUrl": profileImageUrl,
-        "name": name,
+        "lastname": lastname,
+        "firstname": firstname,
+        "username": username,
+//        "role": role,
         "nationality": nationality,
         "order": order,
         "parentId": parentId,

@@ -85,7 +85,17 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        element.name ?? "No name",
+                        element.lastname ?? "No lastname",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        element.firstname ?? "No firstname",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        element.username ?? "No username",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),

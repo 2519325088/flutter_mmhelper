@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'widgets/CountryListPopup.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'widgets/platform_exception_alert_dialog.dart';
+import 'package:flutter_mmhelper/ui/widgets/role_user.dart';
 
 class User {
   User({@required this.uid});
@@ -26,13 +27,19 @@ class User {
 }
 
 class SignUpScreen extends StatefulWidget {
+//  final String roled;
+//  SignUpScreen({Key key,this.roled}):super(key:key);
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   final TextEditingController mobileController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+//  final TextEditingController roleController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nationalityController = TextEditingController();
@@ -47,12 +54,12 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   File locProFileImage;
   String imageUrl;
 
+//  this._SignUpScreenState.roleController.text = ${widget.roled}
   @override
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
   }
-
   Future uploadFile() async {
     final database = Provider.of<FirestoreDatabase>(context);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -65,7 +72,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       print(imageUrl);
       if (imageUrl != null) {
         final  flContent = FlContent(
-            name: nameController.text ?? "",
+            lastname: lastnameController.text ?? "",
+            firstname: firstnameController.text ?? "",
+            username: usernameController.text ?? "",
+//            role: roleController.text ?? "",
             gender: genderSelectedValue,
             email: emailController.text ?? "",
             phone: mobileController.text ?? "",
@@ -114,11 +124,23 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter mobile"),
       ));
-    } else if (nameController.text == "") {
+    } else if (lastnameController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter name"),
+        content: Text("Please enter lastname"),
       ));
-    } else if (emailController.text == "") {
+    } else if (firstnameController.text == "") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter firstname"),
+      ));
+    } else if (usernameController.text == "") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter username"),
+      ));
+//    }else if (roleController.text == "") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter role"),
+//      ));
+    }else if (emailController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter email"),
       ));
@@ -149,7 +171,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           print(onValue);
           if (onValue != null) {
             final flContent = FlContent(
-                name: nameController.text ?? "",
+                lastname: lastnameController.text ?? "",
+                firstname: firstnameController.text ?? "",
+                username: usernameController.text ?? "",
+//                role: roleController.text ?? "",
                 gender: genderSelectedValue,
                 email: emailController.text ?? "",
                 phone: mobileController.text ?? "",
@@ -499,11 +524,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
-                                  controller: nameController,
+                                  controller: lastnameController,
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
-                                      hintText: "Name",
+                                      hintText: "LastName",
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -511,6 +536,96 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black.withOpacity(0.3)),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color: Colors.white),
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                                child: TextFormField(
+                                  controller: firstnameController,
+                                  cursorColor: Theme.of(context).accentColor,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.account_circle),
+                                      hintText: "FirstName",
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black.withOpacity(0.3)),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color: Colors.white),
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                                child: TextFormField(
+                                  controller: usernameController,
+                                  cursorColor: Theme.of(context).accentColor,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.account_circle),
+                                      hintText: "UserName",
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+//                      Padding(
+//                        padding: const EdgeInsets.all(8.0),
+//                        child: Column(
+//                          crossAxisAlignment: CrossAxisAlignment.start,
+//                          children: <Widget>[
+//                            Container(
+//                              decoration: BoxDecoration(
+//                                  border: Border.all(
+//                                      color: Colors.black.withOpacity(0.3)),
+//                                  borderRadius:
+//                                  BorderRadius.all(Radius.circular(5)),
+//                                  color: Colors.white),
+//                              child: Padding(
+//                                padding:
+//                                const EdgeInsets.symmetric(horizontal: 8),
+//                                child: TextFormField(
+//                                  controller: roleController,
+//                                  cursorColor: Theme.of(context).accentColor,
+//                                  decoration: InputDecoration(
+//                                      prefixIcon: Icon(Icons.account_circle),
+//                                      hintText: "Role",
+//                                      border: InputBorder.none),
+//                                  onTap:(){
+//                                    Navigator.of(context)
+//                                        .push(MaterialPageRoute(builder: (context) {
+//                                      return RoleUser();
+//                                    }));
+//                                  },
+//                                ),
+//                              ),
+//                            ),
+//                          ],
+//                        ),
+//                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
