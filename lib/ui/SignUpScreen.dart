@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
-//  final TextEditingController roleController = TextEditingController();
+  final TextEditingController roleController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nationalityController = TextEditingController();
@@ -136,10 +136,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter username"),
       ));
-//    }else if (roleController.text == "") {
-//      scaffoldKey.currentState.showSnackBar(SnackBar(
-//        content: Text("Please enter role"),
-//      ));
+    }else if (roleController.text == "") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter role"),
+      ));
     }else if (emailController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter email"),
@@ -174,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                 lastname: lastnameController.text ?? "",
                 firstname: firstnameController.text ?? "",
                 username: usernameController.text ?? "",
-//                role: roleController.text ?? "",
+                role: roleController.text ?? "",
                 gender: genderSelectedValue,
                 email: emailController.text ?? "",
                 phone: mobileController.text ?? "",
@@ -592,40 +592,40 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                           ],
                         ),
                       ),
-//                      Padding(
-//                        padding: const EdgeInsets.all(8.0),
-//                        child: Column(
-//                          crossAxisAlignment: CrossAxisAlignment.start,
-//                          children: <Widget>[
-//                            Container(
-//                              decoration: BoxDecoration(
-//                                  border: Border.all(
-//                                      color: Colors.black.withOpacity(0.3)),
-//                                  borderRadius:
-//                                  BorderRadius.all(Radius.circular(5)),
-//                                  color: Colors.white),
-//                              child: Padding(
-//                                padding:
-//                                const EdgeInsets.symmetric(horizontal: 8),
-//                                child: TextFormField(
-//                                  controller: roleController,
-//                                  cursorColor: Theme.of(context).accentColor,
-//                                  decoration: InputDecoration(
-//                                      prefixIcon: Icon(Icons.account_circle),
-//                                      hintText: "Role",
-//                                      border: InputBorder.none),
-//                                  onTap:(){
-//                                    Navigator.of(context)
-//                                        .push(MaterialPageRoute(builder: (context) {
-//                                      return RoleUser();
-//                                    }));
-//                                  },
-//                                ),
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black.withOpacity(0.3)),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color: Colors.white),
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                                child: TextFormField(
+                                  controller: roleController,
+                                  cursorColor: Theme.of(context).accentColor,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.account_circle),
+                                      hintText: "Role",
+                                      border: InputBorder.none),
+                                  onTap:(){
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) {
+                                      return RoleUser();
+                                    }));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

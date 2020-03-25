@@ -10,7 +10,7 @@ class FlContent {
   final String lastname;
   final String firstname;
   final String username;
-//  final String role;
+  final String role;
   final String nationality;
   final int order;
   final int parentId;
@@ -30,7 +30,7 @@ class FlContent {
     this.lastname,
     this.firstname,
     this.username,
-//    this.role,
+    this.role,
     this.nationality,
     this.order,
     this.parentId,
@@ -53,7 +53,7 @@ class FlContent {
         lastname: data["lsatname"],
         firstname: data["firstname"],
         username: data["username"],
-//        role: data["role"],
+        role: data["role"],
         nationality: data["nationality"],
         order: data["order"],
         parentId: data["parentId"],
@@ -73,7 +73,7 @@ class FlContent {
         "lastname": lastname,
         "firstname": firstname,
         "username": username,
-//        "role": role,
+        "role": role,
         "nationality": nationality,
         "order": order,
         "parentId": parentId,
