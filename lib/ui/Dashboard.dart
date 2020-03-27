@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'index.dart';
 
@@ -18,8 +20,9 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 
-  Dashboard({this.isFromLogin});
+  Dashboard({this.isFromLogin, this.mobileNo});
 
+  String mobileNo;
   bool isFromLogin;
 }
 
@@ -27,6 +30,9 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   final _firebaseAuth = FirebaseAuth.instance;
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
+  SharedPreferences prefs;
+  String currentUserId;
+  QuerySnapshot querySnapshot;
 
   @override
   void initState() {
@@ -37,6 +43,24 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   @override
   void didInitState() {
     madeGridList();
+    getCurrentUserId();
+  }
+
+  getCurrentUserId() async {
+    if (widget.isFromLogin) {
+      querySnapshot = await Firestore.instance
+          .collection("mb_content")
+          .where("phone", isEqualTo: widget.mobileNo)
+          .getDocuments();
+      currentUserId = querySnapshot.documents[0].data["userId"];
+      prefs = await SharedPreferences.getInstance();
+      prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+      print("this is i got:$currentUserId");
+    } else {
+      prefs = await SharedPreferences.getInstance();
+      currentUserId = prefs.getString('loginUid');
+      print("currentUser:${currentUserId}");
+    }
   }
 
   madeGridList() async {
@@ -149,6 +173,15 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   }));
                 }),
             IconButton(
+                icon: Icon(Icons.chat),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ChatUserPage(
+                      currentUserId: currentUserId,
+                    );
+                  }));
+                }),
+            IconButton(
                 icon: Icon(Icons.exit_to_app),
                 onPressed: () {
                   database.lastUserId = null;
@@ -158,13 +191,13 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                       MaterialPageRoute(builder: (context) {
                     return LoginScreen();
                   }), (Route<dynamic> route) => false);
-                })
+                }),
           ],
         ),
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
+                    childAspectRatio: SizeConfig.safeBlockHorizontal / 5.5,
                     crossAxisCount: 2),
                 children: gridListData,
               )

@@ -11,6 +11,7 @@ import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
 import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Dashboard.dart';
 import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
@@ -32,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   bool isShowSms = false;
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
+
 
   @override
   void didInitState() {
@@ -118,11 +120,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         assert(user.uid == currentUser.uid);
 
         if (user != null) {
+
           print("Successfully");
           _message = 'Successfully signed in, uid: ' + user.uid;
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
             return Dashboard(
+              mobileNo: _phoneNumberController.text,
               isFromLogin: true,
             );
           }), (Route<dynamic> route) => false);
@@ -197,10 +201,10 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           }*/
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-                return Dashboard(
-                  isFromLogin: true,
-                );
-              }), (Route<dynamic> route) => false);
+            return Dashboard(
+              isFromLogin: true,
+            );
+          }), (Route<dynamic> route) => false);
         });
 
         return _userFromFirebase(authResult.user);

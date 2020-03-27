@@ -20,6 +20,7 @@ class FlContent {
   final String type;
   final String whatsApp;
   final String id;
+   String userId;
 
   FlContent({
     this.imageDeck,
@@ -40,6 +41,7 @@ class FlContent {
     this.type,
     this.whatsApp,
     this.id,
+    this.userId,
   });
 
   factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
@@ -63,6 +65,7 @@ class FlContent {
         type: data["type"],
         whatsApp: data["whatsApp"],
         id: documentId,
+        userId: data["userId"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -82,6 +85,7 @@ class FlContent {
         "religion": religion,
         "type": type,
         "whatsApp": whatsApp,
+        "userId": userId,
       };
 }
 
