@@ -27,11 +27,15 @@ class User {
 }
 
 class SignUpScreen extends StatefulWidget {
-//  final String roled;
-//  SignUpScreen({Key key,this.roled}):super(key:key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
+  /// here you need to make constrictor
+  /// here this variable pass from any page from you want to pass data we can
+  /// also daclir default value
+  SignUpScreen({this.dataFromOtherScreen="Role"});
+  String dataFromOtherScreen;
+  ///now we can use this data with widget.SignUpScreen
 }
 
 class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
@@ -54,11 +58,19 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   File locProFileImage;
   String imageUrl;
 
+  void _onSelectionChanged(String value) {
+    print("back value:$value");
+    roleController.text = value;///here we got that selected data from role page
+    ///now you understend?
+    ///we cam
+  }
 //  this._SignUpScreenState.roleController.text = ${widget.roled}
   @override
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
+  // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
+    ///assign value in didInitState
   }
   Future uploadFile() async {
     final database = Provider.of<FirestoreDatabase>(context);
@@ -617,9 +629,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   onTap:(){
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(builder: (context) {
-                                      return RoleUser();
+                                      return RoleUser(onChanged: _onSelectionChanged,);
                                     }));
-                                  },
+                                  },///here i make one onchange function got back data from last page
+                                  ///now try
                                 ),
                               ),
                             ),
