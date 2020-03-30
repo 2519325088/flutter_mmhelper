@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 
 import 'services/GetCountryListService.dart';
 import 'services/database.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.pink
         ),
         home: LoginScreen(),
+//        home:MamaProfile(),
       ),
     );
   }

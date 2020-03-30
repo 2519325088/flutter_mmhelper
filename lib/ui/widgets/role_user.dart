@@ -5,6 +5,8 @@ import 'package:flutter_mmhelper/utils/data.dart';
 class RoleUser extends StatefulWidget {
   @override
   _RoleUserState createState() => _RoleUserState();
+  final ValueChanged<String> onChanged;///this is type is valueChange<here you can any type like int,string,bool>
+  RoleUser({this.onChanged});///this is same but vauechange function we can use on previous page
 }
 
 class _RoleUserState extends State<RoleUser> {
@@ -44,11 +46,13 @@ class _RoleUserState extends State<RoleUser> {
                   roled['name']
                 ),
                 onTap:(){
-                  Navigator.of(context)
+               /* Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                      return SignUpScreen(dataFromOtherScreen:roled['name']);
-                    }));
-                } ,
+                  return SignUpScreen(dataFromOtherScreen:roled['name']);
+                }));*/
+               widget.onChanged(roled['name']);
+               Navigator.pop(context);///here i just pop to back screen
+              } ,
               ),
             ),
           );

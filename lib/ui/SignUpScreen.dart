@@ -58,13 +58,18 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   File locProFileImage;
   String imageUrl;
 
-
+  void _onSelectionChanged(String value) {
+    print("back value:$value");
+    roleController.text = value;///here we got that selected data from role page
+    ///now you understend?
+    ///we cam
+  }
 //  this._SignUpScreenState.roleController.text = ${widget.roled}
   @override
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-   roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
+  // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
     ///assign value in didInitState
   }
   Future uploadFile() async {
@@ -624,9 +629,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   onTap:(){
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(builder: (context) {
-                                      return RoleUser();
+                                      return RoleUser(onChanged: _onSelectionChanged,);
                                     }));
-                                  },
+                                  },///here i make one onchange function got back data from last page
+                                  ///now try
                                 ),
                               ),
                             ),
