@@ -72,6 +72,11 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
+  int limit = 20;
+  int increment = 20;
+  bool isChatLoad = false;
+  int totalMessage = 0;
+  int lastTotalMessage = -1;
 
   final TextEditingController textEditingController =
       new TextEditingController();
@@ -82,7 +87,7 @@ class ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     focusNode.addListener(onFocusChange);
-
+    listScrollController.addListener(_scrollListener);
     groupChatId = '';
 
     isLoading = false;
@@ -92,6 +97,24 @@ class ChatScreenState extends State<ChatScreen> {
     readLocal();
   }
 
+  _scrollListener() {
+    if (listScrollController.offset >=
+            listScrollController.position.maxScrollExtent &&
+        !listScrollController.position.outOfRange) {
+
+      if (lastTotalMessage < totalMessage) {
+        lastTotalMessage = totalMessage;
+        setState(() {
+          isChatLoad = true;
+          limit += increment;
+        });
+      }else{
+        setState(() {
+          isChatLoad = false;
+        });
+      }
+    }
+  }
 
   void onFocusChange() {
     if (focusNode.hasFocus) {
@@ -120,7 +143,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future getImage() async {
-    String filename= DateTime.now().toIso8601String();
+    String filename = DateTime.now().toIso8601String();
     final dir = await getTemporaryDirectory();
     final targetPath = dir.absolute.path + "/$filename.jpg";
     var result = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -164,7 +187,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void onSendMessage(String content, int type)async {
+  void onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
@@ -175,7 +198,7 @@ class ChatScreenState extends State<ChatScreen> {
           .collection(groupChatId)
           .document(DateTime.now().millisecondsSinceEpoch.toString());
 
-     await Firestore.instance.runTransaction((transaction) async {
+      await Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
           documentReference,
           {
@@ -204,12 +227,12 @@ class ChatScreenState extends State<ChatScreen> {
               ? Container(
                   child: Text(
                     document['content'],
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                    style: TextStyle(color: Colors.white),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
                   decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: Colors.black.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(
                       bottom: isLastMessageRight(index) ? 20.0 : 10.0,
@@ -684,20 +707,48 @@ class ChatScreenState extends State<ChatScreen> {
                   .document(groupChatId)
                   .collection(groupChatId)
                   .orderBy('timestamp', descending: true)
-                  .limit(20)
+                  .limit(limit)
                   .snapshots(),
               builder: (context, snapshot) {
+
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   listMessage = snapshot.data.documents;
-                  return ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data.documents[index]),
-                    itemCount: snapshot.data.documents.length,
-                    reverse: true,
-                    controller: listScrollController,
+                  totalMessage = snapshot.data.documents.length;
+                  if(totalMessage>lastTotalMessage)
+                  isChatLoad = false;
+                  return Column(
+                    children: <Widget>[
+                      isChatLoad
+                          ? Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.01),
+                                    spreadRadius: 10.0,
+                                    blurRadius: 10.0)
+                              ],
+                              color: Colors.white),
+                              height: 50,
+                              width: MediaQuery.of(context).size.width,
+                              child: Center(
+                                child: Text("Loading...",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+                              ),
+                            )
+                          : SizedBox(),
+                      Expanded(
+                        child: Scrollbar(
+                          child: ListView.builder(
+                            padding: EdgeInsets.all(10.0),
+                            itemBuilder: (context, index) => buildItem(
+                                index, snapshot.data.documents[index]),
+                            itemCount: snapshot.data.documents.length,
+                            reverse: true,
+                            controller: listScrollController,
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 }
               },
