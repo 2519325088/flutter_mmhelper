@@ -732,7 +732,7 @@ class ChatScreenState extends State<ChatScreen> {
                               height: 50,
                               width: MediaQuery.of(context).size.width,
                               child: Center(
-                                child: Text("Loading...",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+                                child: Text("Loading More...",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
                               ),
                             )
                           : SizedBox(),
