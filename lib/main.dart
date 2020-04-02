@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mmhelper/ui/widgets/profile.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/work_skill.dart';
 
 import 'services/GetCountryListService.dart';
 import 'services/database.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         ),
         home: LoginScreen(),
 //        home:MamaProfile(),
+//        home: WorkSkill(),
       ),
     );
   }

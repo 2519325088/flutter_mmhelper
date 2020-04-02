@@ -61,7 +61,6 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   SharedPreferences prefs;
 
   void _onSelectionChanged(String value) {
-    print("back value:$value");
     roleController.text = value;///here we got that selected data from role page
     ///now you understend?
     ///we cam
