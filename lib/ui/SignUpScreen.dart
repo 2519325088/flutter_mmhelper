@@ -15,6 +15,7 @@ import 'package:flutter_mmhelper/ui/Dashboard.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'widgets/CountryListPopup.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'widgets/platform_exception_alert_dialog.dart';
@@ -57,6 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   bool isLoading = false;
   File locProFileImage;
   String imageUrl;
+  SharedPreferences prefs;
 
   void _onSelectionChanged(String value) {
     print("back value:$value");
@@ -79,26 +81,31 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     StorageUploadTask uploadTask = reference.putFile(locProFileImage);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     print(storageTaskSnapshot.totalByteCount);
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("loginUid", database.lastUserId);
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
       print(imageUrl);
+      print("this is user id:${database.lastUserId}");
       if (imageUrl != null) {
         final  flContent = FlContent(
             lastname: lastnameController.text ?? "",
             firstname: firstnameController.text ?? "",
             username: usernameController.text ?? "",
-//            role: roleController.text ?? "",
+            role: roleController.text ?? "",
             gender: genderSelectedValue,
             email: emailController.text ?? "",
             phone: mobileController.text ?? "",
             password: passwordController.text ?? "",
             nationality: nationalityController.text ?? "",
             religion: religionController.text ?? "",
+            profileImageUrl: imageUrl,
             type: "",
             education: "",
             order: 0,
             parentId: 0,
             whatsApp: "",
+            userId: database.lastUserId,
         );
         _service.setData(path: APIPath.newCandidate(database.lastUserId),
             data: flContent.toMap());
@@ -201,7 +208,6 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             );
             await database.createUser(flContent);
             uploadFile();
-
           }
         });
       } on PlatformException catch (e) {

@@ -22,20 +22,25 @@ class FirestoreDatabase with ChangeNotifier {
   String lastUserId;
   bool isFirst = true;
   String downloadImageLink;
+
   String documentIdFromCurrentDate() {
     lastUserId = DateTime.now().toIso8601String();
     return lastUserId;
   }
 
-  Future<void> createUser(FlContent flContent) async => await _service.setData(
-        path: APIPath.newCandidate(documentIdFromCurrentDate()),
-        data: flContent.toMap(),
-      );
+  Future<void> createUser(FlContent flContent) async {
+    documentIdFromCurrentDate();
+    flContent.userId = lastUserId;
+    await _service.setData(
+      path: APIPath.newCandidate(lastUserId),
+      data: flContent.toMap(),
+    );
+  }
 
-   Stream<List<FlContent>> flContentsStream() => _service.collectionStream(
-    path: APIPath.candidateList(),
-    builder: (data,documentId) => FlContent.fromMap(data,documentId),
-  );
+  Stream<List<FlContent>> flContentsStream() => _service.collectionStream(
+        path: APIPath.candidateList(),
+        builder: (data, documentId) => FlContent.fromMap(data, documentId),
+      );
 
   Future<Facebookdata> facebookCall(
     _scaffoldKey,
