@@ -6,6 +6,8 @@ import 'package:flutter_mmhelper/ui/widgets/profilechild/religion.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/job_type.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/job_capacity.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/contract.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/work_skill.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/languages.dart';
 
 Random random = Random();
 
@@ -21,6 +23,11 @@ List names = [
   "Rosario Gathright",
   "Kim Delph",
   "Stacy Christensen",
+];
+
+List username =[
+  "Mama",
+  "Helpers",
 ];
 
 List roles = [
@@ -51,12 +58,23 @@ List detailltext=[
   "Select",
 ];
 
+List whatapptext=[
+  "+85263433995",
+  "+85263433995",
+];
+
 List work = [
   "Job Type",
   "Job Capacity",
   "Contract Status",
   "Working Skills",
   "Languages",
+  "Work Experiences",
+];
+
+List workend =[
+  "ExpectedSalary(HKD)",
+  "Employment Start Date",
 ];
 
 List religion = [
@@ -107,6 +125,34 @@ List gender = [
   "Female",
 ];
 
+List texttags =[
+  "Western Food",
+  "Chinese Food",
+  "Japanese Food",
+  "Indian Food",
+  "Care New-born",
+  "Care Todlers",
+  "Care Kids",
+  "Care Elderly",
+  "Care Disabled",
+  "Care Pets",
+  "Marketing",
+  "Car Washing",
+  "Driving",
+  "Ironing",
+  "Tutoring",
+];
+List datatag=[];
+
+List language=[
+  "English",
+  "Cantonese",
+  "Mandarin",
+];
+
+String datatimes="Select";
+
+List datalanguage=[];
 
 List pagename = [
   Education(),
@@ -120,8 +166,8 @@ List workoage=[
   JobType(),
   JobCapacity(),
   Contract(),
-  JobType(),
-  JobType(),
+  WorkSkill(),
+  LanguagePage(langtag:detaills[4]["text"],),
 ];
 
 List roleds = List.generate(3, (index)=>{

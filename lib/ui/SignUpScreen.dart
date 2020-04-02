@@ -59,7 +59,6 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   String imageUrl;
 
   void _onSelectionChanged(String value) {
-    print("back value:$value");
     roleController.text = value;///here we got that selected data from role page
     ///now you understend?
     ///we cam
@@ -87,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             lastname: lastnameController.text ?? "",
             firstname: firstnameController.text ?? "",
             username: usernameController.text ?? "",
-//            role: roleController.text ?? "",
+            role: roleController.text ?? "",
             gender: genderSelectedValue,
             email: emailController.text ?? "",
             phone: mobileController.text ?? "",
