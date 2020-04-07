@@ -8,6 +8,12 @@ import 'package:flutter_mmhelper/ui/widgets/profilechild/job_capacity.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/contract.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/work_skill.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/languages.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/work_country.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/taken_care.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/reference.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/quit_reason.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/work_job.dart';
+
 
 Random random = Random();
 
@@ -77,6 +83,11 @@ List workend =[
   "Employment Start Date",
 ];
 
+List worktexts =[
+  "Select",
+  "Select",
+];
+
 List religion = [
   "Christian",
   "Moslem",
@@ -98,6 +109,15 @@ List children=[
   "2",
   "3",
   ">3",
+];
+
+List takencare=[
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  ">4",
 ];
 
 List jobtype=[
@@ -154,6 +174,37 @@ String datatimes="Select";
 
 List datalanguage=[];
 
+List addwork=[
+  "Country",
+  "Start Date",
+  "End Date",
+  "Type of Jobs",
+  "Number of Taken Care",
+  "Quit Reason",
+  "Reterence Letter",
+];
+
+List addworktext=[
+  "Select",
+  "Select",
+  "Select",
+  "Select",
+  "Select",
+  "Select",
+  "Select",
+];
+
+List quitreason=[
+  "Finished Contract",
+  "Family Relocation",
+  "Others",
+];
+
+List reference=[
+  "No",
+  "Yes",
+];
+
 List pagename = [
   Education(),
   Religion(),
@@ -168,6 +219,16 @@ List workoage=[
   Contract(),
   WorkSkill(),
   LanguagePage(langtag:detaills[4]["text"],),
+];
+
+List workpage=[
+  WorkCountry(),
+  "startdate",
+  "enddate",
+  WorkJobType(),
+  TakenCare(),
+  QuitReason(),
+  Reference(),
 ];
 
 List roleds = List.generate(3, (index)=>{
@@ -196,6 +257,10 @@ List childrens = List.generate(5, (index)=>{
   "name": children[index],
 });
 
+List takencares = List.generate(6, (index)=>{
+  "name": takencare[index],
+});
+
 List works =List.generate(5, (index)=>{
   "title": work[index],
   "text": "Select",
@@ -216,4 +281,18 @@ List contracts =List.generate(7, (index)=>{
 
 List genders =List.generate(2, (index)=>{
   "name": gender[index],
+});
+
+List addworks =List.generate(7, (index)=>{
+  "title": addwork[index],
+  "text":addworktext[index],
+  "page":workpage[index],
+});
+
+List quitreasons = List.generate(3, (index)=>{
+  "name": quitreason[index],
+});
+
+List references = List.generate(2, (index)=>{
+  "name": reference[index],
 });

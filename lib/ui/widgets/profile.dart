@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:after_init/after_init.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
@@ -7,6 +8,8 @@ import 'package:flutter_mmhelper/ui/widgets/profilechild/first_name.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/last_name.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/whatapp.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/phone_input.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/work_salary.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/work_experiences.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_mmhelper/Models/ProfileFirebase.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +17,12 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 
+import '../../utils/data.dart';
+
 class MamaProfile extends StatefulWidget {
   @override
   _MamaProfileState createState() => _MamaProfileState();
-  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null"});
+  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null"});
   int dataIndex;
   String firstName;
   String lastName;
@@ -28,6 +33,7 @@ class MamaProfile extends StatefulWidget {
   String languageText;
   String whatappText;
   String phoneText;
+  String salaryText;
 }
 
 class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
@@ -52,6 +58,9 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     }
     if (widget.lastName !="null"){
       username[1] = widget.lastName;
+    }
+    if (widget.salaryText !="null"){
+      worktexts[0] = widget.salaryText;
     }
     if (widget.whatappText !="null"){
       whatapptext[0] = widget.whatappText;
@@ -117,10 +126,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
           ),
         ),
         centerTitle: true,
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.grey[800],
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Container(
         child: ListView(
@@ -128,16 +134,22 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             Container(
               color: Colors.grey[300],
               width: double.infinity,
-              height: 24,
+              height: 40,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                child: Text(
-                  'Basic Intormation',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Basic Intormation',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -155,7 +167,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "First Name",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -163,7 +175,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               username[0],
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -210,7 +222,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "Last Name",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -218,7 +230,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               username[1],
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -265,7 +277,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "Gender",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -273,7 +285,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               genderdata,
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -320,7 +332,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "Birthday",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -328,7 +340,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               datatimes,
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -385,14 +397,14 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "NationAity",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           Text(
                             "Select",
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                         ],
@@ -413,16 +425,22 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             Container(
               color: Colors.grey[300],
               width: double.infinity,
-              height: 24,
+              height: 40,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                child: Text(
-                  'Detaill Intormation',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Detaill Intormation',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -456,7 +474,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               detaillinfo['title'],
                               style: TextStyle(
                                 color: Colors.grey[400],
-                                fontSize: 22,
+                                fontSize: 18,
                               ),
                             ),
                             GestureDetector(
@@ -464,7 +482,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                                 detaillinfo['text'],
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                 ),
                               ),
                               onTap: (){
@@ -512,7 +530,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "WhatsApp",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -520,7 +538,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               whatapptext[0],
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -567,7 +585,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             "Phone Number (verified)",
                             style: TextStyle(
                               color: Colors.grey[400],
-                              fontSize: 22,
+                              fontSize: 18,
                             ),
                           ),
                           GestureDetector(
@@ -575,7 +593,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               whatapptext[1],
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -610,16 +628,22 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             Container(
               color: Colors.grey[300],
               width: double.infinity,
-              height: 24,
+              height: 40,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                child: Text(
-                  'Work Intormation',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Work Intormation',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -653,7 +677,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               workinfo['title'],
                               style: TextStyle(
                                 color: Colors.grey[400],
-                                fontSize: 22,
+                                fontSize: 18,
                               ),
                             ),
                             GestureDetector(
@@ -661,7 +685,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                                 workinfo['text'],
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                 ),
                               ),
                               onTap: (){
@@ -688,18 +712,176 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               },
             ),
             Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                      width: 0.5,//宽度
+                      color: Colors.grey[300] //边框颜色
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 11,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Work Experiences",
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 18,
+                            ),
+                          ),
+                          GestureDetector(
+                            child: Text(
+                              "No information",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            onTap: (){},
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey[400],
+                        size: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 11,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            workend[0],
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 18,
+                            ),
+                          ),
+                          GestureDetector(
+                            child: Text(
+                              worktexts[0],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            onTap: (){
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return SalaryPage();
+                              }));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey[400],
+                        size: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                      width: 0.5,//宽度
+                      color: Colors.grey[300] //边框颜色
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 11,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            workend[1],
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 18,
+                            ),
+                          ),
+                          GestureDetector(
+                            child: Text(
+                              worktexts[1],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
+                            ),
+                            onTap: (){
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return WorkDate();
+                              }));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey[400],
+                        size: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
               color: Colors.grey[300],
               width: double.infinity,
-              height: 24,
+              height: 40,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                child: Text(
-                  'Self Intormation',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Self Intormation',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

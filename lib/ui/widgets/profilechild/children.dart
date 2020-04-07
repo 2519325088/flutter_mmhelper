@@ -12,7 +12,12 @@ class _ChildrenPageState extends State<ChildrenPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Children"),
+        title: Text(
+          "Children",
+          style: TextStyle(
+            color: Colors.pinkAccent,
+          ),
+        ),
         centerTitle: true,
         textTheme:
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),

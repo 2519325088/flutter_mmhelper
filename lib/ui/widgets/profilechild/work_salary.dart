@@ -2,13 +2,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 
-class PhonePage extends StatefulWidget {
+class SalaryPage extends StatefulWidget {
   @override
-  _PhonePageState createState() => _PhonePageState();
+  _SalaryPageState createState() => _SalaryPageState();
 }
 
-class _PhonePageState extends State<PhonePage> {
-  final TextEditingController phoneController = TextEditingController();
+class _SalaryPageState extends State<SalaryPage> {
+  final TextEditingController firstnameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class _PhonePageState extends State<PhonePage> {
       appBar: AppBar(
         backgroundColor:Colors.white,
         title: Text(
-          'Phone Number',
+          'Salary(HKD)',
           style: TextStyle(
             color: Colors.pinkAccent,
           ),
@@ -34,7 +34,7 @@ class _PhonePageState extends State<PhonePage> {
             ),
           ),
           child: TextFormField(
-            controller: phoneController,
+            controller: firstnameController,
             cursorColor: Theme.of(context).accentColor,
             decoration: InputDecoration(
 //                prefixIcon: Icon(Icons.account_circle),
@@ -43,7 +43,7 @@ class _PhonePageState extends State<PhonePage> {
             onFieldSubmitted: (String value){
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(phoneText: value,);
+                return MamaProfile(salaryText: value,);
               }));
             },
 //            onSaved: (String value){

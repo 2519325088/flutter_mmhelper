@@ -83,6 +83,7 @@ class _WorkSkillState extends State<WorkSkill> with SingleTickerProviderStateMix
         ),
         actions: <Widget>[
           RaisedButton(
+            color: Colors.white,
             child: Icon(
               Icons.check,
               color: Colors.pinkAccent,
@@ -99,10 +100,7 @@ class _WorkSkillState extends State<WorkSkill> with SingleTickerProviderStateMix
           )
         ],
         centerTitle: true,
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.grey[800],
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),

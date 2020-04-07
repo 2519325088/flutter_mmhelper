@@ -12,7 +12,12 @@ class _EducationState extends State<Education> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Education"),
+        title: Text(
+          "Education",
+          style: TextStyle(
+            color: Colors.pinkAccent,
+          ),
+        ),
         centerTitle: true,
         textTheme:
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
