@@ -18,6 +18,10 @@ import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 
 import '../../utils/data.dart';
+import '../../utils/data.dart';
+import '../../utils/data.dart';
+import '../../utils/data.dart';
+import '../../utils/data.dart';
 
 class MamaProfile extends StatefulWidget {
   @override
@@ -38,9 +42,16 @@ class MamaProfile extends StatefulWidget {
 
 class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   final TextEditingController selfController = TextEditingController();
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController whatsappController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController salaryController = TextEditingController();
   static Random random = Random();
   String genderdata = "Female";
   final _service = FirestoreService.instance;
+  int genderRadio = -1;
+  String genderSelectedValue = "";
 
   @override
   void didInitState() {
@@ -85,12 +96,6 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
 
   Future<void> _submit() async {
     final database = Provider.of<FirestoreDatabase>(context);
-//    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-//    StorageUploadTask uploadTask = reference.putFile(locProFileImage);
-//    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-//    print(storageTaskSnapshot.totalByteCount);
-//    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
     final procontext = ProContext(
       firstname: username[0],
       lastname: username[1],
@@ -142,7 +147,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Basic Intormation',
+                      'Basic Information',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -155,7 +160,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             ),
             Container(
               child: Padding(
-                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                padding:const EdgeInsets.symmetric(horizontal: 10,vertical:10),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -171,19 +176,28 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             ),
                           ),
                           GestureDetector(
-                            child: Text(
-                              username[0],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                            child: TextFormField(
+                              scrollPadding:EdgeInsets.zero,
+                              controller: firstnameController,
+                              cursorColor: Theme.of(context).accentColor,
+                              decoration: InputDecoration(
+                                contentPadding: new EdgeInsets.all(0.0),
+                                isDense: true,
+                                hintText: username[0],
+                                hintStyle:TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                                border: InputBorder.none
                               ),
+                              onFieldSubmitted: (String value){
+                                username[0]=firstnameController.text;
+                              },
+                              onEditingComplete:(){
+                                FocusScope. of (context). requestFocus (FocusNode ());
+                                username[0]=firstnameController.text;
+                              },
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                                return FirstName();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -226,19 +240,28 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             ),
                           ),
                           GestureDetector(
-                            child: Text(
-                              username[1],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                            child: TextFormField(
+                              scrollPadding:EdgeInsets.zero,
+                              controller: lastnameController,
+                              cursorColor: Theme.of(context).accentColor,
+                              decoration: InputDecoration(
+                                  contentPadding: new EdgeInsets.all(0.0),
+                                  isDense: true,
+                                  hintText: username[1],
+                                  hintStyle:TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                  border: InputBorder.none
                               ),
+                              onFieldSubmitted: (String value){
+                                username[1]=lastnameController.text;
+                              },
+                              onEditingComplete:(){
+                                FocusScope. of (context). requestFocus (FocusNode ());
+                                username[1]=lastnameController.text;
+                              },
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return LastName();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -255,7 +278,63 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                 ),
               ),
             ),
+//            Container(
+//              decoration: BoxDecoration(
+//                border: Border(
+//                  top: BorderSide(
+//                      width: 0.5,//宽度
+//                      color: Colors.grey[300] //边框颜色
+//                  ),
+//                ),
+//              ),
+//              child: Padding(
+//                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+//                child: Row(
+//                  children: <Widget>[
+//                    Expanded(
+//                      flex: 11,
+//                      child: Column(
+//                        crossAxisAlignment: CrossAxisAlignment.start,
+//                        children: <Widget>[
+//                          Text(
+//                            "Gender",
+//                            style: TextStyle(
+//                              color: Colors.grey[400],
+//                              fontSize: 18,
+//                            ),
+//                          ),
+//                          GestureDetector(
+//                            child: Text(
+//                              genderdata,
+//                              style: TextStyle(
+//                                color: Colors.black,
+//                                fontSize: 18,
+//                              ),
+//                            ),
+//                            onTap: (){
+//                              Navigator.of(context)
+//                                  .push(MaterialPageRoute(builder: (context) {
+//                                return GenderPage();
+//                              }));
+//                            },
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                    Expanded(
+//                      flex: 1,
+//                      child: Icon(
+//                        Icons.arrow_forward_ios,
+//                        color: Colors.grey[400],
+//                        size: 18,
+//                      ),
+//                    ),
+//                  ],
+//                ),
+//              ),
+//            ),
             Container(
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
@@ -265,47 +344,72 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                 ),
               ),
               child: Padding(
-                padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Gender",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Text(
-                              genderdata,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                    Padding(
+                      padding:
+                      const EdgeInsets.symmetric(horizontal:0),
+                      child: Text(
+                        "Gender:",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    GridView(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                      SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, childAspectRatio:4),
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Radio(
+                                value: 0,
+                                groupValue: genderRadio,
+                                onChanged: genderRadioValueChange),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  genderRadioValueChange(0);
+                                },
+                                child: Text(
+                                  "Male",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: 16),
+                                ),
                               ),
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return GenderPage();
-                              }));
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
-                      ),
-                    ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Radio(
+                                value: 1,
+                                groupValue: genderRadio,
+                                onChanged: genderRadioValueChange),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  genderRadioValueChange(1);
+                                },
+                                child: Text(
+                                  "Female",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -394,7 +498,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "NationAity",
+                            "Nationaity",
                             style: TextStyle(
                               color: Colors.grey[400],
                               fontSize: 18,
@@ -433,7 +537,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Detaill Intormation',
+                      'Detail Information',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -534,19 +638,28 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             ),
                           ),
                           GestureDetector(
-                            child: Text(
-                              whatapptext[0],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                            child: TextFormField(
+                              scrollPadding:EdgeInsets.zero,
+                              controller: whatsappController,
+                              cursorColor: Theme.of(context).accentColor,
+                              decoration: InputDecoration(
+                                  contentPadding: new EdgeInsets.all(0.0),
+                                  isDense: true,
+                                  hintText: whatapptext[0],
+                                  hintStyle:TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                  border: InputBorder.none
                               ),
+                              onFieldSubmitted: (String value){
+                                whatapptext[0]=whatsappController.text;
+                              },
+                              onEditingComplete:(){
+                                FocusScope. of (context). requestFocus (FocusNode ());
+                                whatapptext[0]=whatsappController.text;
+                              },
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return WhatAppPage();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -589,19 +702,28 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             ),
                           ),
                           GestureDetector(
-                            child: Text(
-                              whatapptext[1],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                            child:TextFormField(
+                              scrollPadding:EdgeInsets.zero,
+                              controller: phoneController,
+                              cursorColor: Theme.of(context).accentColor,
+                              decoration: InputDecoration(
+                                  contentPadding: new EdgeInsets.all(0.0),
+                                  isDense: true,
+                                  hintText: whatapptext[1],
+                                  hintStyle:TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                  border: InputBorder.none
                               ),
+                              onFieldSubmitted: (String value){
+                                whatapptext[1]=phoneController.text;
+                              },
+                              onEditingComplete:(){
+                                FocusScope. of (context). requestFocus (FocusNode ());
+                                whatapptext[1]=phoneController.text;
+                              },
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return PhonePage();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -636,7 +758,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Work Intormation',
+                      'Work Information',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -738,13 +860,18 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                           ),
                           GestureDetector(
                             child: Text(
-                              "No information",
+                              worktexts[2],
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
                               ),
                             ),
-                            onTap: (){},
+                            onTap: (){
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return WorkDate();
+                              }));
+                            },
                           ),
                         ],
                       ),
@@ -779,19 +906,28 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             ),
                           ),
                           GestureDetector(
-                            child: Text(
-                              worktexts[0],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
+                            child: TextFormField(
+                              scrollPadding:EdgeInsets.zero,
+                              controller: salaryController,
+                              cursorColor: Theme.of(context).accentColor,
+                              decoration: InputDecoration(
+                                  contentPadding: new EdgeInsets.all(0.0),
+                                  isDense: true,
+                                  hintText: worktexts[0],
+                                  hintStyle:TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                  border: InputBorder.none
                               ),
+                              onFieldSubmitted: (String value){
+                                worktexts[0]=salaryController.text;
+                              },
+                              onEditingComplete:(){
+                                FocusScope. of (context). requestFocus (FocusNode ());
+                                worktexts[0]=salaryController.text;
+                              },
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return SalaryPage();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -841,12 +977,6 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                                 fontSize: 18,
                               ),
                             ),
-                            onTap: (){
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return WorkDate();
-                              }));
-                            },
                           ),
                         ],
                       ),
@@ -874,7 +1004,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Self Intormation',
+                      'Self Introduction',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black,
@@ -925,6 +1055,21 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
         ),
       ),
     );
+  }
+
+  void genderRadioValueChange(int value) {
+    setState(() {
+      genderRadio = value;
+
+      switch (genderRadio) {
+        case 0:
+          genderSelectedValue = "Male";
+          break;
+        case 1:
+          genderSelectedValue = "Female";
+          break;
+      }
+    });
   }
 }
 
