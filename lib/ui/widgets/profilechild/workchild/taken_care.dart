@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mmhelper/ui/widgets/profile.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/workadd.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 
-class Contract extends StatefulWidget {
+class TakenCare extends StatefulWidget {
   @override
-  _ContractState createState() => _ContractState();
+  _TakenCareState createState() => _TakenCareState();
 }
 
-class _ContractState extends State<Contract> {
+class _TakenCareState extends State<TakenCare> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Contract Status",
+          "Number of Taken Care",
           style: TextStyle(
             color: Colors.pinkAccent,
           ),
@@ -38,20 +38,20 @@ class _ContractState extends State<Contract> {
               ),
             );
           },
-          itemCount: contracts.length,
+          itemCount: takencares.length,
           itemBuilder: (BuildContext context, int index) {
-            Map contract = contracts[index];
+            Map takencare = takencares[index];
             return Padding(
               padding:const EdgeInsets.symmetric(horizontal: 8,vertical: 15),
               child: Container(
                 child: GestureDetector(
                   child: Text(
-                      contract['name']
+                      takencare['name']
                   ),
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 2,workText:contract['name'] ,);
+                      return AddWorkDate(takenText: takencare['name'],);
                     }));
                   } ,
                 ),

@@ -12,6 +12,7 @@ import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'Dashboard.dart';
 import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
@@ -502,6 +503,32 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                               )),
                               shape: RoundedRectangleBorder(),
                               color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return MamaProfile();
+                                }));
+                              },
+                              child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 100, vertical: 20),
+                                    child: Text(
+                                      "Profile",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  )),
+                              shape: RoundedRectangleBorder(),
+                              color: Colors.cyan,
                             ),
                           ),
                         ),

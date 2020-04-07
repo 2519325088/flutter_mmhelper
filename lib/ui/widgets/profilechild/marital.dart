@@ -12,7 +12,12 @@ class _MaritalState extends State<Marital> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Marital Status"),
+        title: Text(
+          "Marital Status",
+          style: TextStyle(
+            color: Colors.pinkAccent,
+          ),
+        ),
         centerTitle: true,
         textTheme:
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),

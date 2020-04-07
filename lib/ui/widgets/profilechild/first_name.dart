@@ -22,10 +22,7 @@ class _FirstNameState extends State<FirstName> {
           ),
         ),
         centerTitle: true,
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.grey[800],
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),

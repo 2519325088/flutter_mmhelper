@@ -12,7 +12,12 @@ class _JobTypeState extends State<JobType> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Job Type"),
+        title: Text(
+          "Job Type",
+          style: TextStyle(
+            color: Colors.pinkAccent,
+          ),
+        ),
         centerTitle: true,
         textTheme:
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),

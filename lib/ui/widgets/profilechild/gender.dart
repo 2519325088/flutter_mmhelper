@@ -12,7 +12,12 @@ class _GenderPageState extends State<GenderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gender"),
+        title: Text(
+          "Gender",
+          style: TextStyle(
+            color: Colors.pinkAccent,
+          ),
+        ),
         centerTitle: true,
         textTheme:
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
