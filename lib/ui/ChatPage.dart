@@ -661,6 +661,7 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: TextField(
+                maxLines: 2,
                 style: TextStyle(
                  fontSize: 18.0),
                 controller: textEditingController,
