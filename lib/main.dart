@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.pink
         ),
-        home: LoginScreen(),
+          home: LoginScreen(),
 //        home:MamaProfile(),
 //        home: WorkSkill(),
       ),

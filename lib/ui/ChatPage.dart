@@ -645,7 +645,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             color: Colors.white,
           ),
-          Material(
+          /*Material(
             child: new Container(
               margin: new EdgeInsets.symmetric(horizontal: 1.0),
               child: new IconButton(
@@ -655,7 +655,7 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
             color: Colors.white,
-          ),
+          ),*/
 
           // Edit text
           Flexible(

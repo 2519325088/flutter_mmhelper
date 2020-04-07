@@ -183,10 +183,12 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
-                onPressed: () {
+                onPressed: () async{
                   database.lastUserId = null;
                   _firebaseAuth.signOut();
                   facebookLogin.logOut();
+                  prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
                   Navigator.pushAndRemoveUntil(context,
                       MaterialPageRoute(builder: (context) {
                     return LoginScreen();
