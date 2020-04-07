@@ -53,6 +53,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       }else{
         var getCountryList = Provider.of<GetCountryListService>(context);
         getCountryList.getCountryList();
+        getCountryList.newLoginCountry(newCountry: "Hong Kong",newCountryCode: "+852");
+        _phoneNumberController.text = "96527733";
       }
     });
 
