@@ -24,7 +24,8 @@ class FirestoreDatabase with ChangeNotifier {
   String downloadImageLink;
 
   String documentIdFromCurrentDate() {
-    lastUserId = DateTime.now().toIso8601String();
+    final string = DateTime.now().toIso8601String();
+    lastUserId = string;
     return lastUserId;
   }
 

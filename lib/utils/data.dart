@@ -86,6 +86,7 @@ List workend =[
 List worktexts =[
   "Select",
   "Select",
+  "No information",
 ];
 
 List religion = [

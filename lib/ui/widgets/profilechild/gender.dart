@@ -49,10 +49,10 @@ class _GenderPageState extends State<GenderPage> {
                       gender['name']
                   ),
                   onTap:(){
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(genderText:gender['name'] ,);
-                    }));
+//                    Navigator.of(context)
+//                        .push(MaterialPageRoute(builder: (context) {
+//                      return MamaProfile(genderText:gender['name'] ,);
+//                    }));
                   } ,
                 ),
               ),
