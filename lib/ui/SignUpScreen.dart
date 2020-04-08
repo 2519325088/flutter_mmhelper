@@ -11,7 +11,7 @@ import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
-import 'package:flutter_mmhelper/ui/Dashboard.dart';
+import 'package:flutter_mmhelper/ui/MainPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -110,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             data: flContent.toMap());
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-              return Dashboard(isFromLogin: false,);
+              return MainPage(isFromLogin: false,);
             }), (Route<dynamic> route) => false);
       } else {
         scaffoldKey.currentState.showSnackBar(SnackBar(

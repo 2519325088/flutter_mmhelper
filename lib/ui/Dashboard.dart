@@ -162,7 +162,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     final database = Provider.of<FirestoreDatabase>(context);
     SizeConfig().init(context);
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           title: Text("Dashboard"),
           actions: <Widget>[
             IconButton(
@@ -195,7 +195,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   }), (Route<dynamic> route) => false);
                 }),
           ],
-        ),
+        ),*/
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

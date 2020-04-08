@@ -7,6 +7,7 @@ import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/ui/MainPage.dart';
 import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
 import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         getUserPhone().then((onValue){
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-                return Dashboard(
+                return MainPage(
                   mobileNo: onValue,
                   isFromLogin: true,
                 );
@@ -155,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           _message = 'Successfully signed in, uid: ' + user.uid;
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard(
+            return MainPage(
               mobileNo: _phoneNumberController.text,
               isFromLogin: true,
             );
@@ -232,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           }*/
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard(
+            return MainPage(
               isFromLogin: true,
             );
           }), (Route<dynamic> route) => false);
