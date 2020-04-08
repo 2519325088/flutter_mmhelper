@@ -55,7 +55,6 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   String genderdata = "Female";
   final _service = FirestoreService.instance;
   int genderRadio = -1;
-  String genderSelectedValue = "";
 
   @override
   void didInitState() {
@@ -112,9 +111,9 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     final procontext = ProContext(
       firstname: username[0],
       lastname: username[1],
-      gender: genderSelectedValue,
+      gender: username[3],
       birthday: datatimes,
-      nationaity: "",
+      nationaity: username[2],
       education: detaills[0]['text'],
       religion: detaills[1]['text'],
       marital: detaills[2]['text'],
@@ -127,8 +126,12 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
       contract: works[2]['text'],
       workskill: works[3]['text'],
       language: works[4]['text'],
+      workexperiences:workhistory,
+      expectedsalary:worktexts[0],
+      employment:worktexts[1],
+      selfintroduction:selfController.text,
     );
-    _service.setData(path: APIPath.newCandidate(database.lastUserId),
+    _service.setData(path: APIPath.newCandidate(DateTime.now().toIso8601String()),
         data: procontext.toMap());
   }
 
@@ -174,53 +177,38 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             Container(
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical:10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "First Name",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: TextFormField(
-                              scrollPadding:EdgeInsets.zero,
-                              controller: firstnameController,
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                contentPadding: new EdgeInsets.all(0.0),
-                                isDense: true,
-                                hintText: username[0],
-                                hintStyle:TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                                border: InputBorder.none
-                              ),
-                              onFieldSubmitted: (String value){
-                                username[0]=firstnameController.text;
-                              },
-                              onEditingComplete:(){
-                                FocusScope. of (context). requestFocus (FocusNode ());
-                                username[0]=firstnameController.text;
-                              },
-                            ),
-                          ),
-                        ],
+                    Text(
+                      "First Name",
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: TextFormField(
+                        scrollPadding:EdgeInsets.zero,
+                        controller: firstnameController,
+                        cursorColor: Theme.of(context).accentColor,
+                        decoration: InputDecoration(
+                          contentPadding: new EdgeInsets.all(0.0),
+                          isDense: true,
+                          hintText: username[0],
+                          hintStyle:TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                          border: InputBorder.none
+                        ),
+                        onFieldSubmitted: (String value){
+                          username[0]=firstnameController.text;
+                        },
+                        onEditingComplete:(){
+                          FocusScope. of (context). requestFocus (FocusNode ());
+                          username[0]=firstnameController.text;
+                        },
                       ),
                     ),
                   ],
@@ -238,53 +226,38 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               ),
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Last Name",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: TextFormField(
-                              scrollPadding:EdgeInsets.zero,
-                              controller: lastnameController,
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                  contentPadding: new EdgeInsets.all(0.0),
-                                  isDense: true,
-                                  hintText: username[1],
-                                  hintStyle:TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                              onFieldSubmitted: (String value){
-                                username[1]=lastnameController.text;
-                              },
-                              onEditingComplete:(){
-                                FocusScope. of (context). requestFocus (FocusNode ());
-                                username[1]=lastnameController.text;
-                              },
-                            ),
-                          ),
-                        ],
+                    Text(
+                      "Last Name",
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: TextFormField(
+                        scrollPadding:EdgeInsets.zero,
+                        controller: lastnameController,
+                        cursorColor: Theme.of(context).accentColor,
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.all(0.0),
+                            isDense: true,
+                            hintText: username[1],
+                            hintStyle:TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                            border: InputBorder.none
+                        ),
+                        onFieldSubmitted: (String value){
+                          username[1]=lastnameController.text;
+                        },
+                        onEditingComplete:(){
+                          FocusScope. of (context). requestFocus (FocusNode ());
+                          username[1]=lastnameController.text;
+                        },
                       ),
                     ),
                   ],
@@ -438,55 +411,40 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               ),
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Birthday",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Text(
-                              datatimes,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                            onTap: (){
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime(2016, 3, 5),
-                                  maxTime: DateTime(2050, 6, 7), onChanged: (date) {
-                                    setState(() {
-                                      datatimes = date.toString().split(" ")[0];
-                                    });
-                                  }, onConfirm: (date) {
-                                    print('confirm $date');
-                                    setState(() {
-                                      datatimes = date.toString().split(" ")[0];
-                                    });
-                                  }, currentTime: DateTime.now(), locale: LocaleType.en
-                              );
-                            },
-                          ),
-                        ],
+                    Text(
+                      "Birthday",
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: Text(
+                        datatimes,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
                       ),
+                      onTap: (){
+                        DatePicker.showDatePicker(context,
+                            showTitleActions: true,
+                            minTime: DateTime(2016, 3, 5),
+                            maxTime: DateTime(2050, 6, 7), onChanged: (date) {
+                              setState(() {
+                                datatimes = date.toString().split(" ")[0];
+                              });
+                            }, onConfirm: (date) {
+                              print('confirm $date');
+                              setState(() {
+                                datatimes = date.toString().split(" ")[0];
+                              });
+                            }, currentTime: DateTime.now(), locale: LocaleType.en
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -644,53 +602,38 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               ),
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "WhatsApp",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: TextFormField(
-                              scrollPadding:EdgeInsets.zero,
-                              controller: whatsappController,
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                  contentPadding: new EdgeInsets.all(0.0),
-                                  isDense: true,
-                                  hintText: whatapptext[0],
-                                  hintStyle:TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                              onFieldSubmitted: (String value){
-                                whatapptext[0]=whatsappController.text;
-                              },
-                              onEditingComplete:(){
-                                FocusScope. of (context). requestFocus (FocusNode ());
-                                whatapptext[0]=whatsappController.text;
-                              },
-                            ),
-                          ),
-                        ],
+                    Text(
+                      "WhatsApp",
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: TextFormField(
+                        scrollPadding:EdgeInsets.zero,
+                        controller: whatsappController,
+                        cursorColor: Theme.of(context).accentColor,
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.all(0.0),
+                            isDense: true,
+                            hintText: whatapptext[0],
+                            hintStyle:TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                            border: InputBorder.none
+                        ),
+                        onFieldSubmitted: (String value){
+                          whatapptext[0]=whatsappController.text;
+                        },
+                        onEditingComplete:(){
+                          FocusScope. of (context). requestFocus (FocusNode ());
+                          whatapptext[0]=whatsappController.text;
+                        },
                       ),
                     ),
                   ],
@@ -708,61 +651,39 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               ),
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 10,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Phone Number (verified)",
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child:TextFormField(
-                              scrollPadding:EdgeInsets.zero,
-                              controller: phoneController,
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                  contentPadding: new EdgeInsets.all(0.0),
-                                  isDense: true,
-                                  hintText: whatapptext[1],
-                                  hintStyle:TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                              onFieldSubmitted: (String value){
-                                whatapptext[1]=phoneController.text;
-                              },
-                              onEditingComplete:(){
-                                FocusScope. of (context). requestFocus (FocusNode ());
-                                whatapptext[1]=phoneController.text;
-                              },
-                            ),
-                          ),
-                        ],
+                    Text(
+                      "Phone Number (verified)",
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 2,
-                      child:Text(
-                        "Private",
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 18,
+                    GestureDetector(
+                      child:TextFormField(
+                        scrollPadding:EdgeInsets.zero,
+                        controller: phoneController,
+                        cursorColor: Theme.of(context).accentColor,
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.all(0.0),
+                            isDense: true,
+                            hintText: whatapptext[1],
+                            hintStyle:TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                            border: InputBorder.none
                         ),
+                        onFieldSubmitted: (String value){
+                          whatapptext[1]=phoneController.text;
+                        },
+                        onEditingComplete:(){
+                          FocusScope. of (context). requestFocus (FocusNode ());
+                          whatapptext[1]=phoneController.text;
+                        },
                       ),
-//                      child: Icon(
-//                        Icons.arrow_forward_ios,
-//                        color: Colors.grey[400],
-//                        size: 18,
-//                      ),
                     ),
                   ],
                 ),
@@ -912,53 +833,38 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
             Container(
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            workend[0],
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: TextFormField(
-                              scrollPadding:EdgeInsets.zero,
-                              controller: salaryController,
-                              cursorColor: Theme.of(context).accentColor,
-                              decoration: InputDecoration(
-                                  contentPadding: new EdgeInsets.all(0.0),
-                                  isDense: true,
-                                  hintText: worktexts[0],
-                                  hintStyle:TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                              onFieldSubmitted: (String value){
-                                worktexts[0]=salaryController.text;
-                              },
-                              onEditingComplete:(){
-                                FocusScope. of (context). requestFocus (FocusNode ());
-                                worktexts[0]=salaryController.text;
-                              },
-                            ),
-                          ),
-                        ],
+                    Text(
+                      workend[0],
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: TextFormField(
+                        scrollPadding:EdgeInsets.zero,
+                        controller: salaryController,
+                        cursorColor: Theme.of(context).accentColor,
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.all(0.0),
+                            isDense: true,
+                            hintText: worktexts[0],
+                            hintStyle:TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                            border: InputBorder.none
+                        ),
+                        onFieldSubmitted: (String value){
+                          worktexts[0]=salaryController.text;
+                        },
+                        onEditingComplete:(){
+                          FocusScope. of (context). requestFocus (FocusNode ());
+                          worktexts[0]=salaryController.text;
+                        },
                       ),
                     ),
                   ],
@@ -976,55 +882,40 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
               ),
               child: Padding(
                 padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            workend[1],
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 18,
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Text(
-                              worktexts[1],
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                            onTap: (){
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime(2016, 3, 5),
-                                  maxTime: DateTime(2050, 6, 7), onChanged: (date) {
-                                    setState(() {
-                                      worktexts[1] = date.toString().split(" ")[0];
-                                    });
-                                  }, onConfirm: (date) {
-                                    print('confirm $date');
-                                    setState(() {
-                                      worktexts[1] = date.toString().split(" ")[0];
-                                    });
-                                  }, currentTime: DateTime.now(), locale: LocaleType.en
-                              );
-                            },
-                          ),
-                        ],
+                    Text(
+                      workend[1],
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 18,
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                    GestureDetector(
+                      child: Text(
+                        worktexts[1],
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
                       ),
+                      onTap: (){
+                        DatePicker.showDatePicker(context,
+                            showTitleActions: true,
+                            minTime: DateTime(2016, 3, 5),
+                            maxTime: DateTime(2050, 6, 7), onChanged: (date) {
+                              setState(() {
+                                worktexts[1] = date.toString().split(" ")[0];
+                              });
+                            }, onConfirm: (date) {
+                              print('confirm $date');
+                              setState(() {
+                                worktexts[1] = date.toString().split(" ")[0];
+                              });
+                            }, currentTime: DateTime.now(), locale: LocaleType.en
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -1061,6 +952,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                   maxLines: 10,
                   autofocus: false,
                   textAlign: TextAlign.left,
+                  textInputAction: TextInputAction.done,
                 ),
               ),
             ),
@@ -1077,7 +969,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     ),
                     color:Colors.pinkAccent,
                     child:Text(
-                      'logout',
+                      'Push',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -1100,10 +992,10 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
 
       switch (genderRadio) {
         case 0:
-          genderSelectedValue = "Male";
+          username[3] = "Male";
           break;
         case 1:
-          genderSelectedValue = "Female";
+          username[3] = "Female";
           break;
       }
     });
