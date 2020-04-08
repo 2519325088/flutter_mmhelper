@@ -8,6 +8,7 @@ import 'package:flutter_mmhelper/ui/widgets/profilechild/job_capacity.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/contract.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/work_skill.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/languages.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/curren_location.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/work_country.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/taken_care.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/reference.dart';
@@ -88,6 +89,7 @@ List worktexts =[
   "Select",
   "Select",
   "No information",
+  "",
 ];
 
 List religion = [
@@ -207,12 +209,14 @@ List reference=[
   "Yes",
 ];
 
+List workhistory=[];
+
 List pagename = [
   Education(),
   Religion(),
   Marital(),
   ChildrenPage(),
-  Religion(),
+  CurrentLocation(),
 ];
 
 List workoage=[

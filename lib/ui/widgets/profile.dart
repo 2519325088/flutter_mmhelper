@@ -27,7 +27,7 @@ import '../../utils/data.dart';
 class MamaProfile extends StatefulWidget {
   @override
   _MamaProfileState createState() => _MamaProfileState();
-  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null",this.nationalityText="null"});
+  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null",this.nationalityText="null",this.workHistory="null",this.cuttrenText="null"});
   int dataIndex;
   String firstName;
   String lastName;
@@ -40,6 +40,8 @@ class MamaProfile extends StatefulWidget {
   String phoneText;
   String salaryText;
   String nationalityText;
+  String workHistory;
+  String cuttrenText;
 }
 
 class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
@@ -77,6 +79,12 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     }
     if (widget.salaryText !="null"){
       worktexts[0] = widget.salaryText;
+    }
+    if (widget.workHistory !="null"){
+      worktexts[2] = widget.workHistory;
+    }
+    if (widget.cuttrenText !="null"){
+      detaills[4]["text"] = widget.cuttrenText;
     }
     if (widget.whatappText !="null"){
       whatapptext[0] = widget.whatappText;
@@ -882,7 +890,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             onTap: (){
                               Navigator.of(context)
                                   .push(MaterialPageRoute(builder: (context) {
-                                return WorkDate();
+                                return WorkDate(workList: [],);
                               }));
                             },
                           ),
@@ -990,6 +998,22 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                                 fontSize: 18,
                               ),
                             ),
+                            onTap: (){
+                              DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime(2016, 3, 5),
+                                  maxTime: DateTime(2050, 6, 7), onChanged: (date) {
+                                    setState(() {
+                                      worktexts[1] = date.toString().split(" ")[0];
+                                    });
+                                  }, onConfirm: (date) {
+                                    print('confirm $date');
+                                    setState(() {
+                                      worktexts[1] = date.toString().split(" ")[0];
+                                    });
+                                  }, currentTime: DateTime.now(), locale: LocaleType.en
+                              );
+                            },
                           ),
                         ],
                       ),
