@@ -18,6 +18,10 @@ class ProContext {
   final String contract;
   final String workskill;
   final String language;
+  final List workexperiences;
+  final String expectedsalary;
+  final String employment;
+  final String selfintroduction;
 
   ProContext({
     this.firstname,
@@ -37,6 +41,10 @@ class ProContext {
     this.contract,
     this.workskill,
     this.language,
+    this.workexperiences,
+    this.expectedsalary,
+    this.employment,
+    this.selfintroduction,
   });
 
   factory ProContext.fromMap(Map<String, dynamic> data, String documentId) =>
@@ -58,6 +66,10 @@ class ProContext {
         contract: data["contract"],
         workskill: data["workskill"],
         language: data["language"],
+        workexperiences: data["workexperiences"],
+        expectedsalary: data["expectedsalary"],
+        employment:data["employment"],
+        selfintroduction:data["selfintroduction"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -78,6 +90,10 @@ class ProContext {
     "contract":contract,
     "workskill":workskill,
     "language":language,
+    "workexperiences":workexperiences,
+    "expectedsalary":expectedsalary,
+    "employment":employment,
+    "selfintroduction":selfintroduction,
   };
 
 }
