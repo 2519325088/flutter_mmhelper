@@ -9,6 +9,7 @@ import 'package:flutter_mmhelper/ui/widgets/profilechild/last_name.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/whatapp.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/phone_input.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/work_salary.dart';
+import 'package:flutter_mmhelper/ui/widgets/profilechild/nationaity.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/work_experiences.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_mmhelper/Models/ProfileFirebase.dart';
@@ -26,7 +27,7 @@ import '../../utils/data.dart';
 class MamaProfile extends StatefulWidget {
   @override
   _MamaProfileState createState() => _MamaProfileState();
-  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null"});
+  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null",this.nationalityText="null"});
   int dataIndex;
   String firstName;
   String lastName;
@@ -38,6 +39,7 @@ class MamaProfile extends StatefulWidget {
   String whatappText;
   String phoneText;
   String salaryText;
+  String nationalityText;
 }
 
 class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
@@ -70,6 +72,9 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     if (widget.lastName !="null"){
       username[1] = widget.lastName;
     }
+    if (widget.nationalityText !="null"){
+      username[2] = widget.nationalityText;
+    }
     if (widget.salaryText !="null"){
       worktexts[0] = widget.salaryText;
     }
@@ -99,7 +104,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     final procontext = ProContext(
       firstname: username[0],
       lastname: username[1],
-      gender: genderdata,
+      gender: genderSelectedValue,
       birthday: datatimes,
       nationaity: "",
       education: detaills[0]['text'],
@@ -504,12 +509,20 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                               fontSize: 18,
                             ),
                           ),
-                          Text(
-                            "Select",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
+                          GestureDetector(
+                            child: Text(
+                              username[2],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
                             ),
+                            onTap: (){
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return Nationaity();
+                              }));
+                            },
                           ),
                         ],
                       ),
