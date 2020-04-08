@@ -70,7 +70,7 @@ class _NationaityState extends State<Nationaity> with AfterInitMixin {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 0,workText:countryinfo['name'] ,);
+                      return MamaProfile(nationalityText:countryinfo['name'] ,);
                     }));
                   } ,
                 ),
