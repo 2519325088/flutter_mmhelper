@@ -22,6 +22,9 @@ class AddWorkDate extends StatefulWidget {
 }
 
 class _AddWorkDateState extends State<AddWorkDate> with AfterInitMixin{
+  List workDateList = [
+    {"country":"","start":"","end":"","jobtype":"","taken":"","reason":"","reterence":"",},
+  ];
 
   @override
   void didInitState() {
@@ -61,10 +64,33 @@ class _AddWorkDateState extends State<AddWorkDate> with AfterInitMixin{
               color: Colors.pinkAccent,
             ),
             onPressed: (){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return WorkDate();
-              }));
+              if(addworks[0]['text']=="Select"){
+
+              }else if(addworks[1]['text']=="Select"){
+
+              }else if(addworks[2]['text']=="Select"){
+
+              }else if(addworks[3]['text']=="Select"){
+
+              }else if(addworks[4]['text']=="Select"){
+
+              }else if(addworks[5]['text']=="Select"){
+
+              }else if(addworks[6]['text']=="Select"){
+
+              }else{
+                workDateList[0]["country"]=addworks[0]['text'];
+                workDateList[0]["start"]=addworks[1]['text'];
+                workDateList[0]["end"]=addworks[2]['text'];
+                workDateList[0]["jobtype"]=addworks[3]['text'];
+                workDateList[0]["taken"]=addworks[4]['text'];
+                workDateList[0]["reason"]=addworks[5]['text'];
+                workDateList[0]["reterence"]=addworks[6]['text'];
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return WorkDate(workList: workDateList,);
+                }));
+              }
             },
           )
         ],

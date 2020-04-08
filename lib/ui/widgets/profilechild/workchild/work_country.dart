@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/workchild/workadd.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:after_init/after_init.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class WorkCountry extends StatefulWidget {
   @override
   _WorkCountryState createState() => _WorkCountryState();
 }
 
-class _WorkCountryState extends State<WorkCountry> {
+class _WorkCountryState extends State<WorkCountry> with AfterInitMixin{
+
+  List CountryLists = [];
+
+  @override
+  void didInitState() {
+    loadStateJson().then((jsonString) {
+      setState(() {
+        CountryLists = json.decode(jsonString) as List;
+      });
+    });
+  }
+
+  @override
+  Future<String> loadStateJson() async {
+    return await rootBundle.loadString('assets/Countrylist.json');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +45,8 @@ class _WorkCountryState extends State<WorkCountry> {
         brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: ListView.separated(
+      body:CountryLists.length != 0
+          ? ListView.separated(
           padding: EdgeInsets.all(10),
           separatorBuilder: (BuildContext context, int index) {
             return Align(
@@ -38,27 +59,30 @@ class _WorkCountryState extends State<WorkCountry> {
               ),
             );
           },
-          itemCount: references.length,
+          itemCount: CountryLists.length,
           itemBuilder: (BuildContext context, int index) {
-            Map reference = references[index];
+            Map countryinfo = CountryLists[index];
             return Padding(
-              padding:const EdgeInsets.symmetric(horizontal: 8,vertical: 15),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
               child: Container(
                 child: GestureDetector(
-                  child: Text(
-                      reference['name']
-                  ),
-                  onTap:(){
+                  child: Text(countryinfo['name']),
+                  onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return AddWorkDate(countryText:reference['name'],);
+                      return AddWorkDate(
+                        countryText: countryinfo['name'],
+                      );
                     }));
-                  } ,
+                  },
                 ),
               ),
             );
-          }
-      ),
-    );
+          })
+          : Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          )));
   }
 }
