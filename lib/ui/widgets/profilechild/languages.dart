@@ -103,7 +103,23 @@ class _LanguagePageState extends State<LanguagePage> with SingleTickerProviderSt
           )
         ],
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return MamaProfile();
+                }));
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),

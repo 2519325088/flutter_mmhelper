@@ -23,7 +23,23 @@ class _QuitReasonState extends State<QuitReason> {
         TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
         backgroundColor: Colors.white,
         brightness: Brightness.light,
-        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return AddWorkDate();
+                }));
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
       ),
       body: ListView.separated(
           padding: EdgeInsets.all(10),

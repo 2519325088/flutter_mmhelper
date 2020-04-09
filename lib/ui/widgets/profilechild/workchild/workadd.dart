@@ -95,7 +95,23 @@ class _AddWorkDateState extends State<AddWorkDate> with AfterInitMixin{
           )
         ],
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return WorkDate(workList: [],);
+                }));
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
       ),
       body: Container(
         child: ListView.separated(
