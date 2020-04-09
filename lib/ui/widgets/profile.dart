@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:after_init/after_init.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/gender.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/first_name.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/last_name.dart';
@@ -133,6 +134,10 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     );
     _service.setData(path: APIPath.newCandidate(DateTime.now().toIso8601String()),
         data: procontext.toMap());
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) {
+      return LoginScreen();
+    }));
   }
 
   @override
@@ -147,7 +152,23 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
           ),
         ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return LoginScreen();
+                }));
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
       ),
       body: Container(
         child: ListView(
@@ -495,10 +516,18 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     ),
                     Expanded(
                       flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey[400],
+                          size: 18,
+                        ),
+                        onPressed: (){
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return Nationaity();
+                          }));
+                        },
                       ),
                     ),
                   ],
@@ -580,10 +609,18 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                       ),
                       Expanded(
                         flex: 1,
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey[400],
-                          size: 18,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.grey[400],
+                            size: 18,
+                          ),
+                          onPressed: (){
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return detaillinfo['page'];
+                            }));
+                          },
                         ),
                       ),
                     ],
@@ -764,10 +801,18 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                       ),
                       Expanded(
                         flex: 1,
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey[400],
-                          size: 18,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.grey[400],
+                            size: 18,
+                          ),
+                          onPressed: (){
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return workinfo['page'];
+                            }));
+                          },
                         ),
                       ),
                     ],
@@ -820,10 +865,18 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     ),
                     Expanded(
                       flex: 1,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey[400],
-                        size: 18,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey[400],
+                          size: 18,
+                        ),
+                        onPressed: (){
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return WorkDate(workList: [],);
+                          }));
+                        },
                       ),
                     ),
                   ],
@@ -969,7 +1022,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     ),
                     color:Colors.pinkAccent,
                     child:Text(
-                      'Push',
+                      'Sumbit',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
