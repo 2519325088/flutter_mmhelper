@@ -16,6 +16,7 @@ import 'index.dart';
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
+
   MainPage({this.isFromLogin, this.mobileNo});
 
   String mobileNo;
@@ -39,9 +40,9 @@ class _MainPageState extends State<MainPage> {
         titleText = "Home";
       } else if (index == 1) {
         titleText = "Job";
-      } else if(index == 2){
+      } else if (index == 2) {
         titleText = "Chat";
-      }else{
+      } else {
         titleText = "Me";
       }
     });
@@ -74,10 +75,15 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgetOptions = [
-      Dashboard( mobileNo: widget.mobileNo,
-        isFromLogin: widget.isFromLogin,),
-      JobPage(),
-      ChatUserPage(mobileNo: widget.mobileNo,currentUserId: currentUserId,),
+      Dashboard(
+        mobileNo: widget.mobileNo,
+        isFromLogin: widget.isFromLogin,
+      ),
+      JobPage(currentUserId: currentUserId,),
+      ChatUserPage(
+        mobileNo: widget.mobileNo,
+        currentUserId: currentUserId,
+      ),
       MePage(),
     ];
     final database = Provider.of<FirestoreDatabase>(context);
@@ -86,7 +92,7 @@ class _MainPageState extends State<MainPage> {
         child: ListView(children: <Widget>[
           DrawerHeader(child: null),
           ListTile(
-            onTap: ()async{
+            onTap: () async {
               database.lastUserId = null;
               _firebaseAuth.signOut();
               facebookLogin.logOut();
@@ -94,8 +100,8 @@ class _MainPageState extends State<MainPage> {
               prefs.clear();
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
-                    return LoginScreen();
-                  }), (Route<dynamic> route) => false);
+                return LoginScreen();
+              }), (Route<dynamic> route) => false);
             },
             leading: Icon(Icons.exit_to_app),
             title: Text("Logout"),
@@ -124,17 +130,13 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text("Home")),
+            icon: Icon(Icons.home),
+            title: Text("Home"),
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.work), title: Text("Job")),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("Chat")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              title: Text("Job")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              title: Text("Chat")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              title: Text("Me"))
+              icon: Icon(Icons.account_circle), title: Text("Me"))
         ],
         onTap: bottomClick,
         unselectedItemColor: Colors.grey,

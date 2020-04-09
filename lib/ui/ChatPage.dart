@@ -673,6 +673,7 @@ class ChatScreenState extends State<ChatScreen> {
                     hintStyle: TextStyle(color: Colors.grey),
                   ),
                   focusNode: focusNode,
+                  textInputAction: TextInputAction.done,
                 ),
               ),
             ),
