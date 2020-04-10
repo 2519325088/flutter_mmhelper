@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,9 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                     return jobCard(
                         userName: snapshot2.data["firstname"],
                         shortDes: snapshot.data.documents[index]
-                            ["job_short_description"]);
+                            ["job_short_description"],
+                        jobSnapshot: snapshot.data.documents[index],
+                        userSnapshot: snapshot2.data);
                   });
             },
             itemCount: snapshot.data.documents.length,
@@ -67,10 +70,11 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     );
   }
 
-  Widget jobCard({
-    String shortDes,
-    String userName,
-  }) {
+  Widget jobCard(
+      {String shortDes,
+      String userName,
+      DocumentSnapshot jobSnapshot,
+      DocumentSnapshot userSnapshot}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -109,16 +113,26 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
               style: TextStyle(fontSize: 16),
             ),
             Divider(
-              color: Colors.black,
+              color: Colors.black.withOpacity(0.6),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "View more >",
-                  style: TextStyle(fontSize: 14, color: Colors.black54),
-                )
-              ],
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return JobDetailPage(
+                    jobSnapshot: jobSnapshot,
+                    userSnapshot: userSnapshot,
+                  );
+                }));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    "View more",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  )
+                ],
+              ),
             )
           ],
         ),

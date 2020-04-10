@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mmhelper/Models/PostJobModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/database.dart';
@@ -22,6 +24,11 @@ class _PostJobPageState extends State<PostJobPage> {
   TextEditingController unitSizeCtr = TextEditingController();
   TextEditingController moreJobDesCtr = TextEditingController();
   TextEditingController skillCtr = TextEditingController();
+  TextEditingController contractTypeCtr = TextEditingController();
+  TextEditingController jobTypeCtr = TextEditingController();
+  TextEditingController currencyTypeCtr = TextEditingController();
+  TextEditingController accommodationCtr = TextEditingController();
+  TextEditingController weeklyHolidayCtr = TextEditingController();
   String contractType;
   String jobType;
   String currencyType;
@@ -36,6 +43,7 @@ class _PostJobPageState extends State<PostJobPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    currencyTypeCtr.text = "HKD";
   }
 
   @override
@@ -49,6 +57,11 @@ class _PostJobPageState extends State<PostJobPage> {
     unitSizeCtr.dispose();
     moreJobDesCtr.dispose();
     skillCtr.dispose();
+    contractTypeCtr.dispose();
+    jobTypeCtr.dispose();
+    currencyTypeCtr.dispose();
+    accommodationCtr.dispose();
+    weeklyHolidayCtr.dispose();
   }
 
   @override
@@ -67,48 +80,51 @@ class _PostJobPageState extends State<PostJobPage> {
                 if (jobShortDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter job short description")));
-                } else if(contractType==null){
+                } else if (contractTypeCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select contract type")));
+                } else if (workingLocationDesCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please enter working location")));
+                } else if (jobTypeCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select job type")));
+                } else if (_date == null) {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select available in")));
+                } else if (currencyTypeCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select currency type")));
+                } else if (salaryCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please enter salary amount")));
+                } else if (unitSizeCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please enter unit size")));
+                } else if (int.parse(unitSizeCtr.text) < 100 ||
+                    int.parse(unitSizeCtr.text) > 5000) {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select contract type")));
-                }else if(workingLocationDesCtr.text == ""){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please enter working location")));
-                }else if(jobType==null){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select job type")));
-                }else if(_date==null){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select available in")));
-                }else if(currencyType==null){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select currency type")));
-                }else if(salaryCtr.text==""){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please enter salary amount")));
-                }else if(unitSizeCtr.text==""){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please enter unit size")));
-                }else if(accommodation==null){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select accommodation")));
-                }else if(weeklyHoliday==null){
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select weekly holiday")));
-                }else if(moreJobDesCtr.text==""){
+                      content: Text("Unit should be between 100 to 5000")));
+                } else if (accommodationCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select accommodation")));
+                } else if (weeklyHolidayCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select weekly holiday")));
+                } else if (moreJobDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter more job description")));
-                }else if(skillCtr.text==""){
+                } else if (skillCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter skill requirements")));
-                }
-                else {
+                } else {
                   String id = DateTime.now().toIso8601String();
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
-                  _service.setData(
-                      path: APIPath.newJob(id),
-                      data: postJob.toMap()).then((onValue){
-                        Navigator.pop(context);
+                  _service
+                      .setData(path: APIPath.newJob(id), data: postJob.toMap())
+                      .then((onValue) {
+                    Navigator.pop(context);
                   });
                 }
               })
@@ -166,7 +182,7 @@ class _PostJobPageState extends State<PostJobPage> {
                                     "Contract Type:",
                                     style: titleText,
                                   ),
-                                  DropdownButtonFormField<String>(
+                                  /*DropdownButtonFormField<String>(
                                     items: [
                                       DropdownMenuItem<String>(
                                         child: Text(
@@ -202,6 +218,52 @@ class _PostJobPageState extends State<PostJobPage> {
                                       });
                                     },
                                     value: contractType,
+                                  )*/
+                                  TextFormField(
+                                    style: dataText,
+                                    controller: contractTypeCtr,
+                                    decoration: InputDecoration(
+                                        hintText: "Select contract type"),
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      final action = CupertinoActionSheet(
+                                        title: Text(
+                                          "Contract Type",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                        message: Text(
+                                          "Select any option ",
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("option 1"),
+                                            onPressed: () {
+                                              contractTypeCtr.text = "option 1";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("option 2"),
+                                            onPressed: () {
+                                              contractTypeCtr.text = "option 2";
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
                                   )
                                 ],
                               ),
@@ -264,7 +326,7 @@ class _PostJobPageState extends State<PostJobPage> {
                                     "Job Type:",
                                     style: titleText,
                                   ),
-                                  DropdownButtonFormField<String>(
+                                  /*DropdownButtonFormField<String>(
                                     items: [
                                       DropdownMenuItem<String>(
                                         child: Text(
@@ -300,6 +362,59 @@ class _PostJobPageState extends State<PostJobPage> {
                                       });
                                     },
                                     value: jobType,
+                                  )*/
+                                  TextFormField(
+                                    style: dataText,
+                                    controller: jobTypeCtr,
+                                    decoration: InputDecoration(
+                                        hintText: "Select job type"),
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      final action = CupertinoActionSheet(
+                                        title: Text(
+                                          "Job Type",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                        message: Text(
+                                          "Select any option ",
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Full Time"),
+                                            onPressed: () {
+                                              jobTypeCtr.text = "Full Time";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Part Time"),
+                                            onPressed: () {
+                                              jobTypeCtr.text = "Part Time";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Permanent"),
+                                            onPressed: () {
+                                              jobTypeCtr.text = "Permanent";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
                                   )
                                 ],
                               ),
@@ -330,6 +445,8 @@ class _PostJobPageState extends State<PostJobPage> {
                                   ),
                                   GestureDetector(
                                     child: TextFormField(
+                                      decoration: InputDecoration(
+                                          hintText: "Select available in date"),
                                       onTap: () {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
@@ -370,7 +487,8 @@ class _PostJobPageState extends State<PostJobPage> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
                                       Expanded(
-                                        child: DropdownButtonFormField<String>(
+                                          child:
+                                              /*DropdownButtonFormField<String>(
                                           items: [
                                             DropdownMenuItem<String>(
                                               child: Text(
@@ -398,8 +516,53 @@ class _PostJobPageState extends State<PostJobPage> {
                                             });
                                           },
                                           value: currencyType,
-                                        ),
-                                      ),
+                                        ),*/
+                                              TextFormField(
+                                        style: dataText,
+                                        controller: currencyTypeCtr,
+                                        decoration: InputDecoration(
+                                            hintText: "Currency"),
+                                        onTap: () {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          final action = CupertinoActionSheet(
+                                            title: Text(
+                                              "Currency Type",
+                                              style: TextStyle(fontSize: 30),
+                                            ),
+                                            message: Text(
+                                              "Select any option ",
+                                              style: TextStyle(fontSize: 15.0),
+                                            ),
+                                            actions: <Widget>[
+                                              CupertinoActionSheetAction(
+                                                child: Text("HKD"),
+                                                onPressed: () {
+                                                  currencyTypeCtr.text = "HKD";
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              CupertinoActionSheetAction(
+                                                child: Text("USD"),
+                                                onPressed: () {
+                                                  currencyTypeCtr.text = "USD";
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                            cancelButton:
+                                                CupertinoActionSheetAction(
+                                              child: Text("Cancel"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                          showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (context) => action);
+                                        },
+                                      )),
                                       SizedBox(
                                         width: 5,
                                       ),
@@ -409,14 +572,16 @@ class _PostJobPageState extends State<PostJobPage> {
                                             onChanged: (newValue) {
                                               postJob.salary = newValue;
                                             },
+                                            inputFormatters: [
+                                              WhitelistingTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
                                             keyboardType:
                                                 TextInputType.numberWithOptions(
                                                     signed: false),
                                             decoration: InputDecoration(
-                                                hintText: "amount",
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                        vertical: 25)),
+                                              hintText: "amount",
+                                            ),
                                             controller: salaryCtr,
                                             style: dataText,
                                           ),
@@ -455,6 +620,13 @@ class _PostJobPageState extends State<PostJobPage> {
                                     onChanged: (newValue) {
                                       postJob.unitSize = newValue;
                                     },
+                                    inputFormatters: [
+                                      WhitelistingTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(4),
+                                    ],
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            signed: false),
                                     controller: unitSizeCtr,
                                     style: dataText,
                                   )
@@ -485,7 +657,7 @@ class _PostJobPageState extends State<PostJobPage> {
                                     "Accommodation:",
                                     style: titleText,
                                   ),
-                                  DropdownButtonFormField<String>(
+                                  /*DropdownButtonFormField<String>(
                                     items: [
                                       DropdownMenuItem<String>(
                                         child: Text(
@@ -513,6 +685,54 @@ class _PostJobPageState extends State<PostJobPage> {
                                       });
                                     },
                                     value: accommodation,
+                                  )*/
+                                  TextFormField(
+                                    style: dataText,
+                                    controller: accommodationCtr,
+                                    decoration: InputDecoration(
+                                        hintText: "Select accommodation"),
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      final action = CupertinoActionSheet(
+                                        title: Text(
+                                          "Accommodation",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                        message: Text(
+                                          "Select any option ",
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Shared bedroom"),
+                                            onPressed: () {
+                                              accommodationCtr.text =
+                                                  "Shared bedroom";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Private bedroom"),
+                                            onPressed: () {
+                                              accommodationCtr.text =
+                                                  "Private bedroom";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
                                   )
                                 ],
                               ),
@@ -541,7 +761,7 @@ class _PostJobPageState extends State<PostJobPage> {
                                     "Weekly Holiday:",
                                     style: titleText,
                                   ),
-                                  DropdownButtonFormField<String>(
+                                  /*DropdownButtonFormField<String>(
                                     items: [
                                       DropdownMenuItem<String>(
                                         child: Text(
@@ -569,6 +789,52 @@ class _PostJobPageState extends State<PostJobPage> {
                                       });
                                     },
                                     value: weeklyHoliday,
+                                  )*/
+                                  TextFormField(
+                                    style: dataText,
+                                    controller: weeklyHolidayCtr,
+                                    decoration: InputDecoration(
+                                        hintText: "Select weekly holiday"),
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      final action = CupertinoActionSheet(
+                                        title: Text(
+                                          "Weekly Holiday",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                        message: Text(
+                                          "Select any option ",
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("1"),
+                                            onPressed: () {
+                                              weeklyHolidayCtr.text = "1";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("2"),
+                                            onPressed: () {
+                                              weeklyHolidayCtr.text = "2";
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
                                   )
                                 ],
                               ),
