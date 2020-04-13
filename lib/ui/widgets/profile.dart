@@ -171,7 +171,8 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     });
   }
 
-  Future saveImage(Asset asset) async {
+  //  sumbit image
+  Future<String> saveImage(Asset asset) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     ByteData byteData = await asset.requestOriginal();
     List<int> imageData = byteData.buffer.asUint8List();
@@ -182,17 +183,60 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     prefs = await SharedPreferences.getInstance();
     prefs.setString("loginUid", datenow);
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+      print("this is link:$downloadUrl");
       return downloadUrl;
     });
-//     await (await uploadTask.onComplete).ref.getDownloadURL().then((downloadUrl){
-//       return downloadUrl ;
-//    });
   }
 
   Future<void> _submit() async {
     imageList=[];
-    for(int i =0;i<imagesa.length;i++){
-      imageList.add(saveImage(imagesa[i]));
+    int i =0;
+    imagesa.forEach((upFile)async{
+      String downloadLink = await saveImage(upFile);
+      imageList.add(downloadLink);
+      i += 1;
+      if(i==imagesa.length-1) {
+        final database = Provider.of<FirestoreDatabase>(context);
+        final procontext = ProContext(
+          firstname: username[0],
+          lastname: username[1],
+          gender: username[3],
+          birthday: datatimes,
+          nationaity: username[2],
+          education: detaills[0]['text'],
+          religion: detaills[1]['text'],
+          marital: detaills[2]['text'],
+          children: detaills[3]['text'],
+          current: detaills[4]['text'],
+          whatsapp: whatapptext[0],
+          phone: whatapptext[1],
+          jobtype: worktopdata[0],
+          jobcapacity: worktopdata[1],
+          contract: worktopdata[2],
+          workskill: works[0]['text'],
+          language: works[1]['text'],
+          workexperiences: workhistory,
+          expectedsalary: worktexts[0],
+          employment: worktexts[1],
+          selfintroduction: selfController.text,
+          imagelist: imageList,
+        );
+        _service.setData(path: APIPath.newProfile(datenow),
+            data: procontext.toMap());
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) {
+          return LoginScreen();
+        }));
+      }
+    });
+   // for(i =0;i<imagesa.length;i++){
+   // await saveImage(imagesa[i]).then((downloadLink){
+     //   imageList.add(downloadLink);
+       // print(downloadLink);
+
+      //});
+
+//now try can you try
 //      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
 //      StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
 //      StorageUploadTask uploadTask = reference.putFile(imageFile);
@@ -203,38 +247,8 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
 //      storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
 //        imageList.add(downloadUrl);
 //      });
-    }
-    final database = Provider.of<FirestoreDatabase>(context);
-    final procontext = ProContext(
-      firstname: username[0],
-      lastname: username[1],
-      gender: username[3],
-      birthday: datatimes,
-      nationaity: username[2],
-      education: detaills[0]['text'],
-      religion: detaills[1]['text'],
-      marital: detaills[2]['text'],
-      children: detaills[3]['text'],
-      current: detaills[4]['text'],
-      whatsapp: whatapptext[0],
-      phone: whatapptext[1],
-      jobtype: worktopdata[0],
-      jobcapacity: worktopdata[1],
-      contract: worktopdata[2],
-      workskill: works[0]['text'],
-      language: works[1]['text'],
-      workexperiences:workhistory,
-      expectedsalary:worktexts[0],
-      employment:worktexts[1],
-      selfintroduction:selfController.text,
-      imagelist:imageList,
-    );
-    _service.setData(path: APIPath.newCandidate(datenow),
-        data: procontext.toMap());
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) {
-      return LoginScreen();
-    }));
+    //}
+
   }
 
   @override
@@ -1622,30 +1636,33 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                         fontSize: 18,
                       ),
                     ),
-                    GestureDetector(
-                      child: Text(
-                        worktexts[1],
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 0),
+                      child: GestureDetector(
+                        child: Text(
+                          worktexts[1],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
+                        onTap: (){
+                          DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              minTime: DateTime(2016, 3, 5),
+                              maxTime: DateTime(2050, 6, 7), onChanged: (date) {
+                                setState(() {
+                                  worktexts[1] = date.toString().split(" ")[0];
+                                });
+                              }, onConfirm: (date) {
+                                print('confirm $date');
+                                setState(() {
+                                  worktexts[1] = date.toString().split(" ")[0];
+                                });
+                              }, currentTime: DateTime.now(), locale: LocaleType.en
+                          );
+                        },
                       ),
-                      onTap: (){
-                        DatePicker.showDatePicker(context,
-                            showTitleActions: true,
-                            minTime: DateTime(2016, 3, 5),
-                            maxTime: DateTime(2050, 6, 7), onChanged: (date) {
-                              setState(() {
-                                worktexts[1] = date.toString().split(" ")[0];
-                              });
-                            }, onConfirm: (date) {
-                              print('confirm $date');
-                              setState(() {
-                                worktexts[1] = date.toString().split(" ")[0];
-                              });
-                            }, currentTime: DateTime.now(), locale: LocaleType.en
-                        );
-                      },
                     ),
                   ],
                 ),

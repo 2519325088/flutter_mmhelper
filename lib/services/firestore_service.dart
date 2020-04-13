@@ -9,7 +9,7 @@ class FirestoreService {
   Future<void> setData({String path, Map<String, dynamic> data}) async {
     final reference = Firestore.instance.document(path);
     print('$path: $data');
-    await reference.setData(data);
+    await reference.setData(data);//i think this is error
   }
 
   Stream<List<T>> collectionStream<T>({
