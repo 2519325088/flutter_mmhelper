@@ -632,6 +632,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildInput() {
     return Container(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Button send image
           Material(
@@ -645,7 +646,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             color: Colors.white,
           ),
-          Material(
+          /*Material(
             child: new Container(
               margin: new EdgeInsets.symmetric(horizontal: 1.0),
               child: new IconButton(
@@ -655,20 +656,25 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
             color: Colors.white,
-          ),
+          ),*/
 
           // Edit text
           Flexible(
             child: Container(
-              child: TextField(
-                style: TextStyle(
-                 fontSize: 18.0),
-                controller: textEditingController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
-                  hintStyle: TextStyle(color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: TextField(
+                  maxLines: 5,
+                  style: TextStyle(
+                   fontSize: 18.0),
+                  controller: textEditingController,
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Type your message...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                  focusNode: focusNode,
+                  textInputAction: TextInputAction.done,
                 ),
-                focusNode: focusNode,
               ),
             ),
           ),
@@ -688,7 +694,7 @@ class ChatScreenState extends State<ChatScreen> {
         ],
       ),
       width: double.infinity,
-      height: 50.0,
+      height: 80.0,
       decoration: new BoxDecoration(
           border: new Border(
               top: new BorderSide(

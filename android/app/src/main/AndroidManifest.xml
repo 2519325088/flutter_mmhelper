@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_mmhelper"
+        android:label="Mama Helpers"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

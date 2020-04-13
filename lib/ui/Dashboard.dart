@@ -162,7 +162,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     final database = Provider.of<FirestoreDatabase>(context);
     SizeConfig().init(context);
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           title: Text("Dashboard"),
           actions: <Widget>[
             IconButton(
@@ -183,17 +183,19 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 }),
             IconButton(
                 icon: Icon(Icons.exit_to_app),
-                onPressed: () {
+                onPressed: () async{
                   database.lastUserId = null;
                   _firebaseAuth.signOut();
                   facebookLogin.logOut();
+                  prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
                   Navigator.pushAndRemoveUntil(context,
                       MaterialPageRoute(builder: (context) {
                     return LoginScreen();
                   }), (Route<dynamic> route) => false);
                 }),
           ],
-        ),
+        ),*/
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -22,18 +22,12 @@ class _ChatUserPageState extends State<ChatUserPage> {
     print(widget.currentUserId);
 
   }
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text("CHATs"),
-      ),
+      ),*/
       body: Stack(
         children: <Widget>[
           // List

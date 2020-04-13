@@ -7,12 +7,13 @@ import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/ui/MainPage.dart';
 import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
 import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_mmhelper/ui/widgets/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Dashboard.dart';
 import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
@@ -34,12 +35,40 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   bool isShowSms = false;
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
+  SharedPreferences prefs;
 
 
   @override
   void didInitState() {
-    var getCountryList = Provider.of<GetCountryListService>(context);
-    getCountryList.getCountryList();
+    getPhoneUserId().then((onValue){
+      if(onValue != null){
+        getUserPhone().then((onValue){
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) {
+                return MainPage(
+                  mobileNo: onValue,
+                  isFromLogin: true,
+                );
+              }), (Route<dynamic> route) => false);
+        });
+      }else{
+        var getCountryList = Provider.of<GetCountryListService>(context);
+        getCountryList.getCountryList();
+        getCountryList.newLoginCountry(newCountry: "Hong Kong",newCountryCode: "+852");
+        _phoneNumberController.text = "96527733";
+      }
+    });
+
+  }
+
+  Future<String> getPhoneUserId()async{
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString("PhoneUserId");
+  }
+
+  Future<String> getUserPhone()async{
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString("UserPhone");
   }
 
   void _verifyPhoneNumber() async {
@@ -121,12 +150,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         assert(user.uid == currentUser.uid);
 
         if (user != null) {
-
-          print("Successfully");
+          prefs = await SharedPreferences.getInstance();
+          prefs.setString("PhoneUserId", user.uid);
+          prefs.setString("UserPhone", _phoneNumberController.text);
           _message = 'Successfully signed in, uid: ' + user.uid;
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard(
+            return MainPage(
               mobileNo: _phoneNumberController.text,
               isFromLogin: true,
             );
@@ -142,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
             final id = Contents.map((contents) => contents.id).toList();
             print(id);
           }*/
+
         } else {
           _message = 'Sign in failed';
         }
@@ -202,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           }*/
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return Dashboard(
+            return MainPage(
               isFromLogin: true,
             );
           }), (Route<dynamic> route) => false);
