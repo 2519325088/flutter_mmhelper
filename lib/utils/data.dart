@@ -72,10 +72,19 @@ List whatapptext=[
   "+85263433995",
 ];
 
-List work = [
+List worktop=[
   "Job Type",
   "Job Capacity",
   "Contract Status",
+];
+
+List worktopdata=[
+  "Select",
+  "Select",
+  "Select",
+];
+
+List work = [
   "Working Skills",
   "Languages",
   "Work Experiences",
@@ -221,9 +230,9 @@ List pagename = [
 ];
 
 List workoage=[
-  JobType(),
-  JobCapacity(),
-  Contract(),
+//  JobType(),
+//  JobCapacity(),
+//  Contract(),
   WorkSkill(),
   LanguagePage(langtag:detaills[4]["text"],),
 ];
@@ -237,6 +246,9 @@ List workpage=[
   QuitReason(),
   Reference(),
 ];
+
+List imageList=[];
+
 
 List roleds = List.generate(3, (index)=>{
   "name": roles[index],
@@ -268,7 +280,7 @@ List takencares = List.generate(6, (index)=>{
   "name": takencare[index],
 });
 
-List works =List.generate(5, (index)=>{
+List works =List.generate(2, (index)=>{
   "title": work[index],
   "text": "Select",
   "page":workoage[index],
