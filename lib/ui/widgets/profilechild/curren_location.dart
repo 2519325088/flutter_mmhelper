@@ -89,7 +89,7 @@ class _CurrentLocationState extends State<CurrentLocation> with AfterInitMixin {
                     onTap: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return MamaProfile(
+                        return MamaProfile(//use constructor function // like before we use in login page to select countrycode from list
                           cuttrenText: countryinfo['name'],
                         );
                       }));
