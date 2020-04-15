@@ -133,30 +133,27 @@ class _AddWorkDateState extends State<AddWorkDate> with AfterInitMixin{
             Map addworkinfo = addworks[index];
             return Padding(
               padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 9,
-                    child: Text(
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
                       addworkinfo['title'],
                       style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 22,
+                        color: Colors.grey,
+                        fontSize: 18,
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 2,
-                          child: GestureDetector(
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          GestureDetector(
                             child: Text(
                               addworkinfo['text'],
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 16,
+                                fontSize: 18,
                               ),
                             ),
                             onTap: (){
@@ -183,19 +180,16 @@ class _AddWorkDateState extends State<AddWorkDate> with AfterInitMixin{
                               }
                             },
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Icon(
+                          Icon(
                             Icons.arrow_forward_ios,
-                            color: Colors.grey[400],
+                            color: Colors.grey,
                             size: 18,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
