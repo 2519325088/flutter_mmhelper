@@ -10,9 +10,11 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
+import 'package:flutter_mmhelper/ui/widgets/profile_dateil.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 
 import 'index.dart';
 
@@ -70,70 +72,78 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       contents.forEach((element) async {
         gridListData.add(Card(
           elevation: 3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(5), topLeft: Radius.circular(5)),
-                child: Container(
-                  height: 150,
-                  width: double.infinity,
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          topLeft: Radius.circular(5)),
-                      child: Image.asset(
-                        "assets/placeholder.jpg",
-                        fit: BoxFit.cover,
+          child: InkWell(
+            onTap: (){
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return ProfileDateil();
+              }));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(5), topLeft: Radius.circular(5)),
+                  child: Container(
+                    height: 150,
+                    width: double.infinity,
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) =>
+                          Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(5),
+                            topLeft: Radius.circular(5)),
+                        child: Image.asset(
+                          "assets/placeholder.jpg",
+                          fit: BoxFit.cover,
+                        ),
                       ),
+                      imageUrl: await getImageUrl(
+                              element.imageDeck[0].image[0] as DocumentReference)
+                          .then((imagePath) {
+                        i += 1;
+                        print(i);
+                        return imagePath;
+                      }),
+                      fit: BoxFit.cover,
                     ),
-                    imageUrl: await getImageUrl(
-                            element.imageDeck[0].image[0] as DocumentReference)
-                        .then((imagePath) {
-                      i += 1;
-                      print(i);
-                      return imagePath;
-                    }),
-                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        element.lastname ?? "No lastname",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        element.firstname ?? "No firstname",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        element.username ?? "No username",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        element.nationality ?? "No nationality",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      Text(element.gender ?? "No gender"),
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          element.lastname ?? "No lastname",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          element.firstname ?? "No firstname",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          element.username ?? "No username",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          element.nationality ?? "No nationality",
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        Text(element.gender ?? "No gender"),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
         if (contents.length == i) {
@@ -142,6 +152,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       });
     });
   }
+
 
   Future<String> getImageUrl(DocumentReference imageReference) {
     var completer = Completer<String>();
@@ -196,6 +207,16 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 }),
           ],
         ),*/
+//        floatingActionButton: FloatingActionButton(
+//          onPressed: () {
+//            Navigator.push(context, MaterialPageRoute(builder: (context) {
+//              return MamaProfile(
+//                currentUserId: currentUserId,
+//              );
+//            }));
+//          },
+//          child: Icon(Icons.add),
+//        ),
         body: gridListData.length != 0
             ? GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -205,6 +226,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
               )
             : Center(
                 child: CircularProgressIndicator(),
-              ));
+              )
+    );
   }
 }

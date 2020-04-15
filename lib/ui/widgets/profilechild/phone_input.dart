@@ -41,17 +41,11 @@ class _PhonePageState extends State<PhonePage> {
 //                hintText: "Role",
                 border: InputBorder.none),
             onFieldSubmitted: (String value){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(phoneText: value,);
-              }));
-            },
-//            onSaved: (String value){
 //              Navigator.of(context)
 //                  .push(MaterialPageRoute(builder: (context) {
-//                return MamaProfile(firstName: value,);
+//                return MamaProfile(phoneText: value,);
 //              }));
-//            },
+            },
           ),
         ),
       ),

@@ -94,7 +94,7 @@ class _WorkSkillState extends State<WorkSkill> with SingleTickerProviderStateMix
               }
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(dataIndex: 3,workSkill: taglist,);
+                return MamaProfile(workSkill: taglist,);
               }));
             },
           )

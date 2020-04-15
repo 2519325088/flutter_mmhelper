@@ -11,6 +11,7 @@ import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_mmhelper/Models/FlImageModel.dart';
 import 'package:flutter_mmhelper/Models/PostJobModel.dart';
+import 'package:flutter_mmhelper/Models/ProfileFirebase.dart';
 import 'api_path.dart';
 import 'firestore_service.dart';
 

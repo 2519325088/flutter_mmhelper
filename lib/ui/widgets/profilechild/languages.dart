@@ -97,7 +97,7 @@ class _LanguagePageState extends State<LanguagePage> with SingleTickerProviderSt
               }
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(dataIndex: 4,languageText: languagelist,);
+                return MamaProfile(languageText: languagelist,);
               }));
             },
           )

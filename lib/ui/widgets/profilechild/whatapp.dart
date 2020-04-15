@@ -41,17 +41,11 @@ class _WhatAppPageState extends State<WhatAppPage> {
 //                hintText: "Role",
                 border: InputBorder.none),
             onFieldSubmitted: (String value){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(whatappText: value,);
-              }));
-            },
-//            onSaved: (String value){
 //              Navigator.of(context)
 //                  .push(MaterialPageRoute(builder: (context) {
-//                return MamaProfile(firstName: value,);
+//                return MamaProfile(whatappText: value,);
 //              }));
-//            },
+            },
           ),
         ),
       ),

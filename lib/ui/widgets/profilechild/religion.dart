@@ -67,7 +67,7 @@ class _ReligionState extends State<Religion> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 1,dataText:religion['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),

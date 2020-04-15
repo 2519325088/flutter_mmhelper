@@ -67,7 +67,7 @@ class _JobCapacityState extends State<JobCapacity> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 1,workText:jobcapacity['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),
