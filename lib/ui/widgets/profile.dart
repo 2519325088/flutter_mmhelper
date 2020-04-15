@@ -359,7 +359,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       "First Name",
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -408,7 +408,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       "Last Name",
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -538,7 +538,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       "Birthday",
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -595,7 +595,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                           Text(
                             "Nationaity",
                             style: TextStyle(
-                              color: Colors.grey[400],
+                              color: Colors.grey,
                               fontSize: 18,
                             ),
                           ),
@@ -679,7 +679,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       detailltitle[0],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -687,7 +687,8 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                       style: dataText,
                       controller: educationTypeCtr,
                       decoration: InputDecoration(
-                          hintText: detailltext[0]),
+                          hintText: detailltext[0]
+                      ),
                       onTap: () {
                         FocusScope.of(context)
                             .requestFocus(FocusNode());
@@ -768,7 +769,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       detailltitle[1],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -857,7 +858,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       detailltitle[2],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -954,7 +955,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       detailltitle[3],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1055,7 +1056,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                           Text(
                             detailltitle[4],
                             style: TextStyle(
-                              color: Colors.grey[400],
+                              color: Colors.grey,
                               fontSize: 18,
                             ),
                           ),
@@ -1117,7 +1118,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       "WhatsApp",
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1166,7 +1167,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       "Phone Number (verified)",
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1237,7 +1238,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       worktop[0],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1310,7 +1311,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       worktop[1],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1383,7 +1384,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       worktop[2],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1508,7 +1509,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                             Text(
                               workinfo['title'],
                               style: TextStyle(
-                                color: Colors.grey[400],
+                                color: Colors.grey,
                                 fontSize: 18,
                               ),
                             ),
@@ -1575,7 +1576,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                           Text(
                             "Work Experiences",
                             style: TextStyle(
-                              color: Colors.grey[400],
+                              color: Colors.grey,
                               fontSize: 18,
                             ),
                           ),
@@ -1626,7 +1627,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       workend[0],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),
@@ -1675,7 +1676,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                     Text(
                       workend[1],
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey,
                         fontSize: 18,
                       ),
                     ),

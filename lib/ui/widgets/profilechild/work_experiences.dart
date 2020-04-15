@@ -147,7 +147,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Country",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -181,7 +181,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Start Date",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -215,7 +215,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "End Date",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -249,7 +249,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Type of Jobs",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -283,7 +283,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Number of Taken Care",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -317,7 +317,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Quit Reason",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -351,7 +351,7 @@ class _WorkDateState extends State<WorkDate> with AfterInitMixin{
                                   Text(
                                     "Reterence Letter",
                                     style: TextStyle(
-                                      color: Colors.grey[400],
+                                      color: Colors.grey,
                                       fontSize: 18,
                                     ),
                                   ),
