@@ -8,6 +8,8 @@ import './call.dart';
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => IndexState();
+  String channelName;
+  IndexPage({this.channelName});
 }
 
 class IndexState extends State<IndexPage> {
@@ -16,6 +18,13 @@ class IndexState extends State<IndexPage> {
 
   /// if channel textField is validated to have error
   bool _validateError = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _channelController.text = widget.channelName??"";
+  }
 
   @override
   void dispose() {
