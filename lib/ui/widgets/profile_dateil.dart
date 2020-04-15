@@ -23,7 +23,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
           ),
         ),
         centerTitle: true,
-        leading: Builder(
+        /*leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(
@@ -39,7 +39,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
-        ),
+        ),*/
       ),
       body: Container(
         child: ListView(

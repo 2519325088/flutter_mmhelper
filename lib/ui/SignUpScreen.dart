@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:after_init/after_init.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/MainPage.dart';
+import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -57,6 +59,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   File locProFileImage;
   String imageUrl;
   SharedPreferences prefs;
+  List<Widget> roleWidget = [];
+  String lastName;
 
   void _onSelectionChanged(String value) {
     roleController.text = value;///here we got that selected data from role page
@@ -69,6 +73,16 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
   // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
+    roles.forEach((f){
+      roleWidget.add(CupertinoActionSheetAction(
+        child: Text(f),
+        onPressed: () {
+          roleController.text = f;
+          Navigator.pop(context);
+        },
+      ),);
+    });
+
     ///assign value in didInitState
   }
   Future uploadFile() async {
@@ -540,6 +554,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
                                   controller: lastnameController,
+                                  onChanged: (data){
+                                    usernameController.text = data.toLowerCase();
+                                    lastName = data.toLowerCase();
+                                  },
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
@@ -567,6 +585,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                 const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
+                                  onChanged: (data){
+                                    usernameController.text = lastName+data.toLowerCase();
+                                  },
                                   controller: firstnameController,
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
@@ -630,10 +651,33 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                       hintText: "Role",
                                       border: InputBorder.none),
                                   onTap:(){
-                                    Navigator.of(context)
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    final action = CupertinoActionSheet(
+                                      title: Text(
+                                        "Role",
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                      message: Text(
+                                        "Select any option ",
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                      actions: roleWidget,
+                                      cancelButton:
+                                      CupertinoActionSheetAction(
+                                        child: Text("Cancel"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    );
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => action);
+                                    /*Navigator.of(context)
                                         .push(MaterialPageRoute(builder: (context) {
                                       return RoleUser(onChanged: _onSelectionChanged,);
-                                    }));
+                                    }));*/
                                   },///here i make one onchange function got back data from last page
                                   ///now try
                                 ),
@@ -671,7 +715,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                           ],
                         ),
                       ),
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -699,7 +743,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(

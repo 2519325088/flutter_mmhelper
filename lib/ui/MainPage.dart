@@ -32,17 +32,30 @@ class _MainPageState extends State<MainPage> {
   SharedPreferences prefs;
   String currentUserId;
   QuerySnapshot querySnapshot;
+  bool isShow = true;
 
   bottomClick(int index) {
     setState(() {
       selectedIndex = index;
       if (index == 0) {
         titleText = "Home";
+        setState(() {
+          isShow = true;
+        });
       } else if (index == 1) {
+        setState(() {
+          isShow = true;
+        });
         titleText = "Job";
       } else if (index == 2) {
         titleText = "Chat";
+        setState(() {
+          isShow = false;
+        });
       } else {
+        setState(() {
+          isShow = true;
+        });
         titleText = "Me";
       }
     });
@@ -111,13 +124,13 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(titleText),
         actions: <Widget>[
-          IconButton(
+          isShow?IconButton(
               icon: Icon(Icons.video_call),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return IndexPage();
                 }));
-              }),
+              }):SizedBox(),
         ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
