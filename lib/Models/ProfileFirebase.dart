@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class ProContext {
+  final String id;
   final String firstname;
   final String lastname;
   final String gender;
@@ -23,8 +24,12 @@ class ProContext {
   final String employment;
   final String selfintroduction;
   final List imagelist;
+  final String created_by;
+  final String from_agency;
+
 
   ProContext({
+    this.id,
     this.firstname,
     this.lastname,
     this.gender,
@@ -47,10 +52,13 @@ class ProContext {
     this.employment,
     this.selfintroduction,
     this.imagelist,
+    this.created_by,
+    this.from_agency,
   });
 
   factory ProContext.fromMap(Map<String, dynamic> data, String documentId) =>
       ProContext(
+        id: data["id"],
         firstname: data["firstname"],
         lastname: data["lastname"],
         gender: data["gender"],
@@ -73,9 +81,12 @@ class ProContext {
         employment:data["employment"],
         selfintroduction:data["selfintroduction"],
         imagelist:data["imagelist"],
+        created_by:data["created_by"],
+        from_agency:data["from_agency"],
       );
 
   Map<String, dynamic> toMap() => {
+    "id":id,
     "firstname":firstname,
     "lastname":lastname,
     "gender":gender,
@@ -98,6 +109,8 @@ class ProContext {
     "employment":employment,
     "selfintroduction":selfintroduction,
     "imagelist":imagelist,
+    "created_by":created_by,
+    "from_agency":from_agency,
   };
 
 }

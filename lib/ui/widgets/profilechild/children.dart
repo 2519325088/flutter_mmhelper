@@ -67,7 +67,7 @@ class _ChildrenPageState extends State<ChildrenPage> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 3,dataText:children['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),

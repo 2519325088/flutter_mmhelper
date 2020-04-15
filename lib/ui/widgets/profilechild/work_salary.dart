@@ -41,17 +41,11 @@ class _SalaryPageState extends State<SalaryPage> {
 //                hintText: "Role",
                 border: InputBorder.none),
             onFieldSubmitted: (String value){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(salaryText: value,);
-              }));
-            },
-//            onSaved: (String value){
 //              Navigator.of(context)
 //                  .push(MaterialPageRoute(builder: (context) {
-//                return MamaProfile(firstName: value,);
+//                return MamaProfile(salaryText: value,);
 //              }));
-//            },
+            },
           ),
         ),
       ),

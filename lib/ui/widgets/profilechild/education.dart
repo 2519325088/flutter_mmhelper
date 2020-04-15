@@ -67,7 +67,7 @@ class _EducationState extends State<Education> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 0,dataText:educationd['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),

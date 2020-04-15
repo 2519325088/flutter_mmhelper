@@ -67,7 +67,7 @@ class _JobTypeState extends State<JobType> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 0,workText:jobtype['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),

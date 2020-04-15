@@ -41,17 +41,11 @@ class _FirstNameState extends State<FirstName> {
 //                hintText: "Role",
                 border: InputBorder.none),
             onFieldSubmitted: (String value){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return MamaProfile(firstName: value,);
-              }));
-            },
-//            onSaved: (String value){
 //              Navigator.of(context)
 //                  .push(MaterialPageRoute(builder: (context) {
 //                return MamaProfile(firstName: value,);
 //              }));
-//            },
+            },
           ),
         ),
       ),

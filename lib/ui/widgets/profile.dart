@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/widgets/profilechild/nationaity.dart';
@@ -23,23 +24,18 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import '../../utils/data.dart';
 
 class MamaProfile extends StatefulWidget {
   @override
   _MamaProfileState createState() => _MamaProfileState();
-  MamaProfile({this.firstName='null',this.lastName='null',this.whatappText="null",this.phoneText="null",this.workSkill="null",this.languageText="null",this.dataIndex = -1,this.dataText="null",this.workText="null",this.genderText="null",this.salaryText="null",this.nationalityText="null",this.workHistory="null",this.cuttrenText="null"});
-  int dataIndex;
-  String firstName;
-  String lastName;
-  String dataText;
-  String workText;
-  String genderText;
+  MamaProfile({this.workSkill="null",this.languageText="null",this.nationalityText="null",this.workHistory="null",this.cuttrenText="null"});
   String workSkill;
   String languageText;
-  String whatappText;
-  String phoneText;
-  String salaryText;
   String nationalityText;
   String workHistory;
   String cuttrenText;
@@ -59,38 +55,21 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   final TextEditingController jobtypeTypeCtr = TextEditingController();
   final TextEditingController jobcapacityTypeCtr = TextEditingController();
   final TextEditingController contractTypeCtr = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Asset> imagesa = List<Asset>();
   File locProFileImage;
   String datenow= DateTime.now().toIso8601String();
   SharedPreferences prefs;
   String _error = 'No Error Dectected';
   static Random random = Random();
-  String genderdata = "Female";
   final _service = FirestoreService.instance;
   int genderRadio = -1;
 
   @override
   void didInitState() {
-    if (widget.dataIndex != -1 && widget.dataText !="null"){
-      detaills[widget.dataIndex]["text"]=widget.dataText;
-    }
-    if (widget.dataIndex != -1 && widget.workText !="null"){
-      works[widget.dataIndex]["text"]=widget.workText;
-    }
-    if (widget.genderText !="null"){
-      genderdata = widget.genderText;
-    }
-    if (widget.firstName !="null"){
-      username[0] = widget.firstName;
-    }
-    if (widget.lastName !="null"){
-      username[1] = widget.lastName;
-    }
     if (widget.nationalityText !="null"){
       username[2] = widget.nationalityText;
-    }
-    if (widget.salaryText !="null"){
-      worktexts[0] = widget.salaryText;
     }
     if (widget.workHistory !="null"){
       worktexts[2] = widget.workHistory;
@@ -98,19 +77,12 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     if (widget.cuttrenText !="null"){
       detailltext[4] = widget.cuttrenText;
     }
-    if (widget.whatappText !="null"){
-      whatapptext[0] = widget.whatappText;
-    }
-    if (widget.phoneText !="null"){
-      whatapptext[1] = widget.phoneText;
-    }
     if (widget.workSkill !="null"){
       works[0]["text"]=widget.workSkill;
     }
     if (widget.workSkill ==""){
       works[0]["text"]="Select";
     }
-
     if (widget.languageText !="null"){
       works[1]["text"]=widget.languageText;
     }
@@ -191,63 +163,133 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   Future<void> _submit() async {
     imageList=[];
     int i =0;
-    imagesa.forEach((upFile)async{
-      String downloadLink = await saveImage(upFile);
-      imageList.add(downloadLink);
-      i += 1;
-      if(i==imagesa.length-1) {
-        final database = Provider.of<FirestoreDatabase>(context);
-        final procontext = ProContext(
-          firstname: username[0],
-          lastname: username[1],
-          gender: username[3],
-          birthday: datatimes,
-          nationaity: username[2],
-          education: detaills[0]['text'],
-          religion: detaills[1]['text'],
-          marital: detaills[2]['text'],
-          children: detaills[3]['text'],
-          current: detaills[4]['text'],
-          whatsapp: whatapptext[0],
-          phone: whatapptext[1],
-          jobtype: worktopdata[0],
-          jobcapacity: worktopdata[1],
-          contract: worktopdata[2],
-          workskill: works[0]['text'],
-          language: works[1]['text'],
-          workexperiences: workhistory,
-          expectedsalary: worktexts[0],
-          employment: worktexts[1],
-          selfintroduction: selfController.text,
-          imagelist: imageList,
-        );
-        _service.setData(path: APIPath.newProfile(datenow),
-            data: procontext.toMap());
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) {
-          return LoginScreen();
-        }));
-      }
-    });
-   // for(i =0;i<imagesa.length;i++){
-   // await saveImage(imagesa[i]).then((downloadLink){
-     //   imageList.add(downloadLink);
-       // print(downloadLink);
-
-      //});
-
-//now try can you try
-//      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-//      StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-//      StorageUploadTask uploadTask = reference.putFile(imageFile);
-//      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-//      print(storageTaskSnapshot.totalByteCount);
-//      prefs = await SharedPreferences.getInstance();
-//      prefs.setString("loginUid", datenow);
-//      storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-//        imageList.add(downloadUrl);
-//      });
-    //}
+    if (username[0]== "Mama") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter firstname"),
+      ));
+    } else if (username[1] == "Helpers") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter lastname"),
+      ));
+    }else if (username[3] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter gender"),
+      ));
+    }else if (datatimes == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter birthday"),
+      ));
+    }else if (username[2] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter nationaity"),
+      ));
+    }else if (detailltext[0] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter education"),
+      ));
+    }else if (detailltext[1] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter religion"),
+      ));
+    }else if (detailltext[2] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter marital status"),
+      ));
+    }else if (detailltext[3] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter children"),
+      ));
+    }else if (detailltext[4] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter current location"),
+      ));
+    }else if (whatapptext[0] == "+85263433995") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter whatsapp"),
+      ));
+    }else if (whatapptext[1] == "+85263433995") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter phone number"),
+      ));
+    }else if (worktopdata[0] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter job type"),
+      ));
+    }else if (worktopdata[1] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter job capacity"),
+      ));
+    }else if (worktopdata[2] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter contract status"),
+      ));
+    }else if (works[0]['text'] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter working skills"),
+      ));
+    }else if (works[1]['text'] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter languages"),
+      ));
+    }else if (worktexts[2] == "No information") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter work experiences"),
+      ));
+    }else if (worktexts[0] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter expectedsalary"),
+      ));
+    }else if (worktexts[1] == "Select") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter employment start date"),
+      ));
+    }else if (selfController.text == "") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please enter self introduction"),
+      ));
+    }else{
+      imagesa.forEach((upFile)async{
+        String downloadLink = await saveImage(upFile);
+        imageList.add(downloadLink);
+        i += 1;
+        if(i==imagesa.length-1) {
+          final database = Provider.of<FirestoreDatabase>(context);
+          final procontext = ProContext(
+            id:datenow,
+            firstname: username[0],
+            lastname: username[1],
+            gender: username[3],
+            birthday: datatimes,
+            nationaity: username[2],
+            education: detailltext[0],
+            religion: detailltext[1],
+            marital: detailltext[2],
+            children: detailltext[3],
+            current: detailltext[4],
+            whatsapp: whatapptext[0],
+            phone: whatapptext[1],
+            jobtype: worktopdata[0],
+            jobcapacity: worktopdata[1],
+            contract: worktopdata[2],
+            workskill: works[0]['text'],
+            language: works[1]['text'],
+            workexperiences: workhistory,
+            expectedsalary: worktexts[0],
+            employment: worktexts[1],
+            selfintroduction: selfController.text,
+            imagelist: imageList,
+            created_by:"alan",
+            from_agency:"",
+          );
+          _service.setData(path: APIPath.newProfile(datenow),
+              data: procontext.toMap());
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) {
+            return LoginScreen();
+          }));
+        }
+      });
+    }
 
   }
 
@@ -255,6 +297,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   Widget build(BuildContext context) {
     TextStyle dataText = TextStyle(fontSize: 18);
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor:Colors.white,
         title: Text(
@@ -1275,7 +1318,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                       style: dataText,
                       controller: jobcapacityTypeCtr,
                       decoration: InputDecoration(
-                          hintText: worktopdata[0]),
+                          hintText: worktopdata[1]),
                       onTap: () {
                         FocusScope.of(context)
                             .requestFocus(FocusNode());
@@ -1348,7 +1391,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
                       style: dataText,
                       controller: contractTypeCtr,
                       decoration: InputDecoration(
-                          hintText: worktopdata[0]),
+                          hintText: worktopdata[2]),
                       onTap: () {
                         FocusScope.of(context)
                             .requestFocus(FocusNode());

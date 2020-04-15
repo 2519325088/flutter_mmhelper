@@ -67,7 +67,7 @@ class _MaritalState extends State<Marital> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 2,dataText:marital['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),

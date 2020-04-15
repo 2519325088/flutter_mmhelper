@@ -67,7 +67,7 @@ class _ContractState extends State<Contract> {
                   onTap:(){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return MamaProfile(dataIndex: 2,workText:contract['name'] ,);
+                      return MamaProfile();
                     }));
                   } ,
                 ),
