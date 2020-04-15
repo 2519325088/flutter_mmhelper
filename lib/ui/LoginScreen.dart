@@ -209,8 +209,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
         database
             .facebookCall(scaffoldKey, result.accessToken.token)
             .then((onValue) async {
-          final emails = await database.flContentsStream().first;
-          final allemail = emails.map((job) => job.email).toList();
+          //final emails = await database.flContentsStream().first;
+          //final allemail = emails.map((job) => job.email).toList();
           /*if (allemail.contains(onValue.email)) {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {

@@ -11,7 +11,7 @@ import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_mmhelper/Models/FlImageModel.dart';
 import 'package:flutter_mmhelper/Models/PostJobModel.dart';
-import 'package:flutter_mmhelper/Models/ProfileFirebase.dart';
+import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'api_path.dart';
 import 'firestore_service.dart';
 
@@ -40,9 +40,9 @@ class FirestoreDatabase with ChangeNotifier {
     );
   }
 
-  Stream<List<FlContent>> flContentsStream() => _service.collectionStream(
+  Stream<List<ProfileData>> flContentsStream() => _service.collectionStream(
         path: APIPath.candidateList(),
-        builder: (data, documentId) => FlContent.fromMap(data, documentId),
+        builder: (data, documentId) => ProfileData.fromMap(data),
       );
 
   Future<Facebookdata> facebookCall(
