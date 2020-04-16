@@ -55,8 +55,8 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   final TextEditingController jobtypeTypeCtr = TextEditingController();
   final TextEditingController jobcapacityTypeCtr = TextEditingController();
   final TextEditingController contractTypeCtr = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+//  final formKey = GlobalKey<FormState>();
+//  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Asset> imagesa = List<Asset>();
   File locProFileImage;
   String datenow= DateTime.now().toIso8601String();
@@ -159,95 +159,95 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
       return downloadUrl;
     });
   }
-
+// we got this link mean image upload successfull
   Future<void> _submit() async {
     imageList=[];
     int i =0;
-    if (username[0]== "Mama") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter firstname"),
-      ));
-    } else if (username[1] == "Helpers") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter lastname"),
-      ));
-    }else if (username[3] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter gender"),
-      ));
-    }else if (datatimes == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter birthday"),
-      ));
-    }else if (username[2] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter nationaity"),
-      ));
-    }else if (detailltext[0] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter education"),
-      ));
-    }else if (detailltext[1] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter religion"),
-      ));
-    }else if (detailltext[2] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter marital status"),
-      ));
-    }else if (detailltext[3] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter children"),
-      ));
-    }else if (detailltext[4] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter current location"),
-      ));
-    }else if (whatapptext[0] == "+85263433995") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter whatsapp"),
-      ));
-    }else if (whatapptext[1] == "+85263433995") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter phone number"),
-      ));
-    }else if (worktopdata[0] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter job type"),
-      ));
-    }else if (worktopdata[1] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter job capacity"),
-      ));
-    }else if (worktopdata[2] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter contract status"),
-      ));
-    }else if (works[0]['text'] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter working skills"),
-      ));
-    }else if (works[1]['text'] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter languages"),
-      ));
-    }else if (worktexts[2] == "No information") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter work experiences"),
-      ));
-    }else if (worktexts[0] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter expectedsalary"),
-      ));
-    }else if (worktexts[1] == "Select") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter employment start date"),
-      ));
-    }else if (selfController.text == "") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter self introduction"),
-      ));
-    }else{
+//    if (username[0]== "Mama") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter firstname"),
+//      ));
+//    } else if (username[1] == "Helpers") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter lastname"),
+//      ));
+//    }else if (username[3] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter gender"),
+//      ));
+//    }else if (datatimes == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter birthday"),
+//      ));
+//    }else if (username[2] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter nationaity"),
+//      ));
+//    }else if (detailltext[0] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter education"),
+//      ));
+//    }else if (detailltext[1] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter religion"),
+//      ));
+//    }else if (detailltext[2] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter marital status"),
+//      ));
+//    }else if (detailltext[3] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter children"),
+//      ));
+//    }else if (detailltext[4] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter current location"),
+//      ));
+//    }else if (whatapptext[0] == "+85263433995") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter whatsapp"),
+//      ));
+//    }else if (whatapptext[1] == "+85263433995") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter phone number"),
+//      ));
+//    }else if (worktopdata[0] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter job type"),
+//      ));
+//    }else if (worktopdata[1] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter job capacity"),
+//      ));
+//    }else if (worktopdata[2] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter contract status"),
+//      ));
+//    }else if (works[0]['text'] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter working skills"),
+//      ));
+//    }else if (works[1]['text'] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter languages"),
+//      ));
+//    }else if (worktexts[2] == "No information") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter work experiences"),
+//      ));
+//    }else if (worktexts[0] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter expectedsalary"),
+//      ));
+//    }else if (worktexts[1] == "Select") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter employment start date"),
+//      ));
+//    }else if (selfController.text == "") {
+//      scaffoldKey.currentState.showSnackBar(SnackBar(
+//        content: Text("Please enter self introduction"),
+//      ));
+//    }else{
       imagesa.forEach((upFile)async{
         String downloadLink = await saveImage(upFile);
         imageList.add(downloadLink);
@@ -289,7 +289,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
           }));
         }
       });
-    }
+//    }
 
   }
 
@@ -297,7 +297,7 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
   Widget build(BuildContext context) {
     TextStyle dataText = TextStyle(fontSize: 18);
     return Scaffold(
-      key: scaffoldKey,
+//      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor:Colors.white,
         title: Text(
