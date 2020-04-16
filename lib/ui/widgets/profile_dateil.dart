@@ -193,7 +193,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['birthday'],
+                                widget.proSnapshot['birthday']!="Select"?widget.proSnapshot['birthday']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -228,7 +228,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['nationaity'],
+                                widget.proSnapshot['nationaity']!="Select"?widget.proSnapshot['nationaity']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -277,7 +277,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['education'],
+                                widget.proSnapshot['education']!="Select"?widget.proSnapshot['education']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -312,7 +312,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['religion'],
+                                widget.proSnapshot['religion']!="Select"?widget.proSnapshot['religion']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -347,7 +347,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['marital'],
+                                widget.proSnapshot['marital']!="Select"?widget.proSnapshot['marital']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -382,7 +382,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['children'],
+                                widget.proSnapshot['children']!="Select"?widget.proSnapshot['children']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -417,7 +417,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['current'],
+                                widget.proSnapshot['current']!="Select"?widget.proSnapshot['current']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -452,7 +452,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['whatsapp'],
+                                widget.proSnapshot['whatsapp']!="+85263433995"?widget.proSnapshot['whatsapp']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -487,7 +487,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['phone'],
+                                widget.proSnapshot['phone']!="+85263433995"?widget.proSnapshot['phone']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -537,7 +537,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['jobtype'],
+                                widget.proSnapshot['jobtype']!="Select"?widget.proSnapshot['jobtype']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -572,7 +572,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['jobcapacity'],
+                                widget.proSnapshot['jobcapacity']!="Select"?widget.proSnapshot['jobcapacity']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -607,7 +607,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['contract'],
+                                widget.proSnapshot['contract']!="Select"?widget.proSnapshot['contract']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -642,7 +642,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['workskill'],
+                                widget.proSnapshot['workskill']!="Select"?widget.proSnapshot['workskill']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -677,7 +677,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['language'],
+                                widget.proSnapshot['language']!="Select"?widget.proSnapshot['language']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -712,7 +712,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['expectedsalary'],
+                                widget.proSnapshot['expectedsalary']!="Select"?widget.proSnapshot['expectedsalary']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -748,7 +748,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
                               child: Text(
-                                widget.proSnapshot['employment'],
+                                widget.proSnapshot['employment']!="Select"?widget.proSnapshot['employment']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -803,6 +803,304 @@ class _ProfileDateilState extends State<ProfileDateil> {
                     ],
                   ),
                 ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                  borderRadius: new BorderRadius.circular((20.0)),
+                ),
+                child: widget.proSnapshot["workexperiences"].length!=0?ListView.separated(
+                  shrinkWrap: true,
+                  physics:const ScrollPhysics(),
+                  padding: EdgeInsets.all(10),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 0.5,
+                        width: MediaQuery.of(context).size.width,
+                        child: Divider(),
+                      ),
+                    );
+                  },
+                  itemCount: widget.proSnapshot["workexperiences"].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Map workinfo = widget.proSnapshot["workexperiences"][index];
+                    return Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Container(
+                        decoration: new BoxDecoration(
+                          border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                          borderRadius: new BorderRadius.circular((20.0)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.edit_location,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          "Country:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10,top: 10),
+                                      child: Text(
+                                        workinfo["country"] !="Select"?workinfo["country"]:"",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.access_time,
+                                                  color: Colors.grey,
+                                                  size: 20,
+                                                ),
+                                                Text(
+                                                  "Start Date:",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 10,top: 10),
+                                              child: Text(
+                                                workinfo["start"] !="Select"?workinfo["start"]:"",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.access_time,
+                                                  color: Colors.grey,
+                                                  size: 20,
+                                                ),
+                                                Text(
+                                                  "End Date:",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 10,top: 10),
+                                              child: Text(
+                                                workinfo["end"] !="Select"?workinfo["end"]:"",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.work,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          "Type of Jobs:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10,top: 10),
+                                      child: Text(
+                                        workinfo["jobtype"] !="Select"?workinfo["jobtype"]:"",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.assignment,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          "Number of Taken Care:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10,top: 10),
+                                      child: Text(
+                                        workinfo["taken"] !="Select"?workinfo["taken"]:"",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.assignment_late,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          "Quit Reason:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10,top: 10),
+                                      child: Text(
+                                        workinfo["reason"] !="Select"?workinfo["reason"]:"",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.bookmark,
+                                          size: 20,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          "Reterence Letter:",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10,top: 10),
+                                      child: Text(
+                                        workinfo["reterence"] !="Select"?workinfo["reterence"]:"",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ):Text("No Work Experiences"),
               ),
             ),
           ],
