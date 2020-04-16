@@ -92,12 +92,16 @@ class _MainPageState extends State<MainPage> {
         mobileNo: widget.mobileNo,
         isFromLogin: widget.isFromLogin,
       ),
-      JobPage(currentUserId: currentUserId,),
+      JobPage(
+        currentUserId: currentUserId,
+      ),
       ChatUserPage(
         mobileNo: widget.mobileNo,
         currentUserId: currentUserId,
       ),
-      MePage(),
+      MePage(
+        querySnapshot: querySnapshot,
+      ),
     ];
     final database = Provider.of<FirestoreDatabase>(context);
     return Scaffold(
@@ -124,13 +128,16 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(titleText),
         actions: <Widget>[
-          isShow?IconButton(
-              icon: Icon(Icons.video_call),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return IndexPage();
-                }));
-              }):SizedBox(),
+          isShow
+              ? IconButton(
+                  icon: Icon(Icons.video_call),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return IndexPage();
+                    }));
+                  })
+              : SizedBox(),
         ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -151,7 +158,9 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), title: Text("Me"))
         ],
-        onTap: bottomClick,
+        onTap: (i) {
+          bottomClick(i);
+        },
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.pink,
         currentIndex: selectedIndex,
