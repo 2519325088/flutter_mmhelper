@@ -77,11 +77,9 @@ class _MainPageState extends State<MainPage> {
       currentUserId = querySnapshot.documents[0].data["userId"];
       prefs = await SharedPreferences.getInstance();
       prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
-      print("this is i got:$currentUserId");
     } else {
       prefs = await SharedPreferences.getInstance();
       currentUserId = prefs.getString('loginUid');
-      print("currentUser:${currentUserId}");
     }
   }
 
@@ -139,13 +137,6 @@ class _MainPageState extends State<MainPage> {
                   })
               : SizedBox(),
         ],
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/icn_navigation_bag_image.png"),
-                fit: BoxFit.cover),
-          ),
-        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -166,11 +157,11 @@ class _MainPageState extends State<MainPage> {
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
       ),
-      //body: _widgetOptions.elementAt(selectedValue.selectedIndex),
-      body: IndexedStack(
+      body: widgetOptions.elementAt(selectedIndex),
+      /*body: IndexedStack(
         index: selectedIndex,
         children: widgetOptions,
-      ),
+      ),*/
     );
   }
 }

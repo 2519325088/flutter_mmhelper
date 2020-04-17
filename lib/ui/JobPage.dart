@@ -31,6 +31,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return PostJobPage(
@@ -46,7 +47,8 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
             .orderBy("id", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          return ListView.builder(
+
+          return snapshot.hasData?ListView.builder(
             padding: EdgeInsets.all(10.0),
             itemBuilder: (context, index) {
               return StreamBuilder(
@@ -55,16 +57,16 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                       .document(snapshot.data.documents[index]["user_id"])
                       .snapshots(),
                   builder: (context, snapshot2) {
-                    return jobCard(
-                        userName: snapshot2.data["firstname"],
+                    return snapshot2.hasData?jobCard(
+                        userName: snapshot2.data["firstname"]??"",
                         shortDes: snapshot.data.documents[index]
-                            ["job_short_description"],
+                            ["job_short_description"]??"",
                         jobSnapshot: snapshot.data.documents[index],
-                        userSnapshot: snapshot2.data);
+                        userSnapshot: snapshot2.data):SizedBox();
                   });
             },
             itemCount: snapshot.data.documents.length,
-          );
+          ):Center(child: CircularProgressIndicator(),);
         },
       ),
     );
