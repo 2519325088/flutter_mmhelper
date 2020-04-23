@@ -11,6 +11,7 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
+import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -143,6 +144,15 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     final database = Provider.of<FirestoreDatabase>(context);
     SizeConfig().init(context);
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          heroTag: null,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MamaProfile();
+            }));
+          },
+          child: Icon(Icons.add),
+        ),
         /*appBar: AppBar(
           title: Text("Dashboard"),
           actions: <Widget>[
@@ -177,25 +187,29 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 }),
           ],
         ),*/
-        body:  /*GridView(
+        body:
+            /*GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
                     crossAxisCount: 2),
                 children: gridListData,
               )*/
             StreamBuilder(
-                stream: Firestore.instance.collection('mb_profile').snapshots(),
-                builder: (context, snapshot) {
-                  return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio:
-                              SizeConfig.safeBlockHorizontal / 4.7,
-                          crossAxisCount: 2),
+          stream: Firestore.instance.collection('mb_profile').snapshots(),
+          builder: (context, snapshot) {
+            return snapshot.hasData
+                ? GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
+                        crossAxisCount: 2),
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                            return ProfileDateil(proSnapshot: snapshot.data.documents[index],);
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ProfileDateil(
+                              proSnapshot: snapshot.data.documents[index],
+                            );
                           }));
                         },
                         child: Card(
@@ -205,14 +219,16 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                             children: <Widget>[
                               ClipRRect(
                                 borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5), topLeft: Radius.circular(5)),
+                                    topRight: Radius.circular(5),
+                                    topLeft: Radius.circular(5)),
                                 child: Container(
                                   height: 150,
                                   width: double.infinity,
                                   child: CachedNetworkImage(
-                                    placeholder: (context, url) =>
-                                        Center(child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) => ClipRRect(
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        ClipRRect(
                                       borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(5),
                                           topLeft: Radius.circular(5)),
@@ -222,7 +238,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                                       ),
                                     ),
                                     imageUrl: snapshot.data.documents[index]
-                                    ["imagelist"][0] ?? "",
+                                            ["imagelist"][0] ??
+                                        "",
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -231,25 +248,33 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
                                         snapshot.data.documents[index]
-                                        ["firstname"] +" "+ snapshot.data.documents[index]
-                                        ["lastname"] ?? "No username",
+                                                    ["firstname"] +
+                                                " " +
+                                                snapshot.data.documents[index]
+                                                    ["lastname"] ??
+                                            "No username",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.w500),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                       Text(
                                         snapshot.data.documents[index]
-                                        ["nationaity"] ?? "No nationality",
+                                                ["nationaity"] ??
+                                            "No nationality",
                                         style: TextStyle(
-                                            fontSize: 15, fontWeight: FontWeight.w500),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                       Text(snapshot.data.documents[index]
-                                      ["gender"] ?? "No gender"),
+                                              ["gender"] ??
+                                          "No gender"),
                                     ],
                                   ),
                                 ),
@@ -259,9 +284,12 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                         ),
                       );
                     },
-                    itemCount: snapshot.data.documents.length,);
-                },
-              )
-            );
+                    itemCount: snapshot.data.documents.length,
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
+          },
+        ));
   }
 }
