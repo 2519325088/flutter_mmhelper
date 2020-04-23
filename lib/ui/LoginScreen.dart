@@ -1,4 +1,5 @@
 import 'package:after_init/after_init.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -36,37 +37,37 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
   SharedPreferences prefs;
-
+  QuerySnapshot querySnapshot;
 
   @override
   void didInitState() {
-    getPhoneUserId().then((onValue){
-      if(onValue != null){
-        getUserPhone().then((onValue){
+    getPhoneUserId().then((onValue) {
+      if (onValue != null) {
+        getUserPhone().then((onValue) {
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-                return MainPage(
-                  mobileNo: onValue,
-                  isFromLogin: true,
-                );
-              }), (Route<dynamic> route) => false);
+            return MainPage(
+              mobileNo: onValue,
+              isFromLogin: true,
+            );
+          }), (Route<dynamic> route) => false);
         });
-      }else{
+      } else {
         var getCountryList = Provider.of<GetCountryListService>(context);
         getCountryList.getCountryList();
-        getCountryList.newLoginCountry(newCountry: "Hong Kong",newCountryCode: "+852");
+        getCountryList.newLoginCountry(
+            newCountry: "Hong Kong", newCountryCode: "+852");
         _phoneNumberController.text = "96527733";
       }
     });
-
   }
 
-  Future<String> getPhoneUserId()async{
+  Future<String> getPhoneUserId() async {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString("PhoneUserId");
   }
 
-  Future<String> getUserPhone()async{
+  Future<String> getUserPhone() async {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString("UserPhone");
   }
@@ -458,11 +459,23 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: FlatButton(
-                        onPressed: () {
-                          if (isShowSms) {
-                            _signInWithPhoneNumber();
+                        onPressed: () async {
+                          querySnapshot = await Firestore.instance
+                              .collection("mb_content")
+                              .where("phone",
+                                  isEqualTo: _phoneNumberController.text)
+                              .getDocuments();
+                          print(querySnapshot.documents);
+                          if (querySnapshot.documents.length == 0) {
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                                content: Text(
+                                    "No mobile number found. please sign up first")));
                           } else {
-                            _verifyPhoneNumber();
+                            if (isShowSms) {
+                              _signInWithPhoneNumber();
+                            } else {
+                              _verifyPhoneNumber();
+                            }
                           }
                         },
                         child: Center(
@@ -550,14 +563,14 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                               },
                               child: Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 100, vertical: 20),
-                                    child: Text(
-                                      "Profile",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 18),
-                                    ),
-                                  )),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 20),
+                                child: Text(
+                                  "Profile",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              )),
                               shape: RoundedRectangleBorder(),
                               color: Colors.cyan,
                             ),

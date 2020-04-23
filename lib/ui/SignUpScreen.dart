@@ -28,14 +28,16 @@ class User {
 }
 
 class SignUpScreen extends StatefulWidget {
-
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
+
   /// here you need to make constrictor
   /// here this variable pass from any page from you want to pass data we can
   /// also daclir default value
-  SignUpScreen({this.dataFromOtherScreen="Role"});
+  SignUpScreen({this.dataFromOtherScreen = "Role"});
+
   String dataFromOtherScreen;
+
   ///now we can use this data with widget.SignUpScreen
 }
 
@@ -63,28 +65,34 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   String lastName;
 
   void _onSelectionChanged(String value) {
-    roleController.text = value;///here we got that selected data from role page
+    roleController.text = value;
+
+    ///here we got that selected data from role page
     ///now you understend?
     ///we cam
   }
+
 //  this._SignUpScreenState.roleController.text = ${widget.roled}
   @override
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-  // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
-    roles.forEach((f){
-      roleWidget.add(CupertinoActionSheetAction(
-        child: Text(f),
-        onPressed: () {
-          roleController.text = f;
-          Navigator.pop(context);
-        },
-      ),);
+    // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
+    roles.forEach((f) {
+      roleWidget.add(
+        CupertinoActionSheetAction(
+          child: Text(f),
+          onPressed: () {
+            roleController.text = f;
+            Navigator.pop(context);
+          },
+        ),
+      );
     });
 
     ///assign value in didInitState
   }
+
   Future uploadFile() async {
     final database = Provider.of<FirestoreDatabase>(context);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -99,31 +107,41 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       print(imageUrl);
       print("this is user id:${database.lastUserId}");
       if (imageUrl != null) {
-        final  flContent = FlContent(
-            lastname: lastnameController.text ?? "",
-            firstname: firstnameController.text ?? "",
-            username: usernameController.text ?? "",
-            role: roleController.text ?? "",
-            gender: genderSelectedValue,
-            email: emailController.text ?? "",
-            phone: mobileController.text ?? "",
-            password: passwordController.text ?? "",
-            nationality: nationalityController.text ?? "",
-            religion: religionController.text ?? "",
-            profileImageUrl: imageUrl,
-            type: "",
-            education: "",
-            order: 0,
-            parentId: 0,
-            whatsApp: "",
-            userId: database.lastUserId,
+        final flContent = FlContent(
+          lastname: lastnameController.text ?? "",
+          firstname: firstnameController.text ?? "",
+          username: usernameController.text ?? "",
+          role: roleController.text ?? "",
+          gender: genderSelectedValue,
+          email: emailController.text ?? "",
+          phone: mobileController.text ?? "",
+          password: "123456",
+          //passwordController.text ?? "",
+          nationality: nationalityController.text ?? "",
+          religion: religionController.text ?? "",
+          profileImageUrl: imageUrl,
+          type: roleController.text ?? "",
+          education: "",
+          order: 0,
+          parentId: 0,
+          whatsApp: "",
+          userId: database.lastUserId,
         );
-        _service.setData(path: APIPath.newCandidate(database.lastUserId),
-            data: flContent.toMap());
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-              return MainPage(isFromLogin: false,);
-            }), (Route<dynamic> route) => false);
+        _service
+            .setData(
+                path: APIPath.newCandidate(database.lastUserId),
+                data: flContent.toMap())
+            .then((onValue) async{
+          prefs = await SharedPreferences.getInstance();
+          prefs.setString("PhoneUserId", database.lastUserId);
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) {
+            return MainPage(
+              isFromLogin: false,
+              mobileNo: mobileController.text,
+            );
+          }), (Route<dynamic> route) => false);
+        });
       } else {
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("Something goes wrong to upload image"),
@@ -166,19 +184,21 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter username"),
       ));
-    }else if (roleController.text == "") {
+    } else if (roleController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter role"),
       ));
-    }else if (emailController.text == "") {
+    } else if (emailController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter email"),
       ));
-    } else if (passwordController.text == "") {
+    }
+    /*else if (passwordController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter password"),
       ));
-    } else if (nationalityController.text == "") {
+    }*/
+    else if (nationalityController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Please enter nationality"),
       ));
@@ -196,26 +216,27 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       });
       try {
         createUserWithEmailAndPassword(
-                password: passwordController.text, email: emailController.text)
+                password: "123456", email: emailController.text)
             .then((onValue) async {
           print(onValue);
           if (onValue != null) {
             final flContent = FlContent(
-                lastname: lastnameController.text ?? "",
-                firstname: firstnameController.text ?? "",
-                username: usernameController.text ?? "",
-                role: roleController.text ?? "",
-                gender: genderSelectedValue,
-                email: emailController.text ?? "",
-                phone: mobileController.text ?? "",
-                password: passwordController.text ?? "",
-                nationality: nationalityController.text ?? "",
-                religion: religionController.text ?? "",
-                type: "",
-                education: "",
-                order: 0,
-                parentId: 0,
-                whatsApp: "",
+              lastname: lastnameController.text ?? "",
+              firstname: firstnameController.text ?? "",
+              username: usernameController.text ?? "",
+              role: roleController.text ?? "",
+              gender: genderSelectedValue,
+              email: emailController.text ?? "",
+              phone: mobileController.text ?? "",
+              password: "123456",
+              //passwordController.text ?? "",
+              nationality: nationalityController.text ?? "",
+              religion: religionController.text ?? "",
+              type: roleController.text ?? "",
+              education: "",
+              order: 0,
+              parentId: 0,
+              whatsApp: "",
             );
             await database.createUser(flContent);
             uploadFile();
@@ -554,8 +575,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
                                   controller: lastnameController,
-                                  onChanged: (data){
-                                    usernameController.text = data.toLowerCase();
+                                  onChanged: (data) {
+                                    usernameController.text =
+                                        data.toLowerCase();
                                     lastName = data.toLowerCase();
                                   },
                                   cursorColor: Theme.of(context).accentColor,
@@ -579,14 +601,15 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   border: Border.all(
                                       color: Colors.black.withOpacity(0.3)),
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                                      BorderRadius.all(Radius.circular(5)),
                                   color: Colors.white),
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 8),
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
-                                  onChanged: (data){
-                                    usernameController.text = lastName+data.toLowerCase();
+                                  onChanged: (data) {
+                                    usernameController.text =
+                                        lastName + data.toLowerCase();
                                   },
                                   controller: firstnameController,
                                   cursorColor: Theme.of(context).accentColor,
@@ -610,11 +633,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   border: Border.all(
                                       color: Colors.black.withOpacity(0.3)),
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                                      BorderRadius.all(Radius.circular(5)),
                                   color: Colors.white),
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 8),
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
                                   controller: usernameController,
                                   cursorColor: Theme.of(context).accentColor,
@@ -638,11 +661,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   border: Border.all(
                                       color: Colors.black.withOpacity(0.3)),
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                                      BorderRadius.all(Radius.circular(5)),
                                   color: Colors.white),
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 8),
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
                                   controller: roleController,
                                   cursorColor: Theme.of(context).accentColor,
@@ -650,7 +673,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                       prefixIcon: Icon(Icons.account_circle),
                                       hintText: "Role",
                                       border: InputBorder.none),
-                                  onTap:(){
+                                  onTap: () {
                                     FocusScope.of(context)
                                         .requestFocus(FocusNode());
                                     final action = CupertinoActionSheet(
@@ -663,8 +686,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                         style: TextStyle(fontSize: 15.0),
                                       ),
                                       actions: roleWidget,
-                                      cancelButton:
-                                      CupertinoActionSheetAction(
+                                      cancelButton: CupertinoActionSheetAction(
                                         child: Text("Cancel"),
                                         onPressed: () {
                                           Navigator.pop(context);
@@ -678,7 +700,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                         .push(MaterialPageRoute(builder: (context) {
                                       return RoleUser(onChanged: _onSelectionChanged,);
                                     }));*/
-                                  },///here i make one onchange function got back data from last page
+                                  },
+
+                                  ///here i make one onchange function got back data from last page
                                   ///now try
                                 ),
                               ),

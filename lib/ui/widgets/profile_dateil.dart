@@ -641,12 +641,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['workskill']!=null?Text(
                                 widget.proSnapshot['workskill']!="Select"?widget.proSnapshot['workskill']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -676,12 +676,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['language']!=null?Text(
                                 widget.proSnapshot['language']!="Select"?widget.proSnapshot['language']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -793,12 +793,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10,top: 10),
-                        child: Text(
+                        child: widget.proSnapshot['selfintroduction']!=null?Text(
                           widget.proSnapshot['selfintroduction'],
                           style: TextStyle(
                             fontSize: 18,
                           ),
-                        ),
+                        ):Text("")
                       )
                     ],
                   ),
@@ -813,7 +813,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                   border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
                   borderRadius: new BorderRadius.circular((20.0)),
                 ),
-                child: widget.proSnapshot["workexperiences"].length!=0?ListView.separated(
+                child:widget.proSnapshot["workexperiences"]!=null?ListView.separated(
                   shrinkWrap: true,
                   physics:const ScrollPhysics(),
                   padding: EdgeInsets.all(10),

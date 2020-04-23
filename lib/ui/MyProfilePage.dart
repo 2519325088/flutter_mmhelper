@@ -40,6 +40,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   final _service = FirestoreService.instance;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLoading = false;
+  QuerySnapshot querySnapshot;
+  String userType;
 
   @override
   void initState() {
@@ -175,17 +177,142 @@ class _MyProfilePageState extends State<MyProfilePage> {
     setState(() {
       isLoading = true;
     });
-    if (locProFileImage != null) {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      StorageReference reference =
-          FirebaseStorage.instance.ref().child(fileName);
-      StorageUploadTask uploadTask = reference.putFile(locProFileImage);
-      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-      print(storageTaskSnapshot.totalByteCount);
-      storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-        imageUrl = downloadUrl;
-        print(imageUrl);
-        if (imageUrl != null) {
+    querySnapshot = await Firestore.instance
+        .collection("mb_content")
+        .where("phone", isEqualTo: mobileCtr.text)
+        .getDocuments();
+    print(querySnapshot.documents);
+    if (querySnapshot.documents.length == 0) {
+      if (locProFileImage != null) {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        StorageReference reference =
+            FirebaseStorage.instance.ref().child(fileName);
+        StorageUploadTask uploadTask = reference.putFile(locProFileImage);
+        StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+        print(storageTaskSnapshot.totalByteCount);
+        storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+          imageUrl = downloadUrl;
+          print(imageUrl);
+          if (imageUrl != null) {
+            final flContent = FlContent(
+              lastname: lastNameCtr.text ?? "",
+              firstname: firstNameCtr.text ?? "",
+              username: userNameCtr.text ?? "",
+              role: widget.myProfileDocumentSnapshot["role"],
+              gender: widget.myProfileDocumentSnapshot["gender"],
+              email: widget.myProfileDocumentSnapshot["email"],
+              phone: widget.myProfileDocumentSnapshot["phone"],
+              password: widget.myProfileDocumentSnapshot["password"],
+              nationality: widget.myProfileDocumentSnapshot["nationality"],
+              religion: widget.myProfileDocumentSnapshot["religion"],
+              profileImageUrl: locProFileImage != null
+                  ? imageUrl
+                  : widget.myProfileDocumentSnapshot["profileImageUrl"],
+              type: widget.myProfileDocumentSnapshot["type"],
+              education: widget.myProfileDocumentSnapshot["education"],
+              order: widget.myProfileDocumentSnapshot["order"],
+              parentId: widget.myProfileDocumentSnapshot["parentId"],
+              whatsApp: widget.myProfileDocumentSnapshot["whatsApp"],
+              userId: widget.myProfileDocumentSnapshot["userId"],
+            );
+            _service.setData(
+                path: APIPath.newCandidate(
+                    widget.myProfileDocumentSnapshot["userId"]),
+                data: flContent.toMap());
+            Navigator.pop(context);
+          } else {
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text("Something goes wrong to upload image"),
+            ));
+          }
+        }, onError: (err) {
+          setState(() {
+            isLoading = false;
+          });
+          scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text('This file is not an image'),
+          ));
+        });
+      } else {
+        final flContent = FlContent(
+          lastname: lastNameCtr.text ?? "",
+          firstname: firstNameCtr.text ?? "",
+          username: userNameCtr.text ?? "",
+          role: widget.myProfileDocumentSnapshot["role"],
+          gender: widget.myProfileDocumentSnapshot["gender"],
+          email: widget.myProfileDocumentSnapshot["email"],
+          phone: widget.myProfileDocumentSnapshot["phone"],
+          password: widget.myProfileDocumentSnapshot["password"],
+          nationality: widget.myProfileDocumentSnapshot["nationality"],
+          religion: widget.myProfileDocumentSnapshot["religion"],
+          profileImageUrl: widget.myProfileDocumentSnapshot["profileImageUrl"],
+          type: widget.myProfileDocumentSnapshot["type"],
+          education: widget.myProfileDocumentSnapshot["education"],
+          order: widget.myProfileDocumentSnapshot["order"],
+          parentId: widget.myProfileDocumentSnapshot["parentId"],
+          whatsApp: widget.myProfileDocumentSnapshot["whatsApp"],
+          userId: widget.myProfileDocumentSnapshot["userId"],
+        );
+
+        _service.setData(
+            path: APIPath.newCandidate(
+                widget.myProfileDocumentSnapshot["userId"]),
+            data: flContent.toMap());
+        Navigator.pop(context);
+      }
+    } else {
+      if (widget.myProfileDocumentSnapshot["phone"] == mobileCtr.text) {
+        if (locProFileImage != null) {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          StorageReference reference =
+              FirebaseStorage.instance.ref().child(fileName);
+          StorageUploadTask uploadTask = reference.putFile(locProFileImage);
+          StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+          print(storageTaskSnapshot.totalByteCount);
+          storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+            imageUrl = downloadUrl;
+            print(imageUrl);
+            if (imageUrl != null) {
+              final flContent = FlContent(
+                lastname: lastNameCtr.text ?? "",
+                firstname: firstNameCtr.text ?? "",
+                username: userNameCtr.text ?? "",
+                role: widget.myProfileDocumentSnapshot["role"],
+                gender: widget.myProfileDocumentSnapshot["gender"],
+                email: widget.myProfileDocumentSnapshot["email"],
+                phone: widget.myProfileDocumentSnapshot["phone"],
+                password: widget.myProfileDocumentSnapshot["password"],
+                nationality: widget.myProfileDocumentSnapshot["nationality"],
+                religion: widget.myProfileDocumentSnapshot["religion"],
+                profileImageUrl: locProFileImage != null
+                    ? imageUrl
+                    : widget.myProfileDocumentSnapshot["profileImageUrl"],
+                type: widget.myProfileDocumentSnapshot["type"],
+                education: widget.myProfileDocumentSnapshot["education"],
+                order: widget.myProfileDocumentSnapshot["order"],
+                parentId: widget.myProfileDocumentSnapshot["parentId"],
+                whatsApp: widget.myProfileDocumentSnapshot["whatsApp"],
+                userId: widget.myProfileDocumentSnapshot["userId"],
+              );
+              _service.setData(
+                  path: APIPath.newCandidate(
+                      widget.myProfileDocumentSnapshot["userId"]),
+                  data: flContent.toMap());
+              Navigator.pop(context);
+            } else {
+              scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text("Something goes wrong to upload image"),
+              ));
+            }
+          }, onError: (err) {
+            setState(() {
+              isLoading = false;
+            });
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('This file is not an image'),
+            ));
+          });
+        } else {
           final flContent = FlContent(
             lastname: lastNameCtr.text ?? "",
             firstname: firstNameCtr.text ?? "",
@@ -197,9 +324,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             password: widget.myProfileDocumentSnapshot["password"],
             nationality: widget.myProfileDocumentSnapshot["nationality"],
             religion: widget.myProfileDocumentSnapshot["religion"],
-            profileImageUrl: locProFileImage != null
-                ? imageUrl
-                : widget.myProfileDocumentSnapshot["profileImageUrl"],
+            profileImageUrl:
+                widget.myProfileDocumentSnapshot["profileImageUrl"],
             type: widget.myProfileDocumentSnapshot["type"],
             education: widget.myProfileDocumentSnapshot["education"],
             order: widget.myProfileDocumentSnapshot["order"],
@@ -207,50 +333,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
             whatsApp: widget.myProfileDocumentSnapshot["whatsApp"],
             userId: widget.myProfileDocumentSnapshot["userId"],
           );
+
           _service.setData(
               path: APIPath.newCandidate(
                   widget.myProfileDocumentSnapshot["userId"]),
               data: flContent.toMap());
           Navigator.pop(context);
-        } else {
-          scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text("Something goes wrong to upload image"),
-          ));
         }
-      }, onError: (err) {
+      } else {
         setState(() {
           isLoading = false;
         });
-        scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text('This file is not an image'),
-        ));
-      });
-    } else {
-      final flContent = FlContent(
-        lastname: lastNameCtr.text ?? "",
-        firstname: firstNameCtr.text ?? "",
-        username: userNameCtr.text ?? "",
-        role: widget.myProfileDocumentSnapshot["role"],
-        gender: widget.myProfileDocumentSnapshot["gender"],
-        email: widget.myProfileDocumentSnapshot["email"],
-        phone: widget.myProfileDocumentSnapshot["phone"],
-        password: widget.myProfileDocumentSnapshot["password"],
-        nationality: widget.myProfileDocumentSnapshot["nationality"],
-        religion: widget.myProfileDocumentSnapshot["religion"],
-        profileImageUrl: widget.myProfileDocumentSnapshot["profileImageUrl"],
-        type: widget.myProfileDocumentSnapshot["type"],
-        education: widget.myProfileDocumentSnapshot["education"],
-        order: widget.myProfileDocumentSnapshot["order"],
-        parentId: widget.myProfileDocumentSnapshot["parentId"],
-        whatsApp: widget.myProfileDocumentSnapshot["whatsApp"],
-        userId: widget.myProfileDocumentSnapshot["userId"],
-      );
-
-      _service.setData(
-          path: APIPath.newCandidate(
-              widget.myProfileDocumentSnapshot["userId"]),
-          data: flContent.toMap());
-      Navigator.pop(context);
+        scaffoldKey.currentState.showSnackBar(
+            SnackBar(content: Text("Mobile Number already register")));
+      }
     }
   }
 
@@ -262,6 +358,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         fontWeight: FontWeight.bold);
     TextStyle dataText = TextStyle(fontSize: 18);
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text("My Profile"),
         actions: <Widget>[
