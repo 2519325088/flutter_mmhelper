@@ -33,6 +33,7 @@ class _MainPageState extends State<MainPage> {
   String currentUserId;
   QuerySnapshot querySnapshot;
   bool isShow = true;
+  bool isMeLoading = true;
 
   bottomClick(int index) {
     setState(() {
@@ -70,6 +71,7 @@ class _MainPageState extends State<MainPage> {
 
   getCurrentUserId() async {
     if (widget.isFromLogin) {
+      isMeLoading = true;
       querySnapshot = await Firestore.instance
           .collection("mb_content")
           .where("phone", isEqualTo: widget.mobileNo)
@@ -77,6 +79,7 @@ class _MainPageState extends State<MainPage> {
       currentUserId = querySnapshot.documents[0].data["userId"];
       prefs = await SharedPreferences.getInstance();
       prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+      isMeLoading = false;
     } else {
       prefs = await SharedPreferences.getInstance();
       currentUserId = prefs.getString('loginUid');

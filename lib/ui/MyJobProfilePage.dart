@@ -331,28 +331,108 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               icon: Icon(Icons.done),
               onPressed: () {
                 if (isLoading == false) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  String workingSkillString = "";
-                  String languageString = "";
-                  workingSkillStringList.forEach((f) {
-                    workingSkillString += "$f;";
-                  });
-                  languageChips.forEach((f) {
-                    languageString += "$f;";
-                  });
-                  profileData.workskill = workingSkillString;
-                  profileData.language = languageString;
-                  profileData.id = DateTime.parse(widget.userId);
-                  int i = 1;
-                  if (imagesa.length != 0) {
-                    imagesa.forEach((upFile) async {
-                      String downloadLink = await saveImage(upFile);
-                      profileData.imagelist.add(downloadLink);
-                      i += 1;
-                      if (i > imagesa.length) {
-                        print("Profile update call");
+                  if (firstNameCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please enter first name")));
+                  } else if (lastNameCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please enter last name")));
+                  } else if (genderCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select gender")));
+                  } else if (birthDayCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select birth date")));
+                  } else if (nationalityCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please enter nationality")));
+                  } else if (eduCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select education")));
+                  } else if (religionCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select religion")));
+                  } else if (maritalCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Please select marital status")));
+                  } else if (childCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select child")));
+                  } else if (locationCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please enter location")));
+                  } else if (whatsAppCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Please enter whatsapp number")));
+                  } else if (phoneCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please enter phone")));
+                  } else if (jobTypeCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select job type")));
+                  } else if (jobCapCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select job capacity")));
+                  } else if (contractCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select contract")));
+                  } else if (workingSkillStringList.length == 0) {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select working skill")));
+                  } else if (languageChips.length == 0) {
+                    scaffoldKey.currentState.showSnackBar(
+                        SnackBar(content: Text("Please select language")));
+                  } else if (expectedSalaryCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Please enter expected salary")));
+                  } else if (startDateCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Please select employement start date")));
+                  } else if (selfCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text("Please enter self introduction")));
+                  } else {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    String workingSkillString = "";
+                    String languageString = "";
+                    workingSkillStringList.forEach((f) {
+                      workingSkillString += "$f;";
+                    });
+                    languageChips.forEach((f) {
+                      languageString += "$f;";
+                    });
+                    profileData.workskill = workingSkillString;
+                    profileData.language = languageString;
+                    profileData.id = DateTime.parse(widget.userId);
+                    int i = 1;
+                    if (imagesa.length != 0) {
+                      imagesa.forEach((upFile) async {
+                        String downloadLink = await saveImage(upFile);
+                        profileData.imagelist.add(downloadLink);
+                        i += 1;
+                        if (i > imagesa.length) {
+                          print("Profile update call");
+                          if (profileData.primaryImage == null) {
+                            profileData.primaryImage = profileData.imagelist[0];
+                          }
+                          _service
+                              .setData(
+                                  path: APIPath.newProfile(widget.userId),
+                                  data: profileData.toMap())
+                              .then((onValue) {
+                            setState(() {
+                              isLoading = false;
+                              imagesa.clear();
+                            });
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                                content: Text("Profile Update Succussfully.")));
+                          });
+                        }
+                      });
+                    } else {
+                      if (profileData.imagelist.length != 0) {
                         _service
                             .setData(
                                 path: APIPath.newProfile(widget.userId),
@@ -365,28 +445,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                           scaffoldKey.currentState.showSnackBar(SnackBar(
                               content: Text("Profile Update Succussfully.")));
                         });
-                      }
-                    });
-                  } else {
-                    if (profileData.imagelist.length != 0) {
-                      _service
-                          .setData(
-                              path: APIPath.newProfile(widget.userId),
-                              data: profileData.toMap())
-                          .then((onValue) {
+                      } else {
                         setState(() {
                           isLoading = false;
-                          imagesa.clear();
                         });
-                        scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text("Profile Update Succussfully.")));
-                      });
-                    } else {
-                      setState(() {
-                        isLoading = false;
-                      });
-                      scaffoldKey.currentState.showSnackBar(
-                          SnackBar(content: Text("Please select Image")));
+                        scaffoldKey.currentState.showSnackBar(
+                            SnackBar(content: Text("Please select Image")));
+                      }
                     }
                   }
                 } else {
@@ -1434,17 +1499,18 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                               DatePicker.showDatePicker(context,
                                                   showTitleActions: true,
                                                   minTime: DateTime.now(),
-                                                  maxTime: DateTime(2030,12,31),
+                                                  maxTime:
+                                                      DateTime(2030, 12, 31),
                                                   onConfirm: (date) {
-                                                    setState(() {
-                                                      startDate = date;
-                                                    });
-                                                    startDateCtr.text =
-                                                        DateFormat.yMMMMEEEEd()
-                                                            .format(startDate);
-                                                    profileData.employment =
-                                                        startDate;
-                                                  },
+                                                setState(() {
+                                                  startDate = date;
+                                                });
+                                                startDateCtr.text =
+                                                    DateFormat.yMMMMEEEEd()
+                                                        .format(startDate);
+                                                profileData.employment =
+                                                    startDate;
+                                              },
                                                   currentTime: DateTime.now(),
                                                   locale: LocaleType.en);
                                             },
