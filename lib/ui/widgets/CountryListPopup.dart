@@ -118,7 +118,7 @@ class StateListPopupState extends State<StateListPopup> {
     var getCityList = Provider.of<GetCountryListService>(context);
     return new ListTile(
       onTap: () {
-        if (widget.isFromProfile) {
+        if (widget.isFromProfile == true) {
           widget.onChanged(c.name);
         } else {
           if (widget.isFromLogin) {

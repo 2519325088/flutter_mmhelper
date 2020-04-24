@@ -330,6 +330,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                     builder: (BuildContext context) {
                                       return StateListPopup(
                                         isFromLogin: true,
+                                        isFromProfile: false,
                                       );
                                     });
                               },

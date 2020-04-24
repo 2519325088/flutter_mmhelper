@@ -34,6 +34,7 @@ class ProfileData {
   String whatsapp;
   List<Workexperience> workexperiences;
   String workskill;
+  String primaryImage;
 
   ProfileData({
     this.birthday,
@@ -61,6 +62,7 @@ class ProfileData {
     this.whatsapp,
     this.workexperiences,
     this.workskill,
+    this.primaryImage,
   });
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
@@ -89,6 +91,7 @@ class ProfileData {
     whatsapp: json["whatsapp"] == null ? null : json["whatsapp"],
     workexperiences: json["workexperiences"] == null ? null : List<Workexperience>.from(json["workexperiences"].map((x) => Workexperience.fromMap(x))),
     workskill: json["workskill"] == null ? null : json["workskill"],
+    primaryImage: json["primaryimage"] == null ? null : json["primaryimage"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -117,6 +120,7 @@ class ProfileData {
     "whatsapp": whatsapp == null ? null : whatsapp,
     "workexperiences": workexperiences == null ? null : List<dynamic>.from(workexperiences.map((x) => x.toMap())),
     "workskill": workskill == null ? null : workskill,
+    "primaryimage": primaryImage == null ? null : primaryImage,
   };
 }
 

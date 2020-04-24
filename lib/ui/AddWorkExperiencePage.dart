@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/widgets/CountryListPopup.dart';
@@ -250,7 +251,29 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                       onTap: () {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
-                                        selectStartDate(context);
+                                        DatePicker.showDatePicker(context,
+                                            showTitleActions: true,
+                                            minTime: DateTime(1950, 1, 1),
+                                            maxTime: DateTime.now(),
+                                            /* onChanged: (date) {
+                                                    setState(() {
+                                                      birthDayDate = date;
+                                                    });
+                                                    birthDayCtr.text = DateFormat.yMMMMEEEEd().format(birthDayDate);
+                                                    profileData.birthday = birthDayDate;
+                                                  },*/
+                                            onConfirm: (date) {
+                                              setState(() {
+                                                startDate = date;
+                                              });
+                                              startDateCtr.text =
+                                                  DateFormat.yMMMMEEEEd()
+                                                      .format(startDate);
+                                              workExperience.start =
+                                                  startDate;
+                                            },
+                                            currentTime: DateTime.now(),
+                                            locale: LocaleType.en);
                                       },
                                       controller: startDateCtr,
                                       style: dataText,
@@ -288,7 +311,29 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                       onTap: () {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
-                                        selectEndDate(context);
+                                        DatePicker.showDatePicker(context,
+                                            showTitleActions: true,
+                                            minTime: DateTime(1950, 1, 1),
+                                            maxTime: DateTime.now(),
+                                            /* onChanged: (date) {
+                                                    setState(() {
+                                                      birthDayDate = date;
+                                                    });
+                                                    birthDayCtr.text = DateFormat.yMMMMEEEEd().format(birthDayDate);
+                                                    profileData.birthday = birthDayDate;
+                                                  },*/
+                                            onConfirm: (date) {
+                                              setState(() {
+                                                endDate = date;
+                                              });
+                                              endDateCtr.text =
+                                                  DateFormat.yMMMMEEEEd()
+                                                      .format(endDate);
+                                              workExperience.end =
+                                                  endDate;
+                                            },
+                                            currentTime: DateTime.now(),
+                                            locale: LocaleType.en);
                                       },
                                       controller: endDateCtr,
                                       style: dataText,
