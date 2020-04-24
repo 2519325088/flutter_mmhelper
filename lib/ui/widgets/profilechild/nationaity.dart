@@ -21,7 +21,6 @@ class _NationaityState extends State<Nationaity> with AfterInitMixin {
       setState(() {
         CountryList = json.decode(jsonString) as List;
       });
-
     });
   }
 

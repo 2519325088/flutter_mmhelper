@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,28 @@ class MePage extends StatefulWidget {
 
 class _MePageState extends State<MePage> {
   BorderSide borderSide = BorderSide(color: Colors.black.withOpacity(0.1));
+  String userType;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.querySnapshot.documents[0]["type"]
+        .toString()
+        .contains("Employer")) {
+      userType = "1";
+    } else if (widget.querySnapshot.documents[0]["type"]
+        .toString()
+        .contains("Foreign Helper")) {
+      userType = "2";
+    } else if (widget.querySnapshot.documents[0]["type"]
+        .toString()
+        .contains("Local Auntie")) {
+      userType = "3";
+    }
+  }
+
 
 
   @override
@@ -87,7 +110,7 @@ class _MePageState extends State<MePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      "${widget.querySnapshot.documents[0]["username"]??""}",
+                                      "${widget.querySnapshot.documents[0]["username"] ?? ""}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
@@ -115,6 +138,33 @@ class _MePageState extends State<MePage> {
                 ),
                 Container(
                   decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide.none,
+                          left: borderSide,
+                          right: borderSide,
+                          bottom: borderSide)),
+                  child: ListTile(
+                    onTap: () {
+                      if (userType == "1") {
+                      } else if (userType == "2") {
+
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                              return MyJobProfilePage(
+                                userId: widget.querySnapshot.documents[0]["userId"],
+                              );
+                            }));
+                      }
+                    },
+                    title: Text(userType == "1"
+                        ? "My Job Posts"
+                        : userType == "2" ? "My Profiles" : "My Profile"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
                       border: Border.all(color: Colors.black.withOpacity(0.1))),
                   child: ListTile(
                     title: Text("Job offers"),
@@ -130,18 +180,6 @@ class _MePageState extends State<MePage> {
                           bottom: borderSide)),
                   child: ListTile(
                     title: Text("Shortlisted Applicants"),
-                    trailing: Icon(Icons.arrow_forward_ios),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border(
-                          top: BorderSide.none,
-                          left: borderSide,
-                          right: borderSide,
-                          bottom: borderSide)),
-                  child: ListTile(
-                    title: Text("My Job Posts"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
@@ -200,6 +238,4 @@ class _MePageState extends State<MePage> {
       ),
     );
   }
-
-
 }

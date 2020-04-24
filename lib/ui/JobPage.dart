@@ -16,6 +16,8 @@ class JobPage extends StatefulWidget {
 }
 
 class _JobPageState extends State<JobPage> with AfterInitMixin {
+  String searchText = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -47,26 +49,35 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
             .orderBy("id", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-
-          return snapshot.hasData?ListView.builder(
-            padding: EdgeInsets.all(10.0),
-            itemBuilder: (context, index) {
-              return StreamBuilder(
-                  stream: Firestore.instance
-                      .collection('mb_content')
-                      .document(snapshot.data.documents[index]["user_id"])
-                      .snapshots(),
-                  builder: (context, snapshot2) {
-                    return snapshot2.hasData?jobCard(
-                        userName: snapshot2.data["firstname"]??"",
-                        shortDes: snapshot.data.documents[index]
-                            ["job_short_description"]??"",
-                        jobSnapshot: snapshot.data.documents[index],
-                        userSnapshot: snapshot2.data):SizedBox();
-                  });
-            },
-            itemCount: snapshot.data.documents.length,
-          ):Center(child: CircularProgressIndicator(),);
+          return snapshot.hasData
+              ? ListView.builder(
+                  padding: EdgeInsets.all(10.0),
+                  itemBuilder: (context, index) {
+                    return StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('mb_content')
+                            .document(
+                                snapshot.data.documents[index]["user_id"])
+                            .snapshots(),
+                        builder: (context, snapshot2) {
+                          return snapshot2.hasData
+                              ? jobCard(
+                                  userName:
+                                      snapshot2.data["firstname"] ?? "",
+                                  shortDes: snapshot.data.documents[index]
+                                          ["job_short_description"] ??
+                                      "",
+                                  jobSnapshot:
+                                      snapshot.data.documents[index],
+                                  userSnapshot: snapshot2.data)
+                              : SizedBox();
+                        });
+                  },
+                  itemCount: snapshot.data.documents.length,
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );
