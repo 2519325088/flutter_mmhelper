@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,12 +8,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyJobProfilePage extends StatefulWidget {
@@ -21,7 +27,8 @@ class MyJobProfilePage extends StatefulWidget {
   MyJobProfilePage({this.userId});
 }
 
-class _MyJobProfilePageState extends State<MyJobProfilePage> {
+class _MyJobProfilePageState extends State<MyJobProfilePage>
+    with AfterInitMixin {
   bool isLoading = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController firstNameCtr = TextEditingController();
@@ -63,6 +70,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
   final _service = FirestoreService.instance;
   QuerySnapshot profileQuerySnapshot;
   ScrollController scrollController = ScrollController();
+  bool isEdit = false;
+  int exIndex;
 
   Future<QuerySnapshot> getMyJobProfile() async {
     return await Firestore.instance
@@ -76,6 +85,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
     // TODO: implement initState
     super.initState();
     profileData.imagelist = [];
+    profileData.workexperiences = [];
     getMyJobProfile().then((onValue) {
       if (onValue.documents.length != 0) {
         firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -113,7 +123,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
         profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
         startDateCtr.text = DateFormat.yMMMMEEEEd()
             .format(DateTime.parse(onValue.documents[0]["employment"]));
-        profileData.employment = DateTime.parse(onValue.documents[0]["employment"]);
+        profileData.employment =
+            DateTime.parse(onValue.documents[0]["employment"]);
         selfCtr.text = onValue.documents[0]["selfintroduction"];
         profileData.selfintroduction = onValue.documents[0]["selfintroduction"];
         texttags.forEach((f) {
@@ -121,7 +132,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
             title: f,
             workingSkillStringList: workingSkillStringList,
             isSelected:
-                onValue.documents[0]["workskill"].toString().contains(f),
+            onValue.documents[0]["workskill"].toString().contains(f),
           ));
           workingSkillWidget.add(SizedBox(
             width: 5,
@@ -138,6 +149,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
           ));
         });
         setState(() {});
+        onValue.documents[0]["workexperiences"].forEach((f) {
+          profileData.workexperiences.add(Workexperience.fromMap(
+              (f)));
+        });
         onValue.documents[0]["imagelist"].forEach((f) {
           profileData.imagelist.add(f);
         });
@@ -252,6 +267,15 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
     });
   }
 
+  onWorkingExChange(Workexperience workExperience) {
+    if (isEdit == false) {
+      profileData.workexperiences.add(workExperience);
+    } else {
+      profileData.workexperiences.removeAt(exIndex);
+      profileData.workexperiences.add(workExperience);
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -281,7 +305,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
 
   //  sumbit image
   Future<String> saveImage(Asset asset) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    String fileName = DateTime
+        .now()
+        .millisecondsSinceEpoch
+        .toString();
     ByteData byteData = await asset.requestOriginal();
     List<int> imageData = byteData.buffer.asUint8List();
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
@@ -295,7 +322,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
   Widget build(BuildContext context) {
     TextStyle cardTitleText = TextStyle(fontSize: 20, color: Colors.black);
     TextStyle titleText =
-        TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.7));
+    TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.7));
     TextStyle dataText = TextStyle(fontSize: 20);
     return Scaffold(
       key: scaffoldKey,
@@ -305,32 +332,49 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
           IconButton(
               icon: Icon(Icons.done),
               onPressed: () {
-                setState(() {
-                  isLoading = true;
-                });
-                String workingSkillString = "";
-                String languageString = "";
-                workingSkillStringList.forEach((f) {
-                  workingSkillString += "$f;";
-                });
-                languageChips.forEach((f) {
-                  languageString += "$f;";
-                });
-                profileData.workskill = workingSkillString;
-                profileData.language = languageString;
-                profileData.id = DateTime.parse(widget.userId);
-                int i = 1;
-                if (imagesa.length != 0) {
-                  imagesa.forEach((upFile) async {
-                    String downloadLink = await saveImage(upFile);
-                    profileData.imagelist.add(downloadLink);
-                    i += 1;
-                    if (i > imagesa.length) {
-                      print("Profile update call");
+                if (isLoading == false) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  String workingSkillString = "";
+                  String languageString = "";
+                  workingSkillStringList.forEach((f) {
+                    workingSkillString += "$f;";
+                  });
+                  languageChips.forEach((f) {
+                    languageString += "$f;";
+                  });
+                  profileData.workskill = workingSkillString;
+                  profileData.language = languageString;
+                  profileData.id = DateTime.parse(widget.userId);
+                  int i = 1;
+                  if (imagesa.length != 0) {
+                    imagesa.forEach((upFile) async {
+                      String downloadLink = await saveImage(upFile);
+                      profileData.imagelist.add(downloadLink);
+                      i += 1;
+                      if (i > imagesa.length) {
+                        print("Profile update call");
+                        _service
+                            .setData(
+                            path: APIPath.newProfile(widget.userId),
+                            data: profileData.toMap())
+                            .then((onValue) {
+                          setState(() {
+                            isLoading = false;
+                            imagesa.clear();
+                          });
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text("Profile Update Succussfully.")));
+                        });
+                      }
+                    });
+                  } else {
+                    if (profileData.imagelist.length != 0) {
                       _service
                           .setData(
-                              path: APIPath.newProfile(widget.userId),
-                              data: profileData.toMap())
+                          path: APIPath.newProfile(widget.userId),
+                          data: profileData.toMap())
                           .then((onValue) {
                         setState(() {
                           isLoading = false;
@@ -339,29 +383,17 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                         scaffoldKey.currentState.showSnackBar(SnackBar(
                             content: Text("Profile Update Succussfully.")));
                       });
-                    }
-                  });
-                } else {
-                  if (profileData.imagelist.length != 0) {
-                    _service
-                        .setData(
-                            path: APIPath.newProfile(widget.userId),
-                            data: profileData.toMap())
-                        .then((onValue) {
+                    } else {
                       setState(() {
                         isLoading = false;
-                        imagesa.clear();
                       });
-                      scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text("Profile Update Succussfully.")));
-                    });
-                  } else {
-                    setState(() {
-                      isLoading = false;
-                    });
-                    scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please select Image")));
+                      scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text("Please select Image")));
+                    }
                   }
+                } else {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Wait data is updating...")));
                 }
               })
         ],
@@ -407,7 +439,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "First Name:",
@@ -444,7 +476,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Last Name:",
@@ -481,7 +513,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Gender:",
@@ -496,16 +528,16 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Gender",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: <Widget>[
                                                   CupertinoActionSheetAction(
@@ -513,7 +545,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                                     onPressed: () {
                                                       genderCtr.text = "Male";
                                                       profileData.gender =
-                                                          "Male";
+                                                      "Male";
                                                       Navigator.pop(context);
                                                     },
                                                   ),
@@ -522,13 +554,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                                     onPressed: () {
                                                       genderCtr.text = "Female";
                                                       profileData.gender =
-                                                          "Female";
+                                                      "Female";
                                                       Navigator.pop(context);
                                                     },
                                                   )
                                                 ],
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -562,7 +594,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Birthday:",
@@ -601,7 +633,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Nationality:",
@@ -662,7 +694,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Education:",
@@ -677,20 +709,20 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Education",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: eduWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -724,7 +756,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Religion:",
@@ -739,20 +771,20 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Religion",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: religionWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -786,7 +818,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Marital Status:",
@@ -797,25 +829,25 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             controller: maritalCtr,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Select Marital Status"),
+                                                "Select Marital Status"),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Marital Status",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: maritalStatusWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -849,7 +881,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Children:",
@@ -864,20 +896,20 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Children",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: childrenWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -911,7 +943,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Current Location:",
@@ -925,7 +957,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             style: dataText,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Enter current location"),
+                                                "Enter current location"),
                                           )
                                         ],
                                       ),
@@ -949,7 +981,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Whatsapp Number:",
@@ -968,14 +1000,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                                   .singleLineFormatter,
                                             ],
                                             keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
+                                            TextInputType.numberWithOptions(
+                                                signed: false,
+                                                decimal: false),
                                             controller: whatsAppCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Enter whatsapp number"),
+                                                "Enter whatsapp number"),
                                           )
                                         ],
                                       ),
@@ -999,7 +1031,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Phone Number (verified):",
@@ -1018,9 +1050,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                                   .singleLineFormatter,
                                             ],
                                             keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
+                                            TextInputType.numberWithOptions(
+                                                signed: false,
+                                                decimal: false),
                                             controller: phoneCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
@@ -1072,7 +1104,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Job Type:",
@@ -1087,20 +1119,20 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Job Type",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: jobTypeWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -1134,7 +1166,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Job Capacity:",
@@ -1145,25 +1177,25 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             controller: jobCapCtr,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Select Job Capacity"),
+                                                "Select Job Capacity"),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Job Capacity",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: jobCapWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -1197,7 +1229,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Contract Status:",
@@ -1208,25 +1240,25 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             controller: contractCtr,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Select Contract Status"),
+                                                "Select Contract Status"),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
-                                                  CupertinoActionSheet(
+                                              CupertinoActionSheet(
                                                 title: Text(
                                                   "Contract Status",
                                                   style:
-                                                      TextStyle(fontSize: 30),
+                                                  TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
                                                   "Select any option ",
                                                   style:
-                                                      TextStyle(fontSize: 15.0),
+                                                  TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: contractWidget,
                                                 cancelButton:
-                                                    CupertinoActionSheetAction(
+                                                CupertinoActionSheetAction(
                                                   child: Text("Cancel"),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -1260,7 +1292,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Working Skill:",
@@ -1289,7 +1321,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Language:",
@@ -1318,7 +1350,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Expected Salary(HKD):",
@@ -1338,14 +1370,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                                   .singleLineFormatter,
                                             ],
                                             keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
+                                            TextInputType.numberWithOptions(
+                                                signed: false,
+                                                decimal: false),
                                             controller: expectedSalaryCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Enter expected salary"),
+                                                "Enter expected salary"),
                                           )
                                         ],
                                       ),
@@ -1369,7 +1401,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "Employement Start Date:",
@@ -1395,6 +1427,85 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                   height: 20,
                                 ),
                               ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                              width: SizeConfig.screenWidth,
+                              color: Colors.black.withOpacity(0.2),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Work Experience",
+                                      style: cardTitleText,
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          isEdit = false;
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return AddWorkExperiencePage(
+                                                      onChanged: onWorkingExChange,
+                                                    );
+                                                  }));
+                                        },
+                                        child: Icon(Icons.add)),
+                                  ],
+                                ),
+                              )),
+                          profileData.workexperiences.length != 0
+                              ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: profileData.workexperiences.length,
+                              itemBuilder:
+                                  (BuildContext context, int index) {
+                                return ListTile(
+                                  onTap: () {
+                                    isEdit = true;
+                                    exIndex = index;
+                                    Navigator.push(context,
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                              return AddWorkExperiencePage(
+                                                onChanged: onWorkingExChange,
+                                                oldWorkExperience: profileData
+                                                    .workexperiences[index],
+                                              );
+                                            }));
+                                  },
+                                  title: Text(
+                                    profileData
+                                        .workexperiences[index].jobtype,
+                                    style: titleText,
+                                  ),
+                                  trailing: IconButton(
+                                      icon: Icon(Icons.delete_forever),
+                                      onPressed: () {
+                                        setState(() {
+                                          profileData.workexperiences
+                                              .removeAt(index);
+                                        });
+                                      }),
+                                );
+                              })
+                              : Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 8),
+                            child: Text(
+                              "Add your work experince",
+                              style: titleText,
                             ),
                           ),
                         ],
@@ -1461,49 +1572,49 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                 Container(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     children: <Widget>[
                                       profileData.imagelist.length != 0
                                           ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "Server Image",
-                                                    style: titleText,
-                                                  ),
-                                                ),
-                                                profileData.imagelist.length !=
-                                                        0
-                                                    ? editBuildGridView()
-                                                    : SizedBox(),
-                                              ],
-                                            )
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Server Image",
+                                              style: titleText,
+                                            ),
+                                          ),
+                                          profileData.imagelist.length !=
+                                              0
+                                              ? editBuildGridView()
+                                              : SizedBox(),
+                                        ],
+                                      )
                                           : SizedBox(),
                                       imagesa.length != 0
                                           ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "Local Image",
-                                                    style: titleText,
-                                                  ),
-                                                ),
-                                                imagesa.length != 0
-                                                    ? buildGridView()
-                                                    : Text(""),
-                                              ],
-                                            )
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Local Image",
+                                              style: titleText,
+                                            ),
+                                          ),
+                                          imagesa.length != 0
+                                              ? buildGridView()
+                                              : Text(""),
+                                        ],
+                                      )
                                           : SizedBox(),
                                       RaisedButton(
                                         child: Text("Pick images"),
@@ -1529,11 +1640,11 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
           Positioned.fill(
               child: isLoading
                   ? Container(
-                      color: Colors.black45,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+                color: Colors.black45,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
                   : SizedBox())
         ],
       ),
@@ -1573,7 +1684,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
               height: 300,
               width: 300,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             Align(
@@ -1663,6 +1775,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
         profileData.employment = startDate;
       });
     }
+  }
+
+  @override
+  void didInitState() {
+    // TODO: implement didInitState
+    var getCountryList = Provider.of<GetCountryListService>(context);
+    getCountryList.getCountryList();
   }
 }
 
