@@ -238,7 +238,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                                       ),
                                     ),
                                     imageUrl: snapshot.data.documents[index]
-                                            ["imagelist"][0] ??
+                                            ["primaryimage"] ??
                                         "",
                                     fit: BoxFit.cover,
                                   ),

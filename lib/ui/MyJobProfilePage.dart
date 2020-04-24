@@ -1,16 +1,23 @@
+import 'dart:convert';
+
+import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyJobProfilePage extends StatefulWidget {
@@ -21,7 +28,8 @@ class MyJobProfilePage extends StatefulWidget {
   MyJobProfilePage({this.userId});
 }
 
-class _MyJobProfilePageState extends State<MyJobProfilePage> {
+class _MyJobProfilePageState extends State<MyJobProfilePage>
+    with AfterInitMixin {
   bool isLoading = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController firstNameCtr = TextEditingController();
@@ -63,6 +71,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
   final _service = FirestoreService.instance;
   QuerySnapshot profileQuerySnapshot;
   ScrollController scrollController = ScrollController();
+  bool isEdit = false;
+  int exIndex;
 
   Future<QuerySnapshot> getMyJobProfile() async {
     return await Firestore.instance
@@ -76,6 +86,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
     // TODO: implement initState
     super.initState();
     profileData.imagelist = [];
+    profileData.workexperiences = [];
     getMyJobProfile().then((onValue) {
       if (onValue.documents.length != 0) {
         firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -113,7 +124,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
         profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
         startDateCtr.text = DateFormat.yMMMMEEEEd()
             .format(DateTime.parse(onValue.documents[0]["employment"]));
-        profileData.employment = DateTime.parse(onValue.documents[0]["employment"]);
+        profileData.employment =
+            DateTime.parse(onValue.documents[0]["employment"]);
         selfCtr.text = onValue.documents[0]["selfintroduction"];
         profileData.selfintroduction = onValue.documents[0]["selfintroduction"];
         texttags.forEach((f) {
@@ -138,9 +150,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
           ));
         });
         setState(() {});
+        onValue.documents[0]["workexperiences"].forEach((f) {
+          profileData.workexperiences.add(Workexperience.fromMap((f)));
+        });
         onValue.documents[0]["imagelist"].forEach((f) {
           profileData.imagelist.add(f);
         });
+        profileData.primaryImage = onValue.documents[0]["primaryimage"];
       } else {
         texttags.forEach((f) {
           workingSkillWidget.add(WorkChips(
@@ -252,6 +268,15 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
     });
   }
 
+  onWorkingExChange(Workexperience workExperience) {
+    if (isEdit == false) {
+      profileData.workexperiences.add(workExperience);
+    } else {
+      profileData.workexperiences.removeAt(exIndex);
+      profileData.workexperiences.add(workExperience);
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -305,28 +330,45 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
           IconButton(
               icon: Icon(Icons.done),
               onPressed: () {
-                setState(() {
-                  isLoading = true;
-                });
-                String workingSkillString = "";
-                String languageString = "";
-                workingSkillStringList.forEach((f) {
-                  workingSkillString += "$f;";
-                });
-                languageChips.forEach((f) {
-                  languageString += "$f;";
-                });
-                profileData.workskill = workingSkillString;
-                profileData.language = languageString;
-                profileData.id = DateTime.parse(widget.userId);
-                int i = 1;
-                if (imagesa.length != 0) {
-                  imagesa.forEach((upFile) async {
-                    String downloadLink = await saveImage(upFile);
-                    profileData.imagelist.add(downloadLink);
-                    i += 1;
-                    if (i > imagesa.length) {
-                      print("Profile update call");
+                if (isLoading == false) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  String workingSkillString = "";
+                  String languageString = "";
+                  workingSkillStringList.forEach((f) {
+                    workingSkillString += "$f;";
+                  });
+                  languageChips.forEach((f) {
+                    languageString += "$f;";
+                  });
+                  profileData.workskill = workingSkillString;
+                  profileData.language = languageString;
+                  profileData.id = DateTime.parse(widget.userId);
+                  int i = 1;
+                  if (imagesa.length != 0) {
+                    imagesa.forEach((upFile) async {
+                      String downloadLink = await saveImage(upFile);
+                      profileData.imagelist.add(downloadLink);
+                      i += 1;
+                      if (i > imagesa.length) {
+                        print("Profile update call");
+                        _service
+                            .setData(
+                                path: APIPath.newProfile(widget.userId),
+                                data: profileData.toMap())
+                            .then((onValue) {
+                          setState(() {
+                            isLoading = false;
+                            imagesa.clear();
+                          });
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text("Profile Update Succussfully.")));
+                        });
+                      }
+                    });
+                  } else {
+                    if (profileData.imagelist.length != 0) {
                       _service
                           .setData(
                               path: APIPath.newProfile(widget.userId),
@@ -339,29 +381,17 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                         scaffoldKey.currentState.showSnackBar(SnackBar(
                             content: Text("Profile Update Succussfully.")));
                       });
-                    }
-                  });
-                } else {
-                  if (profileData.imagelist.length != 0) {
-                    _service
-                        .setData(
-                            path: APIPath.newProfile(widget.userId),
-                            data: profileData.toMap())
-                        .then((onValue) {
+                    } else {
                       setState(() {
                         isLoading = false;
-                        imagesa.clear();
                       });
-                      scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text("Profile Update Succussfully.")));
-                    });
-                  } else {
-                    setState(() {
-                      isLoading = false;
-                    });
-                    scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please select Image")));
+                      scaffoldKey.currentState.showSnackBar(
+                          SnackBar(content: Text("Please select Image")));
+                    }
                   }
+                } else {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Wait data is updating...")));
                 }
               })
         ],
@@ -572,7 +602,29 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
-                                              selectBirthDayDate(context);
+                                              DatePicker.showDatePicker(context,
+                                                  showTitleActions: true,
+                                                  minTime: DateTime(1950, 1, 1),
+                                                  maxTime: DateTime.now(),
+                                                  /* onChanged: (date) {
+                                                    setState(() {
+                                                      birthDayDate = date;
+                                                    });
+                                                    birthDayCtr.text = DateFormat.yMMMMEEEEd().format(birthDayDate);
+                                                    profileData.birthday = birthDayDate;
+                                                  },*/
+                                                  onConfirm: (date) {
+                                                setState(() {
+                                                  birthDayDate = date;
+                                                });
+                                                birthDayCtr.text =
+                                                    DateFormat.yMMMMEEEEd()
+                                                        .format(birthDayDate);
+                                                profileData.birthday =
+                                                    birthDayDate;
+                                              },
+                                                  currentTime: DateTime.now(),
+                                                  locale: LocaleType.en);
                                             },
                                             controller: birthDayCtr,
                                             style: dataText,
@@ -1379,7 +1431,22 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
-                                              selectStartDate(context);
+                                              DatePicker.showDatePicker(context,
+                                                  showTitleActions: true,
+                                                  minTime: DateTime.now(),
+                                                  maxTime: DateTime(2030,12,31),
+                                                  onConfirm: (date) {
+                                                    setState(() {
+                                                      startDate = date;
+                                                    });
+                                                    startDateCtr.text =
+                                                        DateFormat.yMMMMEEEEd()
+                                                            .format(startDate);
+                                                    profileData.employment =
+                                                        startDate;
+                                                  },
+                                                  currentTime: DateTime.now(),
+                                                  locale: LocaleType.en);
                                             },
                                             controller: startDateCtr,
                                             style: dataText,
@@ -1397,6 +1464,85 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                               ],
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                              width: SizeConfig.screenWidth,
+                              color: Colors.black.withOpacity(0.2),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Work Experience",
+                                      style: cardTitleText,
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          isEdit = false;
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return AddWorkExperiencePage(
+                                              onChanged: onWorkingExChange,
+                                            );
+                                          }));
+                                        },
+                                        child: Icon(Icons.add)),
+                                  ],
+                                ),
+                              )),
+                          profileData.workexperiences.length != 0
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: profileData.workexperiences.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      onTap: () {
+                                        isEdit = true;
+                                        exIndex = index;
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return AddWorkExperiencePage(
+                                            onChanged: onWorkingExChange,
+                                            oldWorkExperience: profileData
+                                                .workexperiences[index],
+                                          );
+                                        }));
+                                      },
+                                      title: Text(
+                                        profileData
+                                            .workexperiences[index].jobtype,
+                                        style: titleText,
+                                      ),
+                                      trailing: IconButton(
+                                          icon: Icon(Icons.delete_forever),
+                                          onPressed: () {
+                                            setState(() {
+                                              profileData.workexperiences
+                                                  .removeAt(index);
+                                            });
+                                          }),
+                                    );
+                                  })
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 8),
+                                  child: Text(
+                                    "Add your work experince",
+                                    style: titleText,
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -1461,8 +1607,38 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                 Container(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
+                                      profileData.primaryImage != null
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    "Primary Image",
+                                                    style: titleText,
+                                                  ),
+                                                ),
+                                                CachedNetworkImage(
+                                                  imageUrl:
+                                                      profileData.primaryImage,
+                                                  height: 110,
+                                                  width: 110,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
+                                              ],
+                                            )
+                                          : SizedBox(),
                                       profileData.imagelist.length != 0
                                           ? Column(
                                               crossAxisAlignment:
@@ -1505,9 +1681,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
                                               ],
                                             )
                                           : SizedBox(),
-                                      RaisedButton(
-                                        child: Text("Pick images"),
-                                        onPressed: loadAssets,
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: RaisedButton(
+                                          child: Text("Pick images"),
+                                          onPressed: loadAssets,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1568,13 +1747,21 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
       children: List.generate(profileData.imagelist.length, (index) {
         return Stack(
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: profileData.imagelist[index],
-              height: 300,
-              width: 300,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  profileData.primaryImage = profileData.imagelist[index];
+                });
+              },
+              child: CachedNetworkImage(
+                imageUrl: profileData.imagelist[index],
+                height: 300,
+                width: 300,
+                fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
             Align(
                 alignment: Alignment.topRight,
@@ -1663,6 +1850,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage> {
         profileData.employment = startDate;
       });
     }
+  }
+
+  @override
+  void didInitState() {
+    // TODO: implement didInitState
+    var getCountryList = Provider.of<GetCountryListService>(context);
+    getCountryList.getCountryList();
   }
 }
 

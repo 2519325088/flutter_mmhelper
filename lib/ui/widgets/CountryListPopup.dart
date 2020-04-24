@@ -7,9 +7,11 @@ class StateListPopup extends StatefulWidget {
   @override
   State createState() => StateListPopupState();
 
-  StateListPopup({this.isFromLogin});
+  StateListPopup({this.isFromLogin, this.onChanged,this.isFromProfile});
 
+  final ValueChanged<String> onChanged;
   bool isFromLogin;
+  bool isFromProfile;
 }
 
 class StateListPopupState extends State<StateListPopup> {
@@ -116,13 +118,18 @@ class StateListPopupState extends State<StateListPopup> {
     var getCityList = Provider.of<GetCountryListService>(context);
     return new ListTile(
       onTap: () {
-        if (widget.isFromLogin) {
-          getCityList.newLoginCountry(
-              newCountry: c.name, newCountryCode: c.dialCode);
+        if (widget.isFromProfile == true) {
+          widget.onChanged(c.name);
         } else {
-          getCityList.newCountry(
-              newCountry: c.name, newCountryCode: c.dialCode);
+          if (widget.isFromLogin) {
+            getCityList.newLoginCountry(
+                newCountry: c.name, newCountryCode: c.dialCode);
+          } else {
+            getCityList.newCountry(
+                newCountry: c.name, newCountryCode: c.dialCode);
+          }
         }
+
         Navigator.pop(context);
       },
       title: new Text(
