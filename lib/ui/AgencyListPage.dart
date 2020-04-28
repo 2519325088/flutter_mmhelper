@@ -8,10 +8,19 @@ class AgencyListpage extends StatefulWidget {
 }
 
 class _AgencyListpageState extends State<AgencyListpage> {
-  String datenow= DateTime.now().toIso8601String();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pink,
+        title: Text(
+          "Agency List",
+          style: TextStyle(
+            color: Colors.white
+          ),
+        ),
+      ),
       body: Container(
         child: StreamBuilder(
             stream: Firestore.instance
@@ -145,11 +154,10 @@ class _AgencyListpageState extends State<AgencyListpage> {
                         ),
                       ),
                       onTap: (){
-                        print(datenow);
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return AgencyDetailPage(agencySnapshot: agencySnapshot,);
-                                }));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AgencyDetailPage(agencySnapshot: agencySnapshot,);
+                        }));
                       },
                     ),
                   ],
