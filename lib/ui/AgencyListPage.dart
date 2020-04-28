@@ -119,8 +119,8 @@ class _AgencyListpageState extends State<AgencyListpage> {
               child:Container(
                 height: 50,
                 width: double.infinity,
-                child: new Image.asset(
-                  "assets/images/15-shop.jpg",
+                child: new Image.network(
+                  agencySnapshot["logo"],
                   fit: BoxFit.cover,
                 ),
               ),
