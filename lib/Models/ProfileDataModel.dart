@@ -66,13 +66,13 @@ class ProfileData {
   });
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
-    birthday: json["birthday"] == null ? null : DateTime.parse(json["birthday"]),
+    birthday: json["birthday"] == null ? null : DateTime.tryParse(json["birthday"]),
     children: json["children"] == null ? null : json["children"],
     contract: json["contract"] == null ? null : json["contract"],
     createdBy: json["created_by"] == null ? null : json["created_by"],
     current: json["current"] == null ? null : json["current"],
     education: json["education"] == null ? null : json["education"],
-    employment: json["employment"] == null ? null : DateTime.parse(json["employment"]),
+    employment: json["employment"] == null ? null : DateTime.tryParse(json["employment"]),
     expectedsalary: json["expectedsalary"] == null ? null : json["expectedsalary"],
     firstname: json["firstname"] == null ? null : json["firstname"],
     fromAgency: json["from_agency"] == null ? null : json["from_agency"],

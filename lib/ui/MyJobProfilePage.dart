@@ -307,7 +307,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   //  sumbit image
   Future<String> saveImage(Asset asset) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    ByteData byteData = await asset.requestOriginal();
+    ByteData byteData = await asset.getByteData();
     List<int> imageData = byteData.buffer.asUint8List();
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = ref.putData(imageData);
@@ -411,6 +411,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                       imagesa.forEach((upFile) async {
                         String downloadLink = await saveImage(upFile);
                         profileData.imagelist.add(downloadLink);
+                        print("Upload in count $i");
                         i += 1;
                         if (i > imagesa.length) {
                           print("Profile update call");
