@@ -813,7 +813,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                   border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
                   borderRadius: new BorderRadius.circular((20.0)),
                 ),
-                child:widget.proSnapshot["workexperiences"]!=null?ListView.separated(
+                child:widget.proSnapshot["workexperiences"]!=null || widget.proSnapshot["workexperiences"][0]!=null?ListView.separated(
                   shrinkWrap: true,
                   physics:const ScrollPhysics(),
                   padding: EdgeInsets.all(10),
@@ -1101,6 +1101,36 @@ class _ProfileDateilState extends State<ProfileDateil> {
                     );
                   },
                 ):Text("No Work Experiences"),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                  borderRadius: new BorderRadius.circular((20.0)),
+                ),
+                child:widget.proSnapshot["imagelist"]!=null || widget.proSnapshot["imagelist"][0]!=null?GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  primary: false,
+                  padding: EdgeInsets.all(5),
+                  itemCount: widget.proSnapshot["imagelist"].length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 200 / 200,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Image.network(
+                        widget.proSnapshot["imagelist"][index],
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ):Text("No Image"),
               ),
             ),
           ],
