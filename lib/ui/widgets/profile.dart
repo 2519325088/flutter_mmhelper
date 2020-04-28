@@ -131,10 +131,6 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     } on Exception catch (e) {
       error = e.toString();
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -156,12 +152,12 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
     prefs.setString("loginUid", datenow);
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       print("this is link:$downloadUrl");
-      return downloadUrl;
+      imageList.add(downloadUrl);
+//      return downloadUrl;
     });
   }
 // we got this link mean image upload successfull
   Future<void> _submit() async {
-    imageList=[];
     int i =0;
 //    if (username[0]== "Mama") {
 //      scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -249,11 +245,10 @@ class _MamaProfileState extends State<MamaProfile> with AfterInitMixin{
 //      ));
 //    }else{
       imagesa.forEach((upFile)async{
-        String downloadLink = await saveImage(upFile);
-        imageList.add(downloadLink);
+        await saveImage(upFile);
         i += 1;
-        if(i==imagesa.length-1) {
-          final database = Provider.of<FirestoreDatabase>(context);
+        if(i==imagesa.length) {
+//          final database = Provider.of<FirestoreDatabase>(context);
           final procontext = ProContext(
             id:datenow,
             firstname: username[0],
