@@ -17,16 +17,26 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.pink,
         title: Text(
-          "收費表",
-          style: TextStyle(
+        "收費表",
+        style: TextStyle(
             color: Colors.white
-          ),
         ),
+      ),
         centerTitle: true,
       ),
       body: Container(
         child: ListView(
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                height: 120,
+                child: Image.network(
+                  widget.agencySnapshot["logo"],
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
