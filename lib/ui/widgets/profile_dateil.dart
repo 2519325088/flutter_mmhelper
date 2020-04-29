@@ -327,12 +327,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['nationaity']!=null?Text(
                                 widget.proSnapshot['nationaity']!="Select"?widget.proSnapshot['nationaity']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -481,12 +481,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['children']!=null?Text(
                                 widget.proSnapshot['children']!="Select"?widget.proSnapshot['children']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -516,12 +516,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['current']!=null?Text(
                                 widget.proSnapshot['current']!="Select"?widget.proSnapshot['current']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -551,12 +551,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['whatsapp']!=null?Text(
                                 widget.proSnapshot['whatsapp']!="+85263433995"?widget.proSnapshot['whatsapp']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),
@@ -586,12 +586,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10,top: 10),
-                              child: Text(
+                              child: widget.proSnapshot['phone']!=null?Text(
                                 widget.proSnapshot['phone']!="+85263433995"?widget.proSnapshot['phone']:"",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
-                              ),
+                              ):Text("")
                             )
                           ],
                         ),

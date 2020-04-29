@@ -11,6 +11,7 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
+import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -148,7 +149,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
           heroTag: null,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MamaProfile();
+              return MyJobProfilePage(userId: querySnapshot.documents[0]["userId"],);
             }));
           },
           child: Icon(Icons.add),
@@ -200,89 +201,10 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             return snapshot.hasData
                 ? GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
+                        childAspectRatio: SizeConfig.safeBlockHorizontal / 4.9,
                         crossAxisCount: 2),
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ProfileDateil(
-                              proSnapshot: snapshot.data.documents[index],
-                            );
-                          }));
-                        },
-                        child: Card(
-                          elevation: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    topLeft: Radius.circular(5)),
-                                child: Container(
-                                  height: 150,
-                                  width: double.infinity,
-                                  child: CachedNetworkImage(
-                                    placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          topLeft: Radius.circular(5)),
-                                      child: Image.asset(
-                                        "assets/placeholder.jpg",
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    imageUrl: snapshot.data.documents[index]
-                                            ["primaryimage"] ??
-                                        "",
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        snapshot.data.documents[index]
-                                                    ["firstname"] +
-                                                " " +
-                                                snapshot.data.documents[index]
-                                                    ["lastname"] ??
-                                            "No username",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        snapshot.data.documents[index]
-                                                ["nationaity"] ??
-                                            "No nationality",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(snapshot.data.documents[index]
-                                              ["gender"] ??
-                                          "No gender"),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      return buildCard(context, snapshot, index);
                     },
                     itemCount: snapshot.data.documents.length,
                   )
@@ -291,5 +213,85 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   );
           },
         ));
+  }
+
+  Widget buildCard(BuildContext context, AsyncSnapshot snapshot, int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ProfileDateil(
+            proSnapshot: snapshot.data.documents[index],
+          );
+        }));
+      },
+      child: Card(
+        elevation: 3,
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(5), topLeft: Radius.circular(5),bottomLeft:Radius.circular(5), bottomRight: Radius.circular(5) ),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: CachedNetworkImage(
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(5),
+                        topLeft: Radius.circular(5)),
+                    child: Image.asset(
+                      "assets/placeholder.jpg",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  imageUrl:
+                      snapshot.data.documents[index]["primaryimage"] ?? "",
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.black,Colors.transparent],
+                        begin: Alignment(0, 1.2),
+                        end: Alignment(0, 0))),
+              ),
+              Positioned(
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        snapshot.data.documents[index]["firstname"] +
+                                " " +
+                                snapshot.data.documents[index]["lastname"] ??
+                            "No username",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        snapshot.data.documents[index]["nationaity"] ??
+                            "No nationality",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500,color: Colors.white),
+                      ),
+                      Text(snapshot.data.documents[index]["gender"] ??
+                          "No gender",style: TextStyle(color: Colors.white),),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
