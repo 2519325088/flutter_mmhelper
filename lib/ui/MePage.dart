@@ -18,7 +18,7 @@ class MePage extends StatefulWidget {
 class _MePageState extends State<MePage> {
   BorderSide borderSide = BorderSide(color: Colors.black.withOpacity(0.1));
   String userType;
-
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -39,12 +39,11 @@ class _MePageState extends State<MePage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      key: scaffoldKey,
       body: Container(
         width: SizeConfig.screenWidth,
         child: Padding(
@@ -147,14 +146,21 @@ class _MePageState extends State<MePage> {
                     onTap: () {
                       if (userType == "1") {
                       } else if (userType == "2") {
-
                       } else {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                              return MyJobProfilePage(
-                                userId: widget.querySnapshot.documents[0]["userId"],
-                              );
-                            }));
+                        if (widget.querySnapshot != null) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MyJobProfilePage(
+                              userId: widget.querySnapshot.documents[0]
+                                  ["userId"],
+                            );
+                          }));
+                        } else {
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 2),
+                          ));
+                        }
                       }
                     },
                     title: Text(userType == "1"

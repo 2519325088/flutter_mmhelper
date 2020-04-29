@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
@@ -131,20 +130,49 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   searchData() {
-    widget.listProfileData.forEach((element) {
-      if (eduStringList.contains(element.education) ||
-          religionStringList.contains(element.religion) ||
-          maritalStringList.contains(element.marital) ||
-          childrenStringList.contains(element.children) ||
-          jobTypeStringList.contains(element.jobtype) ||
-          jobCapStringList.contains(element.jobcapacity) ||
-          contractStringList.contains(element.contract) ||
-          workingSkillStringList.contains(element.workskill) ||
-          languageStringList.contains(element.language))
-        listOfCard.add(element);
-    });
-    print(listOfCard.length);
-    widget.onChanged(listOfCard);
+    if (eduStringList.length == 0 &&
+        religionStringList.length == 0 &&
+        maritalStringList.length == 0 &&
+        childrenStringList.length == 0 &&
+        jobTypeStringList.length == 0 &&
+        jobCapStringList.length == 0 &&
+        contractStringList.length == 0 &&
+        workingSkillStringList.length == 0 &&
+        languageStringList.length == 0) {
+      widget.onChanged(widget.listProfileData);
+    } else {
+      widget.listProfileData.forEach((element) {
+        bool isAdd = false;
+        if (eduStringList.contains(element.education) ||
+            religionStringList.contains(element.religion) ||
+            maritalStringList.contains(element.marital) ||
+            childrenStringList.contains(element.children) ||
+            jobTypeStringList.contains(element.jobtype) ||
+            jobCapStringList.contains(element.jobcapacity) ||
+            contractStringList.contains(element.contract) ||
+            workingSkillStringList.contains(element.workskill)) {
+          isAdd = true;
+          listOfCard.add(element);
+        }
+        if (!isAdd) {
+          List<String> languages = element.language.split(";");
+          if (languages != null && languages.length > 0) {
+            languages.forEach((language) {
+              if (languageStringList.contains(language) && !isAdd) {
+                isAdd = true;
+                listOfCard.add(element);
+              }
+            });
+          } else {
+            if (languageStringList.contains(element.language))
+              listOfCard.add(element);
+          }
+        }
+      });
+      print(listOfCard.length);
+      widget.onChanged(listOfCard);
+    }
+
     Navigator.pop(context);
   }
 

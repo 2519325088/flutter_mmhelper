@@ -25,8 +25,9 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 
-  Dashboard({this.isFromLogin, this.mobileNo});
+  Dashboard({this.isFromLogin, this.mobileNo, this.querySnapshot});
 
+  QuerySnapshot querySnapshot;
   String mobileNo;
   bool isFromLogin;
 }
@@ -40,6 +41,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   SharedPreferences prefs;
   String currentUserId;
   QuerySnapshot querySnapshot;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -54,14 +56,12 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   onChangeSearchList(List<ProfileData> newGridSearchListData) {
-
-      print("this is length ${newGridSearchListData.length}");
-      madeSearchGridList( newGridSearchListData);
-
+    print("this is length ${newGridSearchListData.length}");
+    madeSearchGridList(newGridSearchListData);
   }
 
   madeSearchGridList(List<ProfileData> newGridSearchListData) async {
-    gridListData=[];
+    gridListData = [];
     newGridSearchListData.forEach((element) async {
       print(element.education);
       gridListData.add(GridCardWidget(element));
@@ -70,9 +70,9 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   madeGridList() async {
-    listProfileData=[];
-    gridListData=[];
-    gridSearchListData=[];
+    listProfileData = [];
+    gridListData = [];
+    gridSearchListData = [];
     final database = Provider.of<FirestoreDatabase>(context);
     database.flContentsStream().first.then((contents) {
       contents.forEach((element) async {
@@ -85,75 +85,84 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   Widget GridCardWidget(ProfileData element) {
-    return Card(
-      elevation: 3,
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(5),
-            topLeft: Radius.circular(5),
-            bottomLeft: Radius.circular(5),
-            bottomRight: Radius.circular(5)),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: CachedNetworkImage(
-                placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(5),
-                      topLeft: Radius.circular(5)),
-                  child: Image.asset(
-                    "assets/placeholder.jpg",
-                    fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ProfileDateil(
+            profileData: element,
+          );
+        }));
+      },
+      child: Card(
+        elevation: 3,
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(5),
+              topLeft: Radius.circular(5),
+              bottomLeft: Radius.circular(5),
+              bottomRight: Radius.circular(5)),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: CachedNetworkImage(
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(5),
+                        topLeft: Radius.circular(5)),
+                    child: Image.asset(
+                      "assets/placeholder.jpg",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  imageUrl: element.primaryImage ?? "",
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.black, Colors.transparent],
+                        begin: Alignment(0, 1.2),
+                        end: Alignment(0, 0))),
+              ),
+              Positioned(
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        element.firstname + " " + element.lastname ??
+                            "No username",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        element.nationaity ?? "No nationality",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        element.gender ?? "No gender",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
-                imageUrl: element.primaryImage ?? "",
-                fit: BoxFit.cover,
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.black, Colors.transparent],
-                      begin: Alignment(0, 1.2),
-                      end: Alignment(0, 0))),
-            ),
-            Positioned(
-              bottom: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      element.firstname + " " + element.lastname ??
-                          "No username",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      element.nationaity ?? "No nationality",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      element.gender ?? "No gender",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -195,6 +204,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     final database = Provider.of<FirestoreDatabase>(context);
     SizeConfig().init(context);
     return Scaffold(
+        key: scaffoldKey,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -216,11 +226,18 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             FloatingActionButton(
               heroTag: null,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MyJobProfilePage(
-                    userId: querySnapshot.documents[0]["userId"],
-                  );
-                }));
+                if (querySnapshot != null) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return MyJobProfilePage(
+                      userId: querySnapshot.documents[0]["userId"],
+                    );
+                  }));
+                } else {
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text("Please wait..."),
+                    duration: Duration(seconds: 2),
+                  ));
+                }
               },
               child: Icon(Icons.add),
             ),
@@ -300,7 +317,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
-            proSnapshot: snapshot.data.documents[index],
+            /*proSnapshot: snapshot.data.documents[index],*/
           );
         }));
       },

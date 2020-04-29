@@ -92,6 +92,7 @@ class _MainPageState extends State<MainPage> {
       Dashboard(
         mobileNo: widget.mobileNo,
         isFromLogin: widget.isFromLogin,
+        querySnapshot: querySnapshot,
       ),
       JobPage(
         currentUserId: currentUserId,
