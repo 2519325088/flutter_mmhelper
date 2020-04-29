@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Dashboard.dart';
 import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
+import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -559,7 +560,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                               onPressed: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (context) {
-                                  return MamaProfile();
+//                                  return MamaProfile();
+                                  return MyJobProfilePage();
                                 }));
                               },
                               child: Center(

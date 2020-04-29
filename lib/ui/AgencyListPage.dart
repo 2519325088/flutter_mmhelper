@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_mmhelper/ui/AgencyDetailPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AgencyListpage extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
             color: Colors.white
           ),
         ),
+        centerTitle: true,
       ),
       body: Container(
         child: StreamBuilder(
@@ -35,82 +37,11 @@ class _AgencyListpageState extends State<AgencyListpage> {
                   },
                   itemCount: snapshot.data.documents.length,
                 )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    );
-            }),
-
-//        child: ListView(
-//          children: <Widget>[
-//            ListView.separated(
-//              shrinkWrap: true,
-//              physics:const ScrollPhysics(),
-//              padding: EdgeInsets.all(10),
-//              separatorBuilder: (BuildContext context, int index) {
-//                return Align(
-//                  alignment: Alignment.centerRight,
-//                  child: Container(
-//                    height: 0.5,
-//                    width: MediaQuery.of(context).size.width,
-//                    child: Divider(),
-//                  ),
-//                );
-//              },
-//              itemCount: pricelists.length,
-//              itemBuilder: (BuildContext context, int index) {
-//                Map  price= pricelists[index];
-//                return Padding(
-//                  padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-//                  child: Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        flex: 6,
-//                        child:Container(
-//                          height: 50,
-//                          width: double.infinity,
-//                          child: new Image.asset(
-//                            "assets/images/15-shop.jpg",
-//                            fit: BoxFit.cover,
-//                          ),
-//                        ),
-//                      ),
-//                      Expanded(
-//                        flex: 4,
-//                        child:Column(
-//                          crossAxisAlignment: CrossAxisAlignment.end,
-//                          children: <Widget>[
-//                            Text(
-//                              "HKD${price['name']}",
-//                              style: TextStyle(
-//                                fontSize: 24,
-//                                fontWeight: FontWeight.w800,
-//                              ),
-//                            ),
-//                            GestureDetector(
-//                              child: Text(
-//                                "详情",
-//                                style: TextStyle(
-//                                  fontSize: 18,
-//                                ),
-//                              ),
-//                              onTap: (){
-//                                print(datenow);
-////                                Navigator.of(context)
-////                                    .push(MaterialPageRoute(builder: (context) {
-////                                  return AgencyDetailPage();
-////                                }));
-//                              },
-//                            ),
-//                          ],
-//                        )
-//                      ),
-//                    ],
-//                  ),
-//                );
-//              },
-//            ),
-//          ],
-//        ),
+          : Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        ),
       ),
     );
   }
@@ -125,17 +56,84 @@ class _AgencyListpageState extends State<AgencyListpage> {
           children: <Widget>[
             Expanded(
               flex: 6,
-              child:Container(
-                height: 50,
-                width: double.infinity,
-                child: new Image.network(
-                  agencySnapshot["logo"],
-                  fit: BoxFit.cover,
-                ),
+              child:Column(
+                children: <Widget>[
+                  Container(
+                    height: 70,
+                    width: double.infinity,
+                    child: new Image.network(
+                      agencySnapshot["logo"],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: GestureDetector(
+                      onTap: () async{
+                        if (await canLaunch(agencySnapshot["ec_url"])) {
+                          await launch(agencySnapshot["ec_url"]);
+                        } else {
+                          throw 'Could not launch ${agencySnapshot["ec_url"]}';
+                        }
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "用戶評分 : ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          Container(
+                            color: Colors.black45,
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orangeAccent,
+                                  size: 18,
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orangeAccent,
+                                  size: 18,
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orangeAccent,
+                                  size: 18,
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orangeAccent,
+                                  size: 18,
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.white70,
+                                  size: 18,
+                                ),
+                                Text(
+                                  agencySnapshot["score"],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
-                flex: 4,
+                flex: 3,
                 child:Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -148,7 +146,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                     ),
                     GestureDetector(
                       child: Text(
-                        "详情",
+                        "收費詳情",
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -168,4 +166,5 @@ class _AgencyListpageState extends State<AgencyListpage> {
       )
     );
   }
+
 }
