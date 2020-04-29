@@ -49,6 +49,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
 
   Widget agenxyCard(
       {DocumentSnapshot agencySnapshot,}) {
+    var aa = double.parse(agencySnapshot["score"]);
     return Card(
       child: Padding(
         padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -88,40 +89,230 @@ class _AgencyListpageState extends State<AgencyListpage> {
                           Container(
                             color: Colors.black45,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.orangeAccent,
-                                  size: 18,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.orangeAccent,
-                                  size: 18,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.orangeAccent,
-                                  size: 18,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.orangeAccent,
-                                  size: 18,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.white70,
-                                  size: 18,
-                                ),
-                                Text(
-                                  agencySnapshot["score"],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
+                                (0<= aa && aa<1 )?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
+                                (1<=aa && aa <2)?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
+                                (2<=aa && aa <3)?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
+                                (3<=aa && aa <4)?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
+                                (4<=aa && aa<5)?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.white70,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
+                                aa== 5?Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orangeAccent,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      agencySnapshot["score"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ):Text(""),
                               ],
                             ),
                           ),
