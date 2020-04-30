@@ -270,275 +270,246 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 50,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(
-                      "Login",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Image.asset("assets/logo1.png",height: 300,width: 300,)
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return StateListPopup(
-                              isFromLogin: true,
-                            );
-                          });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              getCountryList.selectedLoginCountry,
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.grey),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Icon(Icons.arrow_forward, color: Colors.grey)
-                        ],
+                   /* Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        "Login",
+                        style:
+                            TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
+                    ),*/
+                    GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StateListPopup(
+                                isFromLogin: true,
+                              );
+                            });
+                      },
+                      child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                FocusScope.of(context).unfocus();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return StateListPopup(
-                                        isFromLogin: true,
-                                        isFromProfile: false,
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black.withOpacity(0.3)),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Text(
-                                          getCountryList
-                                              .selectedLoginCountryCode,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_down)
-                                    ],
-                                  ),
-                                ),
+                            Expanded(
+                              child: Text(
+                                getCountryList.selectedLoginCountry,
+                                style:
+                                    TextStyle(fontSize: 18, color: Colors.grey),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            Icon(Icons.arrow_forward, color: Colors.grey)
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Padding(
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black.withOpacity(0.3)),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: TextFormField(
-                                    controller: _phoneNumberController,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(
-                                            signed: false, decimal: false),
-                                    cursorColor: Theme.of(context).accentColor,
-                                    decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.call),
-                                        hintText: "Mobile Number",
-                                        border: InputBorder.none),
+                              GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context).unfocus();
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StateListPopup(
+                                          isFromLogin: true,
+                                          isFromProfile: false,
+                                        );
+                                      });
+                                },
+                                child: Container(
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black.withOpacity(0.3)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            getCountryList
+                                                .selectedLoginCountryCode,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                        Icon(Icons.keyboard_arrow_down)
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  isShowSms
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color:
-                                                Colors.black.withOpacity(0.3)),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                        color: Colors.white),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: TextFormField(
-                                        controller: _smsController,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                signed: false, decimal: false),
-                                        cursorColor:
-                                            Theme.of(context).accentColor,
-                                        decoration: InputDecoration(
-                                            prefixIcon: Icon(Icons.sms),
-                                            hintText: "Enter SMS code",
-                                            border: InputBorder.none),
-                                      ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black.withOpacity(0.3)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    child: TextFormField(
+                                      controller: _phoneNumberController,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: false, decimal: false),
+                                      cursorColor: Theme.of(context).accentColor,
+                                      decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.call),
+                                          hintText: "Mobile Number",
+                                          border: InputBorder.none),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                _verifyPhoneNumber();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Not received? Resend SMS",
-                                  style: TextStyle(fontSize: 16),
                                 ),
-                              ),
-                            )
-                          ],
-                        )
-                      : SizedBox(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      child: FlatButton(
-                        onPressed: () async {
-                          querySnapshot = await Firestore.instance
-                              .collection("mb_content")
-                              .where("phone",
-                                  isEqualTo: _phoneNumberController.text)
-                              .getDocuments();
-                          print(querySnapshot.documents);
-                          if (querySnapshot.documents.length == 0) {
-                            scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text(
-                                    "No mobile number found. please sign up first")));
-                          } else {
-                            if (isShowSms) {
-                              _signInWithPhoneNumber();
-                            } else {
-                              _verifyPhoneNumber();
-                            }
-                          }
-                        },
-                        child: Center(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 20),
-                          child: Text(
-                            "Submit",
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        )),
-                        shape: RoundedRectangleBorder(),
-                        color: Colors.pink.withOpacity(0.7),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: FlatButton(
-                              onPressed: () {
-                                signInWithFacebook();
-                              },
-                              child: Center(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 100, vertical: 20),
-                                child: Text(
-                                  "Facebook",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              )),
-                              shape: RoundedRectangleBorder(),
-                              color: Colors.indigo,
+                              ],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return SignUpScreen();
-                                }));
-                              },
-                              child: Center(
-                                  child: Padding(
+                      ],
+                    ),
+                    isShowSms
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color:
+                                                  Colors.black.withOpacity(0.3)),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: TextFormField(
+                                          controller: _smsController,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  signed: false, decimal: false),
+                                          cursorColor:
+                                              Theme.of(context).accentColor,
+                                          decoration: InputDecoration(
+                                              prefixIcon: Icon(Icons.sms),
+                                              hintText: "Enter SMS code",
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _verifyPhoneNumber();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Not received? Resend SMS",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : SizedBox(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: FlatButton(
+                          onPressed: () async {
+                            querySnapshot = await Firestore.instance
+                                .collection("mb_content")
+                                .where("phone",
+                                    isEqualTo: _phoneNumberController.text)
+                                .getDocuments();
+                            print(querySnapshot.documents);
+                            if (querySnapshot.documents.length == 0) {
+                              scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "No mobile number found. please sign up first")));
+                            } else {
+                              if (isShowSms) {
+                                _signInWithPhoneNumber();
+                              } else {
+                                _verifyPhoneNumber();
+                              }
+                            }
+                          },
+                          child: Center(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 100, vertical: 20),
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          )),
+                          shape: RoundedRectangleBorder(),
+                          color: Colors.pink.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return SignUpScreen();
+                            }));
+                          },
+                          child: Center(
+                              child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 100, vertical: 20),
                                 child: Text(
@@ -547,44 +518,78 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                       color: Colors.white, fontSize: 18),
                                 ),
                               )),
-                              shape: RoundedRectangleBorder(),
-                              color: Colors.red,
+                          shape: RoundedRectangleBorder(),
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                /*Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              child: FlatButton(
+                                onPressed: () {
+                                  signInWithFacebook();
+                                },
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 100, vertical: 20),
+                                  child: Text(
+                                    "Facebook",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                )),
+                                shape: RoundedRectangleBorder(),
+                                color: Colors.indigo,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
+
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              child: FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(builder: (context) {
 //                                  return MamaProfile();
-                                  return MyJobProfilePage();
-                                }));
-                              },
-                              child: Center(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 100, vertical: 20),
-                                child: Text(
-                                  "Profile",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              )),
-                              shape: RoundedRectangleBorder(),
-                              color: Colors.cyan,
+                                    return MyJobProfilePage();
+                                  }));
+                                },
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 100, vertical: 20),
+                                  child: Text(
+                                    "Profile",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                )),
+                                shape: RoundedRectangleBorder(),
+                                color: Colors.cyan,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                ),*/
+              ],
+            ),
           )),
     );
   }
