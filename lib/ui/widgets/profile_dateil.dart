@@ -153,14 +153,19 @@ class _ProfileDateilState extends State<ProfileDateil> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Basic Information",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                        )),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -176,21 +181,22 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       children: <Widget>[
                                         Icon(
                                           Icons.person,
-                                          color: Colors.grey,
+                                          color: Colors.black.withOpacity(0.7),
                                           size: 20,
                                         ),
                                         Text(
                                           "FirstName:",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.grey,
+                                            color: Colors.black.withOpacity(0.7),
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 10, top: 10),
+                                          left: 20, top: 10),
                                       child: Text(
                                         //widget.proSnapshot['firstname'],
                                         widget.profileData.firstname,
@@ -213,21 +219,22 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       children: <Widget>[
                                         Icon(
                                           Icons.person,
-                                          color: Colors.grey,
+                                          color: Colors.black.withOpacity(0.7),
                                           size: 20,
                                         ),
                                         Text(
                                           "LastName:",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.grey,
+                                            color: Colors.black.withOpacity(0.7),
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 10, top: 10),
+                                          left: 20, top: 10),
                                       child: Text(
                                         // widget.proSnapshot['lastname'],
                                         widget.profileData.lastname,
@@ -255,19 +262,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.wc,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Gender:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 //widget.proSnapshot['gender'],
                                 widget.profileData.gender,
@@ -291,19 +299,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.date_range,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Birthday:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 DateFormat.yMMMMEEEEd()
                                     .format(widget.profileData.birthday),
@@ -328,20 +337,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.flag,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Nationaity:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['nationaity'] !=
                                       "Select"
@@ -363,13 +373,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
                 child: Column(
                   children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Detail Information",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                        )),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -381,19 +396,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.edit,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Education:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['education'] != "Select"
                                     ? widget.proSnapshot['education']
@@ -419,19 +435,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.turned_in,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Religion:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['religion'] != "Select"
                                     ? widget.proSnapshot['religion']
@@ -457,19 +474,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.group,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Marital Status:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['marital'] != "Select"
                                     ? widget.proSnapshot['marital']
@@ -495,20 +513,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.child_care,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Chilren:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['children'] !=
                                                 "Select"
@@ -534,20 +553,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.edit_location,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Current Location:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /* widget.proSnapshot['current'] !=
                                                 "Select"
@@ -573,20 +593,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.chat_bubble,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "WhatsApp:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['whatsapp'] !=
                                                 "+85263433995"
@@ -612,20 +633,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.phone,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Phone Number:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['phone'] !=
                                                 "+85263433995"
@@ -647,14 +669,19 @@ class _ProfileDateilState extends State<ProfileDateil> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Work Information",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                        )),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -666,19 +693,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.work,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Job Type:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['jobtype'] != "Select"
                                     ? widget.proSnapshot['jobtype']
@@ -704,19 +732,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.access_time,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Job Capacity:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['jobcapacity'] != "Select"
                                     ? widget.proSnapshot['jobcapacity']
@@ -742,19 +771,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.assignment_late,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Contract Status:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /* widget.proSnapshot['contract'] != "Select"
                                     ? widget.proSnapshot['contract']
@@ -780,20 +810,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.apps,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Working Skills:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['workskill'] !=
                                                 "Select"
@@ -819,20 +850,21 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.chat,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Languages:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Text(
                                   /*widget.proSnapshot['language'] !=
                                                 "Select"
@@ -858,19 +890,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.monetization_on,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "ExpectedSalary(HKD):",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['expectedsalary'] != "Select"
                                     ? widget.proSnapshot['expectedsalary']
@@ -896,19 +929,20 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 Icon(
                                   Icons.access_time,
                                   size: 20,
-                                  color: Colors.grey,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
                                   "Employment Start Date:",
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color: Colors.grey,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10),
+                              padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 /*widget.proSnapshot['employment'] != "Select"
                                     ? widget.proSnapshot['employment']
@@ -931,80 +965,52 @@ class _ProfileDateilState extends State<ProfileDateil> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.assignment,
-                            size: 20,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Self introduction:",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            //widget.proSnapshot['selfintroduction'],
-                            widget.profileData.selfintroduction ?? "",
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ))
-                    ],
-                  ),
+                            "Self Introduction",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 10),
+                        child: Text(
+                          //widget.proSnapshot['selfintroduction'],
+                          widget.profileData.selfintroduction ?? "",
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ))
+                  ],
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.work,
-                            size: 20,
-                            color: Colors.grey,
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black.withOpacity(0.2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Work Experiences",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
-                          Text(
-                            "Work Experiences:",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        )),
                     Container(
                       child:
                           /*widget.proSnapshot["workexperiences"] != null ||
                               widget.proSnapshot["workexperiences"][0] != null*/
-                          widget.profileData.workexperiences.length == 0
+                          widget.profileData.workexperiences.length != 0
                               ? ListView.separated(
                                   shrinkWrap: true,
                                   physics: const ScrollPhysics(),
@@ -1030,17 +1036,28 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: Container(
-                                        decoration: new BoxDecoration(
-                                          border: new Border.all(
-                                              color: Colors.black,
-                                              width: 0.5), // 边色与边宽度
-                                          borderRadius:
-                                              new BorderRadius.circular((20.0)),
+                                        padding:const EdgeInsets.only(bottom: 10),
+                                        margin: const EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                                width: 0.5,//宽度
+                                                color: Colors.grey //边框颜色
+                                            ),
+                                          ),
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
+                                            Text(
+                                              '#Work Experience ${index+1}#',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
                                             Container(
                                               child: Padding(
                                                 padding:
@@ -1054,13 +1071,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.edit_location,
                                                           size: 20,
-                                                          color: Colors.grey,
+                                                          color: Colors.black.withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Country:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.grey,
+                                                            color: Colors.black.withOpacity(0.7),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1068,7 +1086,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 10,
+                                                              left: 20,
                                                               top: 10),
                                                       child: Text(
                                                         /*workinfo["country"] !=
@@ -1110,8 +1128,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                 Icon(
                                                                   Icons
                                                                       .access_time,
-                                                                  color: Colors
-                                                                      .grey,
+                                                                  color: Colors.black.withOpacity(0.7),
                                                                   size: 20,
                                                                 ),
                                                                 Text(
@@ -1120,8 +1137,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                       TextStyle(
                                                                     fontSize:
                                                                         18,
-                                                                    color: Colors
-                                                                        .grey,
+                                                                        color: Colors.black.withOpacity(0.7),
+                                                                        fontWeight: FontWeight.bold,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1130,7 +1147,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               padding:
                                                                   const EdgeInsets
                                                                           .only(
-                                                                      left: 10,
+                                                                      left: 20,
                                                                       top: 10),
                                                               child: Text(
                                                                 /*workinfo["start"] !=
@@ -1169,8 +1186,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                 Icon(
                                                                   Icons
                                                                       .access_time,
-                                                                  color: Colors
-                                                                      .grey,
+                                                                  color: Colors.black.withOpacity(0.7),
                                                                   size: 20,
                                                                 ),
                                                                 Text(
@@ -1179,8 +1195,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                       TextStyle(
                                                                     fontSize:
                                                                         18,
-                                                                    color: Colors
-                                                                        .grey,
+                                                                        color: Colors.black.withOpacity(0.7),
+                                                                        fontWeight: FontWeight.bold,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1189,7 +1205,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               padding:
                                                                   const EdgeInsets
                                                                           .only(
-                                                                      left: 10,
+                                                                      left: 20,
                                                                       top: 10),
                                                               child: Text(
                                                                 /*workinfo["end"] !=
@@ -1231,13 +1247,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.work,
                                                           size: 20,
-                                                          color: Colors.grey,
+                                                          color: Colors.black.withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Type of Jobs:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.grey,
+                                                            color: Colors.black.withOpacity(0.7),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1245,7 +1262,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 10,
+                                                              left: 20,
                                                               top: 10),
                                                       child: Text(
                                                         /*workinfo["jobtype"] !=
@@ -1281,13 +1298,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.assignment,
                                                           size: 20,
-                                                          color: Colors.grey,
+                                                          color: Colors.black.withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Number of Taken Care:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.grey,
+                                                            color: Colors.black.withOpacity(0.7),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1295,7 +1313,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 10,
+                                                              left: 20,
                                                               top: 10),
                                                       child: Text(
                                                         /*workinfo["taken"] !=
@@ -1330,13 +1348,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.assignment_late,
                                                           size: 20,
-                                                          color: Colors.grey,
+                                                          color: Colors.black.withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Quit Reason:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.grey,
+                                                            color: Colors.black.withOpacity(0.7),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1344,7 +1363,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 10,
+                                                              left: 20,
                                                               top: 10),
                                                       child: Text(
                                                         /*workinfo["reason"] !=
@@ -1379,13 +1398,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.bookmark,
                                                           size: 20,
-                                                          color: Colors.grey,
+                                                          color: Colors.black.withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Reterence Letter:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.grey,
+                                                            color: Colors.black.withOpacity(0.7),
+                                                            fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1393,7 +1413,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 10,
+                                                              left: 20,
                                                               top: 10),
                                                       child: Text(
                                                         /*workinfo["reterence"] !=
