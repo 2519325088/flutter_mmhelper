@@ -1,11 +1,8 @@
 import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mmhelper/services/database.dart';
-import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
-import 'package:provider/provider.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -56,19 +53,16 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                     return StreamBuilder(
                         stream: Firestore.instance
                             .collection('mb_content')
-                            .document(
-                                snapshot.data.documents[index]["user_id"])
+                            .document(snapshot.data.documents[index]["user_id"])
                             .snapshots(),
                         builder: (context, snapshot2) {
                           return snapshot2.hasData
                               ? jobCard(
-                                  userName:
-                                      snapshot2.data["firstname"] ?? "",
+                                  userName: snapshot2.data["firstname"] ?? "",
                                   shortDes: snapshot.data.documents[index]
                                           ["job_short_description"] ??
                                       "",
-                                  jobSnapshot:
-                                      snapshot.data.documents[index],
+                                  jobSnapshot: snapshot.data.documents[index],
                                   userSnapshot: snapshot2.data)
                               : SizedBox();
                         });
