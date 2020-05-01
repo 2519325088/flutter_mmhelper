@@ -5,6 +5,7 @@ import 'package:flutter_mmhelper/services/AppLanguage.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
+
 import 'services/GetCountryListService.dart';
 import 'services/database.dart';
 
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             locale: model.appLocal,
-            title: "LMS APP",
+            title: "Search 4 Maid",
             supportedLocales: [
               Locale('en', 'US'),
               const Locale.fromSubtags(languageCode: 'zh'),

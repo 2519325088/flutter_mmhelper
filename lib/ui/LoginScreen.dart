@@ -2,23 +2,20 @@ import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/FacebookModel.dart';
-import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/MainPage.dart';
 import 'package:flutter_mmhelper/ui/SignUpScreen.dart';
-import 'package:flutter_mmhelper/ui/widgets/platform_alert_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Dashboard.dart';
+
 import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
-import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -35,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   String _verificationId;
   bool isShowSms = false;
   bool isLoading = false;
-
 
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
@@ -79,11 +75,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
     var getCountryList = Provider.of<GetCountryListService>(context);
     if (getCountryList.selectedLoginCountryCode == "Select Code") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please select dial code"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_select_dial_code')),
       ));
     } else if (_phoneNumberController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter mobile"),
+        content:
+            Text(AppLocalizations.of(context).translate('Please_enter_mobile')),
       ));
     } else {
       setState(() {
@@ -114,7 +112,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       final PhoneCodeSent codeSent =
           (String verificationId, [int forceResendingToken]) async {
         scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("Please check your phone for the verification code."),
+          content: Text(AppLocalizations.of(context)
+              .translate('Please_check_your_phone_for_the_verification_code')),
         ));
         setState(() {
           isShowSms = true;
@@ -188,7 +187,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       }
     } else {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter SMS code"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_SMS_code')),
       ));
     }
   }
@@ -280,10 +280,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Image.asset("assets/logo1.png",height: 300,width: 300,)
-                    ),
-                   /* Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Image.asset(
+                          "assets/logo1.png",
+                          height: 300,
+                          width: 300,
+                        )),
+                    /* Padding(
                       padding: const EdgeInsets.all(20),
                       child: Text(
                         "Login",
@@ -388,17 +391,19 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                           BorderRadius.all(Radius.circular(5)),
                                       color: Colors.white),
                                   child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                     child: TextFormField(
                                       controller: _phoneNumberController,
                                       keyboardType:
                                           TextInputType.numberWithOptions(
                                               signed: false, decimal: false),
-                                      cursorColor: Theme.of(context).accentColor,
+                                      cursorColor:
+                                          Theme.of(context).accentColor,
                                       decoration: InputDecoration(
                                           prefixIcon: Icon(Icons.call),
-                                          hintText: "Mobile Number",
+                                          hintText: AppLocalizations.of(context)
+                                              .translate('MobileNumber'),
                                           border: InputBorder.none),
                                     ),
                                   ),
@@ -421,8 +426,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color:
-                                                  Colors.black.withOpacity(0.3)),
+                                              color: Colors.black
+                                                  .withOpacity(0.3)),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(5)),
                                           color: Colors.white),
@@ -433,12 +438,15 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                           controller: _smsController,
                                           keyboardType:
                                               TextInputType.numberWithOptions(
-                                                  signed: false, decimal: false),
+                                                  signed: false,
+                                                  decimal: false),
                                           cursorColor:
                                               Theme.of(context).accentColor,
                                           decoration: InputDecoration(
                                               prefixIcon: Icon(Icons.sms),
-                                              hintText: "Enter SMS code",
+                                              hintText: AppLocalizations.of(
+                                                      context)
+                                                  .translate('Enter_SMS_code'),
                                               border: InputBorder.none),
                                         ),
                                       ),
@@ -453,7 +461,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "Not received? Resend SMS",
+                                    AppLocalizations.of(context)
+                                        .translate('Not_received_Resend_SMS'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -475,8 +484,9 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                             print(querySnapshot.documents);
                             if (querySnapshot.documents.length == 0) {
                               scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text(
-                                      "No mobile number found. please sign up first")));
+                                  content: Text(AppLocalizations.of(context)
+                                      .translate(
+                                          'No_mobile_number_found_please_sign_up_first'))));
                             } else {
                               if (isShowSms) {
                                 _signInWithPhoneNumber();
@@ -490,8 +500,9 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 100, vertical: 20),
                             child: Text(
-                              "Submit",
-                              style: TextStyle(color: Colors.white, fontSize: 18),
+                              AppLocalizations.of(context).translate('Submit'),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
                             ),
                           )),
                           shape: RoundedRectangleBorder(),
@@ -512,14 +523,14 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                           },
                           child: Center(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 100, vertical: 20),
-                                child: Text(
-                                  "SignUp",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              )),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 100, vertical: 20),
+                            child: Text(
+                              AppLocalizations.of(context).translate('SignUp'),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          )),
                           shape: RoundedRectangleBorder(),
                           color: Colors.red,
                         ),

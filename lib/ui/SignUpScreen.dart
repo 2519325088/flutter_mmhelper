@@ -1,25 +1,27 @@
 import 'dart:io';
+
 import 'package:after_init/after_init.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/MainPage.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'widgets/CountryListPopup.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
-import 'package:flutter_mmhelper/ui/widgets/role_user.dart';
 
 class User {
   User({@required this.uid});
@@ -131,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             .setData(
                 path: APIPath.newCandidate(database.lastUserId),
                 data: flContent.toMap())
-            .then((onValue) async{
+            .then((onValue) async {
           prefs = await SharedPreferences.getInstance();
           prefs.setString("PhoneUserId", database.lastUserId);
           Navigator.pushAndRemoveUntil(context,
@@ -144,7 +146,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         });
       } else {
         scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text("Something goes wrong to upload image"),
+          content: Text(AppLocalizations.of(context)
+              .translate('Something_goes_wrong_to_upload_image')),
         ));
       }
     }, onError: (err) {
@@ -152,7 +155,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         isLoading = false;
       });
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('This file is not an image'),
+        content: Text(AppLocalizations.of(context)
+            .translate('This_file_is_not_an_image')),
       ));
     });
   }
@@ -162,35 +166,43 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     final database = Provider.of<FirestoreDatabase>(context);
     if (locProFileImage == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please select profile Image"),
+        content: Text(AppLocalizations.of(context)
+            .translate('Please_select_profile_Image')),
       ));
     } else if (getCountryList.selectedCountryCode == "Select Code") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please select dial code"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_select_dial_code')),
       ));
     } else if (mobileController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter mobile"),
+        content:
+            Text(AppLocalizations.of(context).translate('Please_enter_mobile')),
       ));
     } else if (lastnameController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter lastname"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_lastname')),
       ));
     } else if (firstnameController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter firstname"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_firstname')),
       ));
     } else if (usernameController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter username"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_username')),
       ));
     } else if (roleController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter role"),
+        content:
+            Text(AppLocalizations.of(context).translate('Please_enter_role')),
       ));
     } else if (emailController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter email"),
+        content:
+            Text(AppLocalizations.of(context).translate('Please_enter_email')),
       ));
     }
     /*else if (passwordController.text == "") {
@@ -200,15 +212,18 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     }*/
     else if (nationalityController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter nationality"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_nationality')),
       ));
     } else if (religionController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please enter religion"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_religion')),
       ));
     } else if (genderRadio == -1) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please select gender"),
+        content: Text(
+            AppLocalizations.of(context).translate('Please_select_gender')),
       ));
     } else {
       setState(() {
@@ -244,7 +259,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         });
       } on PlatformException catch (e) {
         PlatformExceptionAlertDialog(
-          title: 'Operation failed',
+          title: AppLocalizations.of(context).translate('Operation_failed'),
           exception: e,
         ).show(context);
       }
@@ -263,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         isLoading = false;
       });
       PlatformExceptionAlertDialog(
-        title: 'Operation failed',
+        title: AppLocalizations.of(context).translate('Operation_failed'),
         exception: e,
       ).show(context);
       FocusScope.of(context).requestFocus(FocusNode());
@@ -317,7 +332,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                "Upload Image",
+                AppLocalizations.of(context).translate('Upload_Image'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -341,7 +356,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                         Icons.camera_alt,
                         size: 50,
                       ),
-                      Text("Camera"),
+                      Text(AppLocalizations.of(context).translate('Camera')),
                     ],
                   ),
                 ),
@@ -356,7 +371,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                         Icons.image,
                         size: 50,
                       ),
-                      Text("Gallery"),
+                      Text(AppLocalizations.of(context).translate('Gallery')),
                     ],
                   ),
                 )
@@ -368,7 +383,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           Row(
             children: <Widget>[
               FlatButton(
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context).translate('Cancel')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -386,7 +401,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text("Sign Up"),
+        title: Text(AppLocalizations.of(context).translate('SignUp')),
         centerTitle: true,
         textTheme:
             TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
@@ -426,7 +441,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                           Icons.account_circle,
                                           size: 50,
                                         ),
-                                        Text("Upload")
+                                        Text(AppLocalizations.of(context)
+                                            .translate('Upload'))
                                       ],
                                     ),
                                   )
@@ -547,7 +563,9 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                             Theme.of(context).accentColor,
                                         decoration: InputDecoration(
                                             prefixIcon: Icon(Icons.call),
-                                            hintText: "Mobile Number",
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate('MobileNumber'),
                                             border: InputBorder.none),
                                       ),
                                     ),
@@ -583,7 +601,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
-                                      hintText: "LastName",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('LastName'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -615,7 +634,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
-                                      hintText: "FirstName",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('FirstName'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -643,7 +663,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
-                                      hintText: "UserName",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('UserName'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -671,23 +692,27 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
-                                      hintText: "Role",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('Role'),
                                       border: InputBorder.none),
                                   onTap: () {
                                     FocusScope.of(context)
                                         .requestFocus(FocusNode());
                                     final action = CupertinoActionSheet(
                                       title: Text(
-                                        "Role",
+                                        AppLocalizations.of(context)
+                                            .translate('Role'),
                                         style: TextStyle(fontSize: 30),
                                       ),
                                       message: Text(
-                                        "Select any option ",
+                                        AppLocalizations.of(context)
+                                            .translate('Select_any_option'),
                                         style: TextStyle(fontSize: 15.0),
                                       ),
                                       actions: roleWidget,
                                       cancelButton: CupertinoActionSheetAction(
-                                        child: Text("Cancel"),
+                                        child: Text(AppLocalizations.of(context)
+                                            .translate('Cancel')),
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
@@ -731,7 +756,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.email),
-                                      hintText: "Email",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('Email'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -788,7 +814,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.flag),
-                                      hintText: "Nationality",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('Nationality'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -817,7 +844,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                   decoration: InputDecoration(
                                       prefixIcon:
                                           Icon(Icons.supervised_user_circle),
-                                      hintText: "Religion",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('Religion'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -839,7 +867,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
-                                  "Gender:",
+                                  AppLocalizations.of(context)
+                                      .translate('Gender:'),
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
@@ -865,7 +894,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                             genderRadioValueChange(0);
                                           },
                                           child: Text(
-                                            "Male",
+                                            AppLocalizations.of(context)
+                                                .translate('Male'),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(fontSize: 16),
@@ -886,7 +916,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                             genderRadioValueChange(1);
                                           },
                                           child: Text(
-                                            "Female",
+                                            AppLocalizations.of(context)
+                                                .translate('Female'),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(fontSize: 16),
@@ -912,7 +943,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 100, vertical: 20),
                               child: Text(
-                                "Register",
+                                AppLocalizations.of(context)
+                                    .translate('Register'),
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
@@ -953,10 +985,11 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
 
       switch (genderRadio) {
         case 0:
-          genderSelectedValue = "Male";
+          genderSelectedValue = AppLocalizations.of(context).translate('Male');
           break;
         case 1:
-          genderSelectedValue = "Female";
+          genderSelectedValue =
+              AppLocalizations.of(context).translate('Female');
           break;
       }
     });
