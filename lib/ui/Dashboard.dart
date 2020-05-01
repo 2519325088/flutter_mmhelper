@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_mmhelper/Models/EducationListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
@@ -38,6 +39,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   List<Widget> gridListData = [];
   List<ProfileData> gridSearchListData = [];
   List<ProfileData> listProfileData = [];
+  List<EducationList> listEducationData = [];
   SharedPreferences prefs;
   String currentUserId;
   QuerySnapshot querySnapshot;
@@ -51,6 +53,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   @override
   void didInitState() {
+    callEducationData();
     madeGridList();
     getCurrentUserId();
   }
@@ -84,9 +87,19 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     });
   }
 
+  callEducationData() async {
+    listEducationData = [];
+    final database = Provider.of<FirestoreDatabase>(context);
+    database.mbEducationStream().first.then((contents) {
+      contents.forEach((element) async {
+        listEducationData.add(element);
+      });
+    });
+  }
+
   Widget GridCardWidget(ProfileData element) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
             profileData: element,
@@ -215,6 +228,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   return SearchPage(
                     onChanged: onChangeSearchList,
                     listProfileData: listProfileData,
+                    listEducationData: listEducationData,
                   );
                 }));
               },
@@ -317,8 +331,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
-            /*proSnapshot: snapshot.data.documents[index],*/
-          );
+              /*proSnapshot: snapshot.data.documents[index],*/
+              );
         }));
       },
       child: Card(

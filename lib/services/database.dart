@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/EducationListModel.dart';
 import 'package:flutter_mmhelper/Models/FacebookModel.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:dio/dio.dart';
@@ -43,6 +44,12 @@ class FirestoreDatabase with ChangeNotifier {
   Stream<List<ProfileData>> flContentsStream() => _service.collectionStream(
         path: APIPath.candidateList(),
         builder: (data, documentId) => ProfileData.fromMap(data),
+      );
+
+  Stream<List<EducationList>> mbEducationStream() =>
+      _service.collectionStream(
+        path: APIPath.educationList(),
+        builder: (data, documentId) => EducationList.fromMap(data),
       );
 
   Future<Facebookdata> facebookCall(

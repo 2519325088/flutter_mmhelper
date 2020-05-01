@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/EducationListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
   final ValueChanged<List<ProfileData>> onChanged;
   final List<ProfileData> listProfileData;
+  final List<EducationList> listEducationData;
 
-  SearchPage({this.onChanged, this.listProfileData});
+  SearchPage({this.onChanged, this.listProfileData, this.listEducationData});
 }
 
 class _SearchPageState extends State<SearchPage> {
@@ -32,21 +35,35 @@ class _SearchPageState extends State<SearchPage> {
   List<String> workingSkillStringList = [];
   List<String> languageStringList = [];
   List<ProfileData> listOfCard = [];
+  String languageCode;
+  bool isLoading = true;
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    education.forEach((f) {
-      eduWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: eduStringList,
-        isSelected: false,
-      ));
-      eduWidget.add(SizedBox(
-        width: 5,
-      ));
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+      widget.listEducationData.forEach((f) {
+        eduWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: eduStringList,
+          isSelected: false,
+        ));
+        eduWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      setState(() {
+        isLoading = false;
+      });
     });
+
     religion.forEach((f) {
       religionWidget.add(ChipsWidget(
         title: f,
@@ -190,24 +207,42 @@ class _SearchPageState extends State<SearchPage> {
               })
         ],
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              chipsCardWidget(widgetList: eduWidget, title: 'Education'),
-              chipsCardWidget(widgetList: religionWidget, title: 'Religion'),
-              chipsCardWidget(
-                  widgetList: maritalStatusWidget, title: 'Marital'),
-              chipsCardWidget(widgetList: childrenWidget, title: 'Children'),
-              chipsCardWidget(widgetList: jobTypeWidget, title: 'Job Type'),
-              chipsCardWidget(widgetList: jobCapWidget, title: 'Job Capacity'),
-              chipsCardWidget(widgetList: contractWidget, title: 'Contract'),
-              chipsCardWidget(
-                  widgetList: workingSkillWidget, title: 'Working Skill'),
-              chipsCardWidget(widgetList: languageWidget, title: 'Language'),
-            ],
+      body: Stack(
+        children: <Widget>[
+          Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  chipsCardWidget(widgetList: eduWidget, title: 'Education'),
+                  chipsCardWidget(
+                      widgetList: religionWidget, title: 'Religion'),
+                  chipsCardWidget(
+                      widgetList: maritalStatusWidget, title: 'Marital'),
+                  chipsCardWidget(
+                      widgetList: childrenWidget, title: 'Children'),
+                  chipsCardWidget(widgetList: jobTypeWidget, title: 'Job Type'),
+                  chipsCardWidget(
+                      widgetList: jobCapWidget, title: 'Job Capacity'),
+                  chipsCardWidget(
+                      widgetList: contractWidget, title: 'Contract'),
+                  chipsCardWidget(
+                      widgetList: workingSkillWidget, title: 'Working Skill'),
+                  chipsCardWidget(
+                      widgetList: languageWidget, title: 'Language'),
+                ],
+              ),
+            ),
           ),
-        ),
+          Positioned.fill(
+              child: isLoading
+                  ? Container(
+                      color: Colors.black54,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : SizedBox())
+        ],
       ),
     );
   }
