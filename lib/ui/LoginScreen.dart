@@ -31,10 +31,12 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   final formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final _firebaseAuth = FirebaseAuth.instance;
-  bool isLoading = false;
   String _message = '';
   String _verificationId;
   bool isShowSms = false;
+  bool isLoading = false;
+
+
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
   SharedPreferences prefs;

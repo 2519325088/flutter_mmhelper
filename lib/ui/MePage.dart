@@ -2,6 +2,8 @@ import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/services/AppLanguage.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
@@ -42,6 +44,7 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var appLanguage = Provider.of<AppLanguage>(context);
     return Scaffold(
       key: scaffoldKey,
       body: Container(
@@ -174,6 +177,38 @@ class _MePageState extends State<MePage> {
                       border: Border.all(color: Colors.black.withOpacity(0.1))),
                   child: ListTile(
                     title: Text("Job offers"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black.withOpacity(0.1))),
+                  child: ListTile(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    onTap: () {
+                                      appLanguage.changeLanguage(Locale("en"));
+                                      Navigator.pop(context);
+                                    },
+                                    title: Text("English"),
+                                  ),
+                                  ListTile(
+                                    onTap: () {
+                                      appLanguage.changeLanguage(Locale("zh"));
+                                      Navigator.pop(context);
+                                    },
+                                    title: Text("中文"),
+                                  ),
+                                ]);
+                          });
+                    },
+                    title: Text("${AppLocalizations.of(context).translate('languageTitle')}: ${AppLocalizations.of(context).translate('language')}"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
