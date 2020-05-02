@@ -91,6 +91,16 @@ class FirestoreDatabase with ChangeNotifier {
         builder: (data, documentId) => DataList.fromMap(data),
       );
 
+  Stream<List<DataList>> mbNationalityStream() => _service.collectionStream(
+        path: APIPath.nationalityList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbLocationStream() => _service.collectionStream(
+        path: APIPath.locationList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
   Future<Facebookdata> facebookCall(
     _scaffoldKey,
     String token,

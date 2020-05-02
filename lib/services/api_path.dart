@@ -13,6 +13,8 @@ class APIPath {
   static String contractList() => 'mb_contract_list';
   static String workSkillList() => 'mb_workSkill_list';
   static String langList() => 'mb_lang_list';
+  static String nationalityList() => 'mb_nationality_list';
+  static String locationList() => 'mb_location_list';
   static String imageFirebaseData(String imageId) => 'fl_files/$imageId';
 
 }

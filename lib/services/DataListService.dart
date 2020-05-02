@@ -13,6 +13,8 @@ class DataListService with ChangeNotifier {
   List<DataList> listContractData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
+  List<DataList> listNationalityData = [];
+  List<DataList> listLocationData = [];
 
   callEducationData(context) async {
     listEducationData = [];
@@ -77,6 +79,18 @@ class DataListService with ChangeNotifier {
     database.mbLangStream().first.then((contents) {
       contents.forEach((element) async {
         listLangData.add(element);
+      });
+      notifyListeners();
+    });
+    database.mbNationalityStream().first.then((contents) {
+      contents.forEach((element) async {
+        listNationalityData.add(element);
+      });
+      notifyListeners();
+    });
+    database.mbLocationStream().first.then((contents) {
+      contents.forEach((element) async {
+        listLocationData.add(element);
       });
       notifyListeners();
     });
