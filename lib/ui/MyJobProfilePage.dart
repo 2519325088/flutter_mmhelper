@@ -6,17 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
+import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyJobProfilePage extends StatefulWidget {
   @override
@@ -64,14 +68,25 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
 
+  String languageCode;
+
   List<String> workingSkillStringList = [];
-  List<String> languageChips = [];
+  List<DataList> listWorkSkillData = [];
+
+  List<String> languageStringList = [];
+  List<DataList> listLangData = [];
+
   List<Asset> imagesa = List<Asset>();
   final _service = FirestoreService.instance;
   QuerySnapshot profileQuerySnapshot;
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   Future<QuerySnapshot> getMyJobProfile() async {
     return await Firestore.instance
@@ -82,188 +97,227 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileData.imagelist = [];
     profileData.workexperiences = [];
-    getMyJobProfile().then((onValue) {
-      if (onValue.documents.length != 0) {
-        firstNameCtr.text = onValue.documents[0]["firstname"];
-        profileData.firstname = onValue.documents[0]["firstname"];
-        lastNameCtr.text = onValue.documents[0]["lastname"];
-        profileData.lastname = onValue.documents[0]["lastname"];
-        genderCtr.text = onValue.documents[0]["gender"];
-        profileData.gender = onValue.documents[0]["gender"];
-        birthDayCtr.text = DateFormat.yMMMMEEEEd()
-            .format(DateTime.parse(onValue.documents[0]["birthday"]));
-        profileData.birthday = DateTime.parse(onValue.documents[0]["birthday"]);
-        nationalityCtr.text = onValue.documents[0]["nationaity"];
-        profileData.nationaity = onValue.documents[0]["nationaity"];
-        eduCtr.text = onValue.documents[0]["education"];
-        profileData.education = onValue.documents[0]["education"];
-        religionCtr.text = onValue.documents[0]["religion"];
-        profileData.religion = onValue.documents[0]["religion"];
-        maritalCtr.text = onValue.documents[0]["marital"];
-        profileData.marital = onValue.documents[0]["marital"];
-        childCtr.text = onValue.documents[0]["children"];
-        profileData.children = onValue.documents[0]["children"];
-        locationCtr.text = onValue.documents[0]["current"];
-        profileData.current = onValue.documents[0]["current"];
-        whatsAppCtr.text = onValue.documents[0]["whatsapp"];
-        profileData.whatsapp = onValue.documents[0]["whatsapp"];
-        phoneCtr.text = onValue.documents[0]["phone"];
-        profileData.phone = onValue.documents[0]["phone"];
-        jobTypeCtr.text = onValue.documents[0]["jobtype"];
-        profileData.jobtype = onValue.documents[0]["jobtype"];
-        jobCapCtr.text = onValue.documents[0]["jobcapacity"];
-        profileData.jobcapacity = onValue.documents[0]["jobcapacity"];
-        contractCtr.text = onValue.documents[0]["contract"];
-        profileData.contract = onValue.documents[0]["contract"];
-        expectedSalaryCtr.text = onValue.documents[0]["expectedsalary"];
-        profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
-        startDateCtr.text = DateFormat.yMMMMEEEEd()
-            .format(DateTime.parse(onValue.documents[0]["employment"]));
-        profileData.employment =
-            DateTime.parse(onValue.documents[0]["employment"]);
-        selfCtr.text = onValue.documents[0]["selfintroduction"];
-        profileData.selfintroduction = onValue.documents[0]["selfintroduction"];
-        texttags.forEach((f) {
-          workingSkillWidget.add(WorkChips(
-            title: f,
-            workingSkillStringList: workingSkillStringList,
-            isSelected:
-                onValue.documents[0]["workskill"].toString().contains(f),
-          ));
-          workingSkillWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        language.forEach((f) {
-          languageWidget.add(LanguageChips(
-            title: f,
-            languageStringList: languageChips,
-            isSelected: onValue.documents[0]["language"].toString().contains(f),
-          ));
-          languageWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        setState(() {});
-        onValue.documents[0]["workexperiences"].forEach((f) {
-          profileData.workexperiences.add(Workexperience.fromMap((f)));
-        });
-        onValue.documents[0]["imagelist"].forEach((f) {
-          profileData.imagelist.add(f);
-        });
-        profileData.primaryImage = onValue.documents[0]["primaryimage"];
-      } else {
-        texttags.forEach((f) {
-          workingSkillWidget.add(WorkChips(
-            title: f,
-            workingSkillStringList: workingSkillStringList,
-            isSelected: false,
-          ));
-          workingSkillWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        language.forEach((f) {
-          languageWidget.add(LanguageChips(
-            title: f,
-            languageStringList: languageChips,
-            isSelected: false,
-          ));
-          languageWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        setState(() {});
-      }
-    });
 
-    education.forEach((f) {
-      eduWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            eduCtr.text = f;
-            profileData.education = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    religion.forEach((f) {
-      religionWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            religionCtr.text = f;
-            profileData.religion = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    marital.forEach((f) {
-      maritalStatusWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            maritalCtr.text = f;
-            profileData.marital = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    children.forEach((f) {
-      childrenWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            childCtr.text = f;
-            profileData.children = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    jobtype.forEach((f) {
-      jobTypeWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            jobTypeCtr.text = f;
-            profileData.jobtype = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    jobcapacity.forEach((f) {
-      jobCapWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            jobCapCtr.text = f;
-            profileData.jobcapacity = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    contract.forEach((f) {
-      contractWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            contractCtr.text = f;
-            profileData.contract = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+
+      getMyJobProfile().then((onValue) {
+        if (onValue.documents.length != 0) {
+          firstNameCtr.text = onValue.documents[0]["firstname"];
+          profileData.firstname = onValue.documents[0]["firstname"];
+          lastNameCtr.text = onValue.documents[0]["lastname"];
+          profileData.lastname = onValue.documents[0]["lastname"];
+          genderCtr.text = onValue.documents[0]["gender"];
+          profileData.gender = onValue.documents[0]["gender"];
+          birthDayCtr.text = DateFormat.yMMMMEEEEd()
+              .format(DateTime.parse(onValue.documents[0]["birthday"]));
+          profileData.birthday =
+              DateTime.parse(onValue.documents[0]["birthday"]);
+          nationalityCtr.text = onValue.documents[0]["nationaity"];
+          profileData.nationaity = onValue.documents[0]["nationaity"];
+          eduCtr.text = onValue.documents[0]["education"];
+          profileData.education = onValue.documents[0]["education"];
+          religionCtr.text = onValue.documents[0]["religion"];
+          profileData.religion = onValue.documents[0]["religion"];
+          maritalCtr.text = onValue.documents[0]["marital"];
+          profileData.marital = onValue.documents[0]["marital"];
+          childCtr.text = onValue.documents[0]["children"];
+          profileData.children = onValue.documents[0]["children"];
+          locationCtr.text = onValue.documents[0]["current"];
+          profileData.current = onValue.documents[0]["current"];
+          whatsAppCtr.text = onValue.documents[0]["whatsapp"];
+          profileData.whatsapp = onValue.documents[0]["whatsapp"];
+          phoneCtr.text = onValue.documents[0]["phone"];
+          profileData.phone = onValue.documents[0]["phone"];
+          jobTypeCtr.text = onValue.documents[0]["jobtype"];
+          profileData.jobtype = onValue.documents[0]["jobtype"];
+          jobCapCtr.text = onValue.documents[0]["jobcapacity"];
+          profileData.jobcapacity = onValue.documents[0]["jobcapacity"];
+          contractCtr.text = onValue.documents[0]["contract"];
+          profileData.contract = onValue.documents[0]["contract"];
+          expectedSalaryCtr.text = onValue.documents[0]["expectedsalary"];
+          profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
+          startDateCtr.text = DateFormat.yMMMMEEEEd()
+              .format(DateTime.parse(onValue.documents[0]["employment"]));
+          profileData.employment =
+              DateTime.parse(onValue.documents[0]["employment"]);
+          selfCtr.text = onValue.documents[0]["selfintroduction"];
+          profileData.selfintroduction =
+              onValue.documents[0]["selfintroduction"];
+
+          listWorkSkillData.forEach((f) {
+            workingSkillWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: workingSkillStringList,
+              isSelected: onValue.documents[0]["workskill"]
+                  .toString()
+                  .contains(f.nameEn),
+            ));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          listLangData.forEach((f) {
+            languageWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: languageStringList,
+              isSelected: onValue.documents[0]["language"]
+                  .toString()
+                  .contains(f.nameEn),
+            ));
+            languageWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          setState(() {});
+          onValue.documents[0]["workexperiences"].forEach((f) {
+            profileData.workexperiences.add(Workexperience.fromMap((f)));
+          });
+          onValue.documents[0]["imagelist"].forEach((f) {
+            profileData.imagelist.add(f);
+          });
+          profileData.primaryImage = onValue.documents[0]["primaryimage"];
+        } else {
+          listWorkSkillData.forEach((f) {
+            workingSkillWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: workingSkillStringList,
+              isSelected: false,
+            ));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          /*  texttags.forEach((f) {
+            workingSkillWidget.add(WorkChips(
+              title: f,
+              workingSkillStringList: workingSkillStringList,
+              isSelected: false,
+            ));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });*/
+
+          listLangData.forEach((f) {
+            languageWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: languageStringList,
+              isSelected: false,
+            ));
+            languageWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          /*    language.forEach((f) {
+            languageWidget.add(LanguageChips(
+              title: f,
+              languageStringList: languageStringList,
+              isSelected: false,
+            ));
+            languageWidget.add(SizedBox(
+              width: 5,
+            ));
+          });*/
+          setState(() {});
+        }
+      });
+
+      education.forEach((f) {
+        eduWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              eduCtr.text = f;
+              profileData.education = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      religion.forEach((f) {
+        religionWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              religionCtr.text = f;
+              profileData.religion = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      marital.forEach((f) {
+        maritalStatusWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              maritalCtr.text = f;
+              profileData.marital = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      children.forEach((f) {
+        childrenWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              childCtr.text = f;
+              profileData.children = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      jobtype.forEach((f) {
+        jobTypeWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              jobTypeCtr.text = f;
+              profileData.jobtype = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      jobcapacity.forEach((f) {
+        jobCapWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              jobCapCtr.text = f;
+              profileData.jobcapacity = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      contract.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              contractCtr.text = f;
+              profileData.contract = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
     });
   }
 
@@ -394,7 +448,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_select_working_skill'))));
-                  } else if (languageChips.length == 0) {
+                  } else if (languageStringList.length == 0) {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_select_language'))));
@@ -419,7 +473,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     workingSkillStringList.forEach((f) {
                       workingSkillString += "$f;";
                     });
-                    languageChips.forEach((f) {
+                    languageStringList.forEach((f) {
                       languageString += "$f;";
                     });
                     profileData.workskill = workingSkillString;
@@ -2075,106 +2129,11 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void didInitState() {
-    // TODO: implement didInitState
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-  }
-}
 
-class WorkChips extends StatefulWidget {
-  @override
-  _WorkChipsState createState() => _WorkChipsState();
-  final String title;
-  List<String> workingSkillStringList;
-  bool isSelected;
-
-  WorkChips({this.title, this.workingSkillStringList, this.isSelected});
-}
-
-class _WorkChipsState extends State<WorkChips> {
-  bool isSelected;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
-      widget.workingSkillStringList.add(widget.title);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.title),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
-      onSelected: (selected) {
-        setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
-            widget.workingSkillStringList.add(widget.title);
-            print(widget.workingSkillStringList);
-          } else {
-            widget.workingSkillStringList
-                .removeAt(widget.workingSkillStringList.indexOf(widget.title));
-            print(widget.workingSkillStringList);
-          }
-        });
-      },
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.black,
-    );
-  }
-}
-
-class LanguageChips extends StatefulWidget {
-  @override
-  _LanguageChipsState createState() => _LanguageChipsState();
-  final String title;
-  bool isSelected;
-  List<String> languageStringList;
-
-  LanguageChips({this.title, this.languageStringList, this.isSelected});
-}
-
-class _LanguageChipsState extends State<LanguageChips> {
-  bool isSelected = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
-      widget.languageStringList.add(widget.title);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.title),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
-      onSelected: (selected) {
-        this.setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
-            widget.languageStringList.add(widget.title);
-            print(widget.languageStringList);
-          } else {
-            widget.languageStringList
-                .removeAt(widget.languageStringList.indexOf(widget.title));
-            print(widget.languageStringList);
-          }
-        });
-      },
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.black,
-    );
+    var appLanguage = Provider.of<DataListService>(context);
+    listWorkSkillData = appLanguage.listWorkSkillData;
+    listLangData = appLanguage.listLangData;
   }
 }
