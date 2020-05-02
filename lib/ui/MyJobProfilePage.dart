@@ -197,17 +197,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             ));
           });
 
-          /*  texttags.forEach((f) {
-            workingSkillWidget.add(WorkChips(
-              title: f,
-              workingSkillStringList: workingSkillStringList,
-              isSelected: false,
-            ));
-            workingSkillWidget.add(SizedBox(
-              width: 5,
-            ));
-          });*/
-
           listLangData.forEach((f) {
             languageWidget.add(ChipsWidget(
               languageCode: languageCode,
@@ -220,16 +209,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             ));
           });
 
-          /*    language.forEach((f) {
-            languageWidget.add(LanguageChips(
-              title: f,
-              languageStringList: languageStringList,
-              isSelected: false,
-            ));
-            languageWidget.add(SizedBox(
-              width: 5,
-            ));
-          });*/
           setState(() {});
         }
       });
