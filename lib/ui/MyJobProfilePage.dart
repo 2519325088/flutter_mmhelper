@@ -67,6 +67,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> contractWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
+  List<Widget> nationalityWidget = [];
+  List<Widget> locationWidget = [];
 
   String languageCode;
 
@@ -82,6 +84,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<DataList> listContractData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
+  List<DataList> listNationalityData = [];
+  List<DataList> listLocationData = [];
 
   List<Asset> imagesa = List<Asset>();
   final _service = FirestoreService.instance;
@@ -123,11 +127,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               .format(DateTime.parse(onValue.documents[0]["birthday"]));
           profileData.birthday =
               DateTime.parse(onValue.documents[0]["birthday"]);
-          nationalityCtr.text = onValue.documents[0]["nationaity"];
-          profileData.nationaity = onValue.documents[0]["nationaity"];
 
-          locationCtr.text = onValue.documents[0]["current"];
-          profileData.current = onValue.documents[0]["current"];
           whatsAppCtr.text = onValue.documents[0]["whatsapp"];
           profileData.whatsapp = onValue.documents[0]["whatsapp"];
           phoneCtr.text = onValue.documents[0]["phone"];
@@ -319,6 +319,48 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
+          listNationalityData.forEach((f) {
+            if (onValue.documents[0]["nationaity"]
+                .toString()
+                .contains(f.nameEn)) {
+              nationalityCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.nationality = f.nameEn;
+            }
+            nationalityWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  nationalityCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.nationality = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listLocationData.forEach((f) {
+            if (onValue.documents[0]["current"].toString().contains(f.nameEn)) {
+              locationCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.current = f.nameEn;
+            }
+            locationWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  locationCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.current = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
           setState(() {});
 
           onValue.documents[0]["workexperiences"].forEach((f) {
@@ -456,6 +498,22 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                   contractCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.contract = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listNationalityData.forEach((f) {
+            nationalityWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  nationalityCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.nationality = dataList.nameEn;
                   print(dataList.nameEn);
                   Navigator.pop(context);
                 },
@@ -990,16 +1048,47 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             style: titleText,
                                           ),
                                           TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.nationaity = newText;
-                                            },
-                                            controller: nationalityCtr,
                                             style: dataText,
+                                            controller: nationalityCtr,
                                             decoration: InputDecoration(
                                                 hintText: AppLocalizations.of(
                                                         context)
                                                     .translate(
-                                                        'Enter_nationality')),
+                                                        'Select_Nationality')),
+                                            onTap: () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              final action =
+                                                  CupertinoActionSheet(
+                                                title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate('Nationality'),
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                                message: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
+                                                  style:
+                                                      TextStyle(fontSize: 15.0),
+                                                ),
+                                                actions: nationalityWidget,
+                                                cancelButton:
+                                                    CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              );
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => action);
+                                            },
                                           )
                                         ],
                                       ),
@@ -2290,5 +2379,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     listJobCapData = appLanguage.listJobCapData;
     listWorkSkillData = appLanguage.listWorkSkillData;
     listLangData = appLanguage.listLangData;
+    listNationalityData = appLanguage.listNationalityData;
+    listLocationData = appLanguage.listLocationData;
   }
 }

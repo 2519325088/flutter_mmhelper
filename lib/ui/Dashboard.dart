@@ -7,19 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
-import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
-import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/SearchPage.dart';
-import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'index.dart';
 import 'widgets/profile_dateil.dart';
 
 class Dashboard extends StatefulWidget {
@@ -85,7 +80,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     });
   }
 
-
   Widget GridCardWidget(ProfileData element) {
     return GestureDetector(
       onTap: () {
@@ -149,7 +143,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                             color: Colors.white),
                       ),
                       Text(
-                        element.nationaity ?? "No nationality",
+                        element.nationality ?? "No nationality",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
