@@ -1,8 +1,11 @@
+import 'package:after_init/after_init.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mmhelper/Models/EducationListModel.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
@@ -10,12 +13,12 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
   final ValueChanged<List<ProfileData>> onChanged;
   final List<ProfileData> listProfileData;
-  final List<EducationList> listEducationData;
+  final List<DataList> listEducationData;
 
   SearchPage({this.onChanged, this.listProfileData, this.listEducationData});
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<Widget> eduWidget = [];
   List<Widget> religionWidget = [];
   List<Widget> maritalStatusWidget = [];
@@ -37,6 +40,15 @@ class _SearchPageState extends State<SearchPage> {
   List<ProfileData> listOfCard = [];
   String languageCode;
   bool isLoading = true;
+  List<DataList> listEducationData = [];
+  List<DataList> listReligionData = [];
+  List<DataList> listMaritalData = [];
+  List<DataList> listChildrenData = [];
+  List<DataList> listJobTypeData = [];
+  List<DataList> listJobCapData = [];
+  List<DataList> listContractData = [];
+  List<DataList> listWorkSkillData = [];
+  List<DataList> listLangData = [];
 
   Future<String> fetchLanguage() async {
     var prefs = await SharedPreferences.getInstance();
@@ -49,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     fetchLanguage().then((onValue) {
       languageCode = onValue;
-      widget.listEducationData.forEach((f) {
+      listEducationData.forEach((f) {
         eduWidget.add(ChipsWidget(
           title: languageCode == "en" ? f.nameEn : f.nameZh,
           typeStringList: eduStringList,
@@ -59,90 +71,89 @@ class _SearchPageState extends State<SearchPage> {
           width: 5,
         ));
       });
+      listReligionData.forEach((f) {
+        religionWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: religionStringList,
+          isSelected: false,
+        ));
+        religionWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listMaritalData.forEach((f) {
+        maritalStatusWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: maritalStringList,
+          isSelected: false,
+        ));
+        maritalStatusWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listChildrenData.forEach((f) {
+        childrenWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: childrenStringList,
+          isSelected: false,
+        ));
+        childrenWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listJobTypeData.forEach((f) {
+        jobTypeWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: jobTypeStringList,
+          isSelected: false,
+        ));
+        jobTypeWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listJobCapData.forEach((f) {
+        jobCapWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: jobCapStringList,
+          isSelected: false,
+        ));
+        jobCapWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listContractData.forEach((f) {
+        contractWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: contractStringList,
+          isSelected: false,
+        ));
+        contractWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listWorkSkillData.forEach((f) {
+        workingSkillWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: workingSkillStringList,
+          isSelected: false,
+        ));
+        workingSkillWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listLangData.forEach((f) {
+        languageWidget.add(ChipsWidget(
+          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          typeStringList: languageStringList,
+          isSelected: false,
+        ));
+        languageWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
       setState(() {
         isLoading = false;
       });
-    });
-
-    religion.forEach((f) {
-      religionWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: religionStringList,
-        isSelected: false,
-      ));
-      religionWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    marital.forEach((f) {
-      maritalStatusWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: maritalStringList,
-        isSelected: false,
-      ));
-      maritalStatusWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    children.forEach((f) {
-      childrenWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: childrenStringList,
-        isSelected: false,
-      ));
-      childrenWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    jobtype.forEach((f) {
-      jobTypeWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: jobTypeStringList,
-        isSelected: false,
-      ));
-      jobTypeWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    jobcapacity.forEach((f) {
-      jobCapWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: jobCapStringList,
-        isSelected: false,
-      ));
-      jobCapWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    contract.forEach((f) {
-      contractWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: contractStringList,
-        isSelected: false,
-      ));
-      contractWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    texttags.forEach((f) {
-      workingSkillWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: workingSkillStringList,
-        isSelected: false,
-      ));
-      workingSkillWidget.add(SizedBox(
-        width: 5,
-      ));
-    });
-    language.forEach((f) {
-      languageWidget.add(ChipsWidget(
-        title: f,
-        typeStringList: languageStringList,
-        isSelected: false,
-      ));
-      languageWidget.add(SizedBox(
-        width: 5,
-      ));
     });
   }
 
@@ -274,6 +285,20 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void didInitState() {
+    var appLanguage = Provider.of<DataListService>(context);
+    listEducationData = appLanguage.listEducationData;
+    listReligionData = appLanguage.listReligionData;
+    listMaritalData = appLanguage.listMaritalData;
+    listChildrenData = appLanguage.listChildrenData;
+    listContractData = appLanguage.listContractData;
+    listJobTypeData = appLanguage.listJobTypeData;
+    listJobCapData = appLanguage.listJobCapData;
+    listWorkSkillData = appLanguage.listWorkSkillData;
+    listLangData = appLanguage.listLangData;
   }
 }
 

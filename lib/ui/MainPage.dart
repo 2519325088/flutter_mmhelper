@@ -1,7 +1,9 @@
+import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/JobPage.dart';
@@ -23,7 +25,7 @@ class MainPage extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with AfterInitMixin {
   int selectedIndex = 0;
   String titleText = "Home";
   final _firebaseAuth = FirebaseAuth.instance;
@@ -167,5 +169,11 @@ class _MainPageState extends State<MainPage> {
         children: widgetOptions,
       ),*/
     );
+  }
+
+  @override
+  void didInitState() {
+    var appLanguage = Provider.of<DataListService>(context);
+    appLanguage.callEducationData(context);
   }
 }

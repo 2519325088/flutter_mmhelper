@@ -4,20 +4,20 @@
 
 import 'dart:convert';
 
-EducationList educationListFromJson(String str) => EducationList.fromMap(json.decode(str));
+DataList educationListFromJson(String str) => DataList.fromMap(json.decode(str));
 
-String educationListToJson(EducationList data) => json.encode(data.toMap());
+String educationListToJson(DataList data) => json.encode(data.toMap());
 
-class EducationList {
+class DataList {
   String nameEn;
   String nameZh;
 
-  EducationList({
+  DataList({
     this.nameEn,
     this.nameZh,
   });
 
-  factory EducationList.fromMap(Map<String, dynamic> json) => EducationList(
+  factory DataList.fromMap(Map<String, dynamic> json) => DataList(
     nameEn: json["name_en"] == null ? null : json["name_en"],
     nameZh: json["name_zh"] == null ? null : json["name_zh"],
   );

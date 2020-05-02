@@ -6,6 +6,7 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:provider/provider.dart';
 
+import 'services/DataListService.dart';
 import 'services/GetCountryListService.dart';
 import 'services/database.dart';
 
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<FirestoreDatabase>(
             create: (_) => FirestoreDatabase(),
+          ),
+          ChangeNotifierProvider<DataListService>(
+            create: (_) => DataListService(),
           ),
         ],
         child: Consumer<AppLanguage>(builder: (context, model, child) {
