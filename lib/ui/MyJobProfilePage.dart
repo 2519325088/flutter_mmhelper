@@ -17,7 +17,6 @@ import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
 import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
-import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
@@ -70,11 +69,17 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> languageWidget = [];
 
   String languageCode;
-  List<String> eduStringList = [];
+
   List<String> workingSkillStringList = [];
   List<String> languageStringList = [];
 
   List<DataList> listEducationData = [];
+  List<DataList> listReligionData = [];
+  List<DataList> listMaritalData = [];
+  List<DataList> listChildrenData = [];
+  List<DataList> listJobTypeData = [];
+  List<DataList> listJobCapData = [];
+  List<DataList> listContractData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
 
@@ -230,91 +235,90 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         );
       });
 
-      /*   education.forEach((f) {
-        eduWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              eduCtr.text = f;
-              profileData.education = f;
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-*/
-      religion.forEach((f) {
+      listReligionData.forEach((f) {
         religionWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              religionCtr.text = f;
-              profileData.religion = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              religionCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.religion = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
         );
       });
 
-      marital.forEach((f) {
+      listMaritalData.forEach((f) {
         maritalStatusWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              maritalCtr.text = f;
-              profileData.marital = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              maritalCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.marital = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
         );
       });
 
-      children.forEach((f) {
+      listChildrenData.forEach((f) {
         childrenWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              childCtr.text = f;
-              profileData.children = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              childCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.children = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
         );
       });
 
-      jobtype.forEach((f) {
+      listJobTypeData.forEach((f) {
         jobTypeWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              jobTypeCtr.text = f;
-              profileData.jobtype = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              jobTypeCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.jobtype = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
         );
       });
 
-      jobcapacity.forEach((f) {
+      listJobCapData.forEach((f) {
         jobCapWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              jobCapCtr.text = f;
-              profileData.jobcapacity = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              jobCapCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.jobcapacity = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
         );
       });
 
-      contract.forEach((f) {
+      listContractData.forEach((f) {
         contractWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              contractCtr.text = f;
-              profileData.contract = f;
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.contract = dataList.nameEn;
+              print(dataList.nameEn);
               Navigator.pop(context);
             },
           ),
@@ -334,7 +338,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     firstNameCtr.dispose();
     lastNameCtr.dispose();
@@ -2137,6 +2140,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
     var appLanguage = Provider.of<DataListService>(context);
     listEducationData = appLanguage.listEducationData;
+    listReligionData = appLanguage.listReligionData;
+    listMaritalData = appLanguage.listMaritalData;
+    listChildrenData = appLanguage.listChildrenData;
+    listContractData = appLanguage.listContractData;
+    listJobTypeData = appLanguage.listJobTypeData;
+    listJobCapData = appLanguage.listJobCapData;
     listWorkSkillData = appLanguage.listWorkSkillData;
     listLangData = appLanguage.listLangData;
   }
