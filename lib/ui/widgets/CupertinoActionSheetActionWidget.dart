@@ -8,14 +8,14 @@ class CupertinoActionSheetActionWidget extends StatefulWidget {
       _CupertinoActionSheetActionWidgetState();
   String languageCode;
   DataList dataList;
+  final ValueChanged<DataList> onPressedCall;
   String typeStringData;
-  TextEditingController textEditingController;
 
-  CupertinoActionSheetActionWidget(
-      {this.languageCode,
-      this.dataList,
-      this.textEditingController,
-      this.typeStringData});
+  CupertinoActionSheetActionWidget({
+    this.languageCode,
+    this.dataList,
+    this.onPressedCall,
+  });
 }
 
 class _CupertinoActionSheetActionWidgetState
@@ -25,11 +25,7 @@ class _CupertinoActionSheetActionWidgetState
     return CupertinoActionSheetAction(
       child: Text(widget.dataList.getValueByLanguageCode(widget.languageCode)),
       onPressed: () {
-        widget.textEditingController.text =
-            widget.dataList.getValueByLanguageCode(widget.languageCode);
-        widget.typeStringData = widget.dataList.nameEn;
-        print(widget.typeStringData);
-        Navigator.pop(context);
+        widget.onPressedCall(widget.dataList);
       },
     );
   }

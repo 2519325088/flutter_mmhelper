@@ -220,8 +220,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
-            typeStringData: profileData.education,
-            textEditingController: eduCtr,
+            onPressedCall: (dataList) {
+              eduCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.education = dataList.nameEn;
+              print(dataList.nameEn);
+              Navigator.pop(context);
+            },
           ),
         );
       });
