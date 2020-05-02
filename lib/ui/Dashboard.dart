@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
+import 'package:flutter_mmhelper/interface/search_listenter.dart';
 import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
@@ -29,7 +31,9 @@ class Dashboard extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _DashboardState extends State<Dashboard> with AfterInitMixin {
+class _DashboardState extends State<Dashboard>
+    with AfterInitMixin
+    implements SearchClickListener {
   final _firebaseAuth = FirebaseAuth.instance;
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
@@ -40,10 +44,25 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   QuerySnapshot querySnapshot;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  SearchClickUtil searchClickUtil;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    searchClickUtil = SearchClickUtil();
+    searchClickUtil.setScreenListener(this);
+  }
+
+  @override
+  onClickSearch() {
+    print("Dashboard onClickSearch");
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SearchPage(
+        onChanged: onChangeSearchList,
+        listProfileData: listProfileData,
+      );
+    }));
+    return null;
   }
 
   @override

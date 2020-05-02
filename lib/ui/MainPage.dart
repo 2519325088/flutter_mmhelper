@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
+import 'package:flutter_mmhelper/interface/search_listenter.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
@@ -14,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Dashboard.dart';
 import 'LoginScreen.dart';
-import 'index.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -26,7 +27,9 @@ class MainPage extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _MainPageState extends State<MainPage> with AfterInitMixin {
+class _MainPageState extends State<MainPage>
+    with AfterInitMixin
+    implements SearchClickListener {
   int selectedIndex = 0;
   String titleText = "Home";
   final _firebaseAuth = FirebaseAuth.instance;
@@ -65,11 +68,20 @@ class _MainPageState extends State<MainPage> with AfterInitMixin {
     });
   }
 
+  SearchClickUtil searchClickUtil;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrentUserId();
+    searchClickUtil = SearchClickUtil();
+    searchClickUtil.setScreenListener(this);
+  }
+
+  @override
+  onClickSearch() {
+    print("MainPage onClickSearch");
+    return null;
   }
 
   getCurrentUserId() async {
@@ -139,6 +151,7 @@ class _MainPageState extends State<MainPage> with AfterInitMixin {
                   onPressed: () {
                     var onClickService = Provider.of<CallSearch>(context);
                     onClickService.onChangeMethod(!true);
+                    searchClickUtil.onClickSearchButton();
                   })
               : SizedBox(),
         ],
