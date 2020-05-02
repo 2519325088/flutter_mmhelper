@@ -27,7 +27,8 @@ class MyJobProfilePage extends StatefulWidget {
   _MyJobProfilePageState createState() => _MyJobProfilePageState();
   final String userId;
   QuerySnapshot loginUserData;
-  MyJobProfilePage({this.userId,this.loginUserData});
+
+  MyJobProfilePage({this.userId, this.loginUserData});
 }
 
 class _MyJobProfilePageState extends State<MyJobProfilePage>
@@ -371,6 +372,22 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
           profileData.primaryImage = onValue.documents[0]["primaryimage"];
         } else {
+          if (widget.loginUserData.documents.length != 0) {
+            firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
+            profileData.firstname =
+                widget.loginUserData.documents[0]["firstname"];
+
+            lastNameCtr.text = widget.loginUserData.documents[0]["lastname"];
+            profileData.lastname =
+                widget.loginUserData.documents[0]["lastname"];
+
+            genderCtr.text = widget.loginUserData.documents[0]["gender"];
+            profileData.gender = widget.loginUserData.documents[0]["gender"];
+
+            phoneCtr.text = widget.loginUserData.documents[0]["phone"];
+            profileData.phone = widget.loginUserData.documents[0]["phone"];
+          }
+
           listWorkSkillData.forEach((f) {
             workingSkillWidget.add(ChipsWidget(
               languageCode: languageCode,
@@ -411,6 +428,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
 
           listReligionData.forEach((f) {
+            if (widget.loginUserData.documents.length != 0) {
+              if (widget.loginUserData.documents[0]["religion"]
+                  .toString()
+                  .contains(f.nameEn)) {
+                religionCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.religion = f.nameEn;
+              }
+            }
             religionWidget.add(
               CupertinoActionSheetActionWidget(
                 languageCode: languageCode,
@@ -506,6 +531,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
 
           listNationalityData.forEach((f) {
+            if (widget.loginUserData.documents.length != 0) {
+              if (widget.loginUserData.documents[0]["nationaity"]
+                  .toString()
+                  .contains(f.nameEn)) {
+                nationalityCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.nationality = f.nameEn;
+              }
+            }
             nationalityWidget.add(
               CupertinoActionSheetActionWidget(
                 languageCode: languageCode,

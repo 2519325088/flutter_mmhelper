@@ -867,8 +867,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('Gender:'),
+                                  "${AppLocalizations.of(context).translate('Gender')}:",
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
