@@ -26,6 +26,8 @@ class DataListService with ChangeNotifier {
     listContractData = [];
     listWorkSkillData = [];
     listLangData = [];
+    listNationalityData = [];
+    listLocationData = [];
 
     final database = Provider.of<FirestoreDatabase>(context);
     database.mbEducationStream().first.then((contents) {
