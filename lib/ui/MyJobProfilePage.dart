@@ -126,24 +126,13 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           nationalityCtr.text = onValue.documents[0]["nationaity"];
           profileData.nationaity = onValue.documents[0]["nationaity"];
 
-          religionCtr.text = onValue.documents[0]["religion"];
-          profileData.religion = onValue.documents[0]["religion"];
-          maritalCtr.text = onValue.documents[0]["marital"];
-          profileData.marital = onValue.documents[0]["marital"];
-          childCtr.text = onValue.documents[0]["children"];
-          profileData.children = onValue.documents[0]["children"];
           locationCtr.text = onValue.documents[0]["current"];
           profileData.current = onValue.documents[0]["current"];
           whatsAppCtr.text = onValue.documents[0]["whatsapp"];
           profileData.whatsapp = onValue.documents[0]["whatsapp"];
           phoneCtr.text = onValue.documents[0]["phone"];
           profileData.phone = onValue.documents[0]["phone"];
-          jobTypeCtr.text = onValue.documents[0]["jobtype"];
-          profileData.jobtype = onValue.documents[0]["jobtype"];
-          jobCapCtr.text = onValue.documents[0]["jobcapacity"];
-          profileData.jobcapacity = onValue.documents[0]["jobcapacity"];
-          contractCtr.text = onValue.documents[0]["contract"];
-          profileData.contract = onValue.documents[0]["contract"];
+
           expectedSalaryCtr.text = onValue.documents[0]["expectedsalary"];
           profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
           startDateCtr.text = DateFormat.yMMMMEEEEd()
@@ -203,6 +192,133 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
+          listReligionData.forEach((f) {
+            if (onValue.documents[0]["religion"]
+                .toString()
+                .contains(f.nameEn)) {
+              religionCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.religion = f.nameEn;
+            }
+            religionWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  religionCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.religion = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listMaritalData.forEach((f) {
+            if (onValue.documents[0]["marital"].toString().contains(f.nameEn)) {
+              maritalCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.marital = f.nameEn;
+            }
+            maritalStatusWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  maritalCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.marital = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listChildrenData.forEach((f) {
+            if (onValue.documents[0]["children"]
+                .toString()
+                .contains(f.nameEn)) {
+              childCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.children = f.nameEn;
+            }
+            childrenWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  childCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.children = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobTypeData.forEach((f) {
+            if (onValue.documents[0]["jobtype"].toString().contains(f.nameEn)) {
+              jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.jobtype = f.nameEn;
+            }
+            jobTypeWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobTypeCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobtype = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobCapData.forEach((f) {
+            if (onValue.documents[0]["jobcapacity"]
+                .toString()
+                .contains(f.nameEn)) {
+              jobCapCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.jobcapacity = f.nameEn;
+            }
+            jobCapWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobCapCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobcapacity = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listContractData.forEach((f) {
+            if (onValue.documents[0]["contract"]
+                .toString()
+                .contains(f.nameEn)) {
+              contractCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.contract = f.nameEn;
+            }
+            contractWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  contractCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.contract = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
           setState(() {});
 
           onValue.documents[0]["workexperiences"].forEach((f) {
@@ -252,98 +368,103 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
+          listReligionData.forEach((f) {
+            religionWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  religionCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.religion = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listMaritalData.forEach((f) {
+            maritalStatusWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  maritalCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.marital = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listChildrenData.forEach((f) {
+            childrenWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  childCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.children = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobTypeData.forEach((f) {
+            jobTypeWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobTypeCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobtype = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobCapData.forEach((f) {
+            jobCapWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobCapCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobcapacity = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listContractData.forEach((f) {
+            contractWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  contractCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.contract = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
           setState(() {});
         }
-      });
-
-      listReligionData.forEach((f) {
-        religionWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              religionCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.religion = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listMaritalData.forEach((f) {
-        maritalStatusWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              maritalCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.marital = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listChildrenData.forEach((f) {
-        childrenWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              childCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.children = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listJobTypeData.forEach((f) {
-        jobTypeWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              jobTypeCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.jobtype = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listJobCapData.forEach((f) {
-        jobCapWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              jobCapCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.jobcapacity = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listContractData.forEach((f) {
-        contractWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.contract = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
       });
     });
   }
