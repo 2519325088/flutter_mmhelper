@@ -125,8 +125,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               DateTime.parse(onValue.documents[0]["birthday"]);
           nationalityCtr.text = onValue.documents[0]["nationaity"];
           profileData.nationaity = onValue.documents[0]["nationaity"];
-          eduCtr.text = onValue.documents[0]["education"];
-          profileData.education = onValue.documents[0]["education"];
+
           religionCtr.text = onValue.documents[0]["religion"];
           profileData.religion = onValue.documents[0]["religion"];
           maritalCtr.text = onValue.documents[0]["marital"];
@@ -183,7 +182,29 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             ));
           });
 
+          listEducationData.forEach((f) {
+            if (onValue.documents[0]["education"]
+                .toString()
+                .contains(f.nameEn)) {
+              eduCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.education = f.nameEn;
+            }
+            eduWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  eduCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.education = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
           setState(() {});
+
           onValue.documents[0]["workexperiences"].forEach((f) {
             profileData.workexperiences.add(Workexperience.fromMap((f)));
           });
@@ -216,23 +237,23 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             ));
           });
 
+          listEducationData.forEach((f) {
+            eduWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  eduCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.education = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
           setState(() {});
         }
-      });
-
-      listEducationData.forEach((f) {
-        eduWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              eduCtr.text = dataList.getValueByLanguageCode(languageCode);
-              profileData.education = dataList.nameEn;
-              print(dataList.nameEn);
-              Navigator.pop(context);
-            },
-          ),
-        );
       });
 
       listReligionData.forEach((f) {
