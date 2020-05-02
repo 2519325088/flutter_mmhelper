@@ -16,6 +16,7 @@ import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
 import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
+import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -69,11 +70,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> languageWidget = [];
 
   String languageCode;
-
+  List<String> eduStringList = [];
   List<String> workingSkillStringList = [];
-  List<DataList> listWorkSkillData = [];
-
   List<String> languageStringList = [];
+
+  List<DataList> listEducationData = [];
+  List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
 
   List<Asset> imagesa = List<Asset>();
@@ -213,7 +215,18 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         }
       });
 
-      education.forEach((f) {
+      listEducationData.forEach((f) {
+        eduWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            typeStringData: profileData.education,
+            textEditingController: eduCtr,
+          ),
+        );
+      });
+
+      /*   education.forEach((f) {
         eduWidget.add(
           CupertinoActionSheetAction(
             child: Text(f),
@@ -225,6 +238,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+*/
       religion.forEach((f) {
         religionWidget.add(
           CupertinoActionSheetAction(
@@ -237,6 +251,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+
       marital.forEach((f) {
         maritalStatusWidget.add(
           CupertinoActionSheetAction(
@@ -249,6 +264,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+
       children.forEach((f) {
         childrenWidget.add(
           CupertinoActionSheetAction(
@@ -261,6 +277,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+
       jobtype.forEach((f) {
         jobTypeWidget.add(
           CupertinoActionSheetAction(
@@ -273,6 +290,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+
       jobcapacity.forEach((f) {
         jobCapWidget.add(
           CupertinoActionSheetAction(
@@ -285,6 +303,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           ),
         );
       });
+
       contract.forEach((f) {
         contractWidget.add(
           CupertinoActionSheetAction(
@@ -455,6 +474,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     languageStringList.forEach((f) {
                       languageString += "$f;";
                     });
+                    print("Upload education ${profileData.education}");
                     profileData.workskill = workingSkillString;
                     profileData.language = languageString;
                     profileData.id = DateTime.parse(widget.userId);
@@ -2112,6 +2132,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     getCountryList.getCountryList();
 
     var appLanguage = Provider.of<DataListService>(context);
+    listEducationData = appLanguage.listEducationData;
     listWorkSkillData = appLanguage.listWorkSkillData;
     listLangData = appLanguage.listLangData;
   }
