@@ -5,6 +5,7 @@ import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -330,55 +331,5 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
     listJobCapData = appLanguage.listJobCapData;
     listWorkSkillData = appLanguage.listWorkSkillData;
     listLangData = appLanguage.listLangData;
-  }
-}
-
-class ChipsWidget extends StatefulWidget {
-  @override
-  _ChipsWidgetState createState() => _ChipsWidgetState();
-  String languageCode;
-  final DataList dataList;
-  List<String> typeStringList;
-  bool isSelected;
-
-  ChipsWidget(
-      {this.languageCode, this.dataList, this.typeStringList, this.isSelected});
-}
-
-class _ChipsWidgetState extends State<ChipsWidget> {
-  bool isSelected;
-
-  @override
-  void initState() {
-    super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
-      widget.typeStringList.add(widget.dataList.nameEn);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.dataList.getValueByLanguageCode(widget.languageCode)),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
-      onSelected: (selected) {
-        setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
-            widget.typeStringList.add(widget.dataList.nameEn);
-            print(widget.typeStringList);
-          } else {
-            widget.typeStringList.removeAt(
-                widget.typeStringList.indexOf(widget.dataList.nameEn));
-            print(widget.typeStringList);
-          }
-        });
-      },
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.black,
-    );
   }
 }

@@ -53,6 +53,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   DateTime startDate;
   DateTime birthDayDate;
   ProfileData profileData = ProfileData();
+
   List<Widget> eduWidget = [];
   List<Widget> religionWidget = [];
   List<Widget> maritalStatusWidget = [];
@@ -62,6 +63,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> contractWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
+
   List<String> workingSkillStringList = [];
   List<String> languageChips = [];
   List<Asset> imagesa = List<Asset>();
