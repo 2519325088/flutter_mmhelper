@@ -4,7 +4,6 @@ import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
-import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +27,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<Widget> contractWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
+
   List<String> eduStringList = [];
   List<String> religionStringList = [];
   List<String> maritalStringList = [];
@@ -37,9 +37,11 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<String> contractStringList = [];
   List<String> workingSkillStringList = [];
   List<String> languageStringList = [];
+
   List<ProfileData> listOfCard = [];
   String languageCode;
   bool isLoading = true;
+
   List<DataList> listEducationData = [];
   List<DataList> listReligionData = [];
   List<DataList> listMaritalData = [];
@@ -57,13 +59,13 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchLanguage().then((onValue) {
       languageCode = onValue;
       listEducationData.forEach((f) {
         eduWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: eduStringList,
           isSelected: false,
         ));
@@ -73,7 +75,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listReligionData.forEach((f) {
         religionWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: religionStringList,
           isSelected: false,
         ));
@@ -83,7 +86,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listMaritalData.forEach((f) {
         maritalStatusWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: maritalStringList,
           isSelected: false,
         ));
@@ -93,7 +97,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listChildrenData.forEach((f) {
         childrenWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: childrenStringList,
           isSelected: false,
         ));
@@ -103,7 +108,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listJobTypeData.forEach((f) {
         jobTypeWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: jobTypeStringList,
           isSelected: false,
         ));
@@ -113,7 +119,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listJobCapData.forEach((f) {
         jobCapWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: jobCapStringList,
           isSelected: false,
         ));
@@ -123,7 +130,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listContractData.forEach((f) {
         contractWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: contractStringList,
           isSelected: false,
         ));
@@ -133,7 +141,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listWorkSkillData.forEach((f) {
         workingSkillWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: workingSkillStringList,
           isSelected: false,
         ));
@@ -143,7 +152,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       });
       listLangData.forEach((f) {
         languageWidget.add(ChipsWidget(
-          title: languageCode == "en" ? f.nameEn : f.nameZh,
+          languageCode: languageCode,
+          dataList: f,
           typeStringList: languageStringList,
           isSelected: false,
         ));
@@ -305,11 +315,13 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
 class ChipsWidget extends StatefulWidget {
   @override
   _ChipsWidgetState createState() => _ChipsWidgetState();
-  final String title;
+  String languageCode;
+  final DataList dataList;
   List<String> typeStringList;
   bool isSelected;
 
-  ChipsWidget({this.title, this.typeStringList, this.isSelected});
+  ChipsWidget(
+      {this.languageCode, this.dataList, this.typeStringList, this.isSelected});
 }
 
 class _ChipsWidgetState extends State<ChipsWidget> {
@@ -317,11 +329,10 @@ class _ChipsWidgetState extends State<ChipsWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isSelected = widget.isSelected;
     if (isSelected) {
-      widget.typeStringList.add(widget.title);
+      widget.typeStringList.add(widget.dataList.nameEn);
     }
   }
 
@@ -329,18 +340,20 @@ class _ChipsWidgetState extends State<ChipsWidget> {
   Widget build(BuildContext context) {
     return FilterChip(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.title),
+      label: Text(widget.languageCode == "en"
+          ? widget.dataList.nameEn
+          : widget.dataList.nameZh),
       labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
       selected: isSelected,
       onSelected: (selected) {
         setState(() {
           isSelected = selected;
           if (isSelected == true) {
-            widget.typeStringList.add(widget.title);
+            widget.typeStringList.add(widget.dataList.nameEn);
             print(widget.typeStringList);
           } else {
-            widget.typeStringList
-                .removeAt(widget.typeStringList.indexOf(widget.title));
+            widget.typeStringList.removeAt(
+                widget.typeStringList.indexOf(widget.dataList.nameEn));
             print(widget.typeStringList);
           }
         });
