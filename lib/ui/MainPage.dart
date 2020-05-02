@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/JobPage.dart';
@@ -134,12 +135,10 @@ class _MainPageState extends State<MainPage> with AfterInitMixin {
         actions: <Widget>[
           isShow
               ? IconButton(
-                  icon: Icon(Icons.video_call),
+                  icon: Icon(Icons.search),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return IndexPage();
-                    }));
+                    var onClickService = Provider.of<CallSearch>(context);
+                    onClickService.onChangeMethod(!true);
                   })
               : SizedBox(),
         ],

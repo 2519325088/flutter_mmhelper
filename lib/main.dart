@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'services/DataListService.dart';
 import 'services/GetCountryListService.dart';
+import 'services/callSearch.dart';
 import 'services/database.dart';
 
 void main() async {
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider<DataListService>(
             create: (_) => DataListService(),
+          ),
+          ChangeNotifierProvider<CallSearch>(
+            create: (_) => CallSearch(),
           ),
         ],
         child: Consumer<AppLanguage>(builder: (context, model, child) {

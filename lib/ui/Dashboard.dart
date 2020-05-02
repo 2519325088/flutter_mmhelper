@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
@@ -197,7 +198,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<FirestoreDatabase>(context);
+    final callSearch = Provider.of<CallSearch>(context);
     SizeConfig().init(context);
     return Scaffold(
         key: scaffoldKey,
@@ -226,6 +227,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MyJobProfilePage(
                       userId: querySnapshot.documents[0]["userId"],
+                      loginUserData: querySnapshot,
                     );
                   }));
                 } else {

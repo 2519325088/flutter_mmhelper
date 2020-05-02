@@ -156,6 +156,7 @@ class _MePageState extends State<MePage> {
                             return MyJobProfilePage(
                               userId: widget.querySnapshot.documents[0]
                                   ["userId"],
+                              loginUserData: widget.querySnapshot,
                             );
                           }));
                         } else {

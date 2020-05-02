@@ -26,8 +26,8 @@ class MyJobProfilePage extends StatefulWidget {
   @override
   _MyJobProfilePageState createState() => _MyJobProfilePageState();
   final String userId;
-
-  MyJobProfilePage({this.userId});
+  QuerySnapshot loginUserData;
+  MyJobProfilePage({this.userId,this.loginUserData});
 }
 
 class _MyJobProfilePageState extends State<MyJobProfilePage>
