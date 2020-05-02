@@ -340,9 +340,7 @@ class _ChipsWidgetState extends State<ChipsWidget> {
   Widget build(BuildContext context) {
     return FilterChip(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.languageCode == "en"
-          ? widget.dataList.nameEn
-          : widget.dataList.nameZh),
+      label: Text(widget.dataList.getValueByLanguageCode(widget.languageCode)),
       labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
       selected: isSelected,
       onSelected: (selected) {

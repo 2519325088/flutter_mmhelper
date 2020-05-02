@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-DataList educationListFromJson(String str) => DataList.fromMap(json.decode(str));
+DataList educationListFromJson(String str) =>
+    DataList.fromMap(json.decode(str));
 
 String educationListToJson(DataList data) => json.encode(data.toMap());
 
@@ -18,12 +19,16 @@ class DataList {
   });
 
   factory DataList.fromMap(Map<String, dynamic> json) => DataList(
-    nameEn: json["name_en"] == null ? null : json["name_en"],
-    nameZh: json["name_zh"] == null ? null : json["name_zh"],
-  );
+        nameEn: json["name_en"] == null ? null : json["name_en"],
+        nameZh: json["name_zh"] == null ? null : json["name_zh"],
+      );
 
   Map<String, dynamic> toMap() => {
-    "name_en": nameEn == null ? null : nameEn,
-    "name_zh": nameZh == null ? null : nameZh,
-  };
+        "name_en": nameEn == null ? null : nameEn,
+        "name_zh": nameZh == null ? null : nameZh,
+      };
+
+  String getValueByLanguageCode(String languageCode) {
+    return languageCode == "en" ? nameEn : nameZh;
+  }
 }
