@@ -521,6 +521,21 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
+          listLocationData.forEach((f) {
+            locationWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  locationCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.current = dataList.nameEn;
+                  print(dataList.nameEn);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
           setState(() {});
         }
       });
@@ -1429,16 +1444,48 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             style: titleText,
                                           ),
                                           TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.current = newText;
-                                            },
-                                            controller: locationCtr,
                                             style: dataText,
+                                            controller: locationCtr,
                                             decoration: InputDecoration(
                                                 hintText: AppLocalizations.of(
                                                         context)
                                                     .translate(
-                                                        'Enter_current_location')),
+                                                        'Select_Current_Location')),
+                                            onTap: () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              final action =
+                                                  CupertinoActionSheet(
+                                                title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Current_Location'),
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                                message: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
+                                                  style:
+                                                      TextStyle(fontSize: 15.0),
+                                                ),
+                                                actions: locationWidget,
+                                                cancelButton:
+                                                    CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              );
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => action);
+                                            },
                                           )
                                         ],
                                       ),
