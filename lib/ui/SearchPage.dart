@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -219,7 +220,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Category Search"),
+        title: Text(AppLocalizations.of(context).translate('Category_Search')),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.done),
@@ -234,22 +235,42 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  chipsCardWidget(widgetList: eduWidget, title: 'Education'),
                   chipsCardWidget(
-                      widgetList: religionWidget, title: 'Religion'),
+                      widgetList: eduWidget,
+                      title:
+                          AppLocalizations.of(context).translate('Education')),
                   chipsCardWidget(
-                      widgetList: maritalStatusWidget, title: 'Marital'),
+                      widgetList: religionWidget,
+                      title:
+                          AppLocalizations.of(context).translate('Religion')),
                   chipsCardWidget(
-                      widgetList: childrenWidget, title: 'Children'),
-                  chipsCardWidget(widgetList: jobTypeWidget, title: 'Job Type'),
+                      widgetList: maritalStatusWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Marital_Status')),
                   chipsCardWidget(
-                      widgetList: jobCapWidget, title: 'Job Capacity'),
+                      widgetList: childrenWidget,
+                      title:
+                          AppLocalizations.of(context).translate('Children')),
                   chipsCardWidget(
-                      widgetList: contractWidget, title: 'Contract'),
+                      widgetList: jobTypeWidget,
+                      title:
+                          AppLocalizations.of(context).translate('Job_Type')),
                   chipsCardWidget(
-                      widgetList: workingSkillWidget, title: 'Working Skill'),
+                      widgetList: jobCapWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Job_Capacity')),
                   chipsCardWidget(
-                      widgetList: languageWidget, title: 'Language'),
+                      widgetList: contractWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Contract_Status')),
+                  chipsCardWidget(
+                      widgetList: workingSkillWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Working_Skill')),
+                  chipsCardWidget(
+                      widgetList: languageWidget,
+                      title:
+                          AppLocalizations.of(context).translate('Language')),
                 ],
               ),
             ),
