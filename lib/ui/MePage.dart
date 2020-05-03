@@ -30,18 +30,20 @@ class _MePageState extends State<MePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Employer")) {
-      userType = "1";
-    } else if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Foreign Helper")) {
-      userType = "2";
-    } else if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Local Auntie")) {
-      userType = "3";
+    if (widget.querySnapshot != null) {
+      if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Employer")) {
+        userType = "1";
+      } else if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Foreign Helper")) {
+        userType = "2";
+      } else if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Local Auntie")) {
+        userType = "3";
+      }
     }
   }
 

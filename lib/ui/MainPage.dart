@@ -85,7 +85,7 @@ class _MainPageState extends State<MainPage>
   }
 
   getCurrentUserId() async {
-    if (widget.isFromLogin) {
+    /*if (widget.isFromLogin) {*/
       isMeLoading = true;
       querySnapshot = await Firestore.instance
           .collection("mb_content")
@@ -95,10 +95,10 @@ class _MainPageState extends State<MainPage>
       prefs = await SharedPreferences.getInstance();
       prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
       isMeLoading = false;
-    } else {
+    /*} else {
       prefs = await SharedPreferences.getInstance();
       currentUserId = prefs.getString('loginUid');
-    }
+    }*/
   }
 
   @override

@@ -51,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController roleController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController facebookEmailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nationalityController = TextEditingController();
   final TextEditingController religionController = TextEditingController();
@@ -60,11 +61,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   String genderSelectedValue = "";
   final formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoading = false;
+  bool isLoading = true;
   File locProFileImage;
   String imageUrl;
   SharedPreferences prefs;
-
   String lastName;
   String languageCode;
 
@@ -86,27 +86,13 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
     dataService.callListData(context);
 
     var getCountryList = Provider.of<GetCountryListService>(context);
+    final database = Provider.of<FirestoreDatabase>(context);
     getCountryList.getCountryList();
-
-    var appLanguage = Provider.of<DataListService>(context);
-    listNationalityData = appLanguage.listNationalityData;
-    listReligionData = appLanguage.listReligionData;
-    listRoleData = appLanguage.listRoleData;
-  }
-
-  Future<String> fetchLanguage() async {
-    var prefs = await SharedPreferences.getInstance();
-    return prefs.getString('language_code');
-  }
-
-  @override
-  void initState() {
-    super.initState();
     mobileController.text = widget.mobileNumber;
-
-    fetchLanguage().then((onValue) {
-      languageCode = onValue;
-
+    database.mbRoleStream().first.then((contents) {
+      contents.forEach((element) async {
+        listRoleData.add(element);
+      });
       listRoleData.forEach((f) {
         roleWidget.add(
           CupertinoActionSheetActionWidget(
@@ -122,39 +108,70 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           ),
         );
       });
-
-      listNationalityData.forEach((f) {
-        nationalityWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              nationalityController.text =
-                  dataList.getValueByLanguageCode(languageCode);
-              nationality = dataList.nameId;
-              print(dataList.nameId);
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });
-
-      listReligionData.forEach((f) {
-        religionWidget.add(
-          CupertinoActionSheetActionWidget(
-            languageCode: languageCode,
-            dataList: f,
-            onPressedCall: (dataList) {
-              religionController.text =
-                  dataList.getValueByLanguageCode(languageCode);
-              religion = dataList.nameId;
-              print(dataList.nameId);
-              Navigator.pop(context);
-            },
-          ),
-        );
+      database.mbNationalityStream().first.then((contents) {
+        contents.forEach((element) async {
+          listNationalityData.add(element);
+        });
+        listNationalityData.forEach((f) {
+          nationalityWidget.add(
+            CupertinoActionSheetActionWidget(
+              languageCode: languageCode,
+              dataList: f,
+              onPressedCall: (dataList) {
+                nationalityController.text =
+                    dataList.getValueByLanguageCode(languageCode);
+                nationality = dataList.nameId;
+                print(dataList.nameId);
+                Navigator.pop(context);
+              },
+            ),
+          );
+        });
+        database.mbReligionStream().first.then((contents) {
+          contents.forEach((element) async {
+            listReligionData.add(element);
+          });
+          listReligionData.forEach((f) {
+            religionWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  religionController.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  religion = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+          setState(() {
+            isLoading = false;
+          });
+        });
       });
     });
+    /* listNationalityData = dataService.listNationalityData;
+    listReligionData = dataService.listReligionData;
+    listRoleData = dataService.listRoleData;*/
+
+    if (dataService.listRoleData != []) {
+      fetchLanguage().then((onValue) {
+        languageCode = onValue;
+        print(dataService.listRoleData);
+      });
+    }
+  }
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   Future uploadFile() async {
@@ -194,7 +211,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         );
         _service
             .setData(
-                path: APIPath.newCandidate(database.lastUserId),
+                path: APIPath.newCandidate(widget.mobileUserId),
                 data: flContent.toMap())
             .then((onValue) async {
           prefs = await SharedPreferences.getInstance();
@@ -252,15 +269,20 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_username')),
       ));
-    } else if (role == "") {
+    } else if (role == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content:
             Text(AppLocalizations.of(context).translate('Please_enter_role')),
       ));
-    } else if (emailController.text == "") {
+    } else if (role == "Employer" && emailController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content:
             Text(AppLocalizations.of(context).translate('Please_enter_email')),
+      ));
+    } else if (role != "Employer" && facebookEmailController.text == "") {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text(
+            AppLocalizations.of(context).translate('Please_enter_facebook')),
       ));
     }
     /*else if (passwordController.text == "") {
@@ -268,12 +290,12 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         content: Text("Please enter password"),
       ));
     }*/
-    else if (nationality == "") {
+    else if (nationality == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_nationality')),
       ));
-    } else if (religion == "") {
+    } else if (religion == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_religion')),
@@ -792,36 +814,75 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black.withOpacity(0.3)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  color: Colors.white),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                child: TextFormField(
-                                  controller: emailController,
-                                  cursorColor: Theme.of(context).accentColor,
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.email),
-                                      hintText: AppLocalizations.of(context)
-                                          .translate('Email'),
-                                      border: InputBorder.none),
-                                ),
+                      role == "Employer"
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(0.3)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: TextFormField(
+                                        controller: emailController,
+                                        cursorColor:
+                                            Theme.of(context).accentColor,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: InputDecoration(
+                                            prefixIcon: Icon(Icons.email),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate('Email'),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(0.3)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: TextFormField(
+                                        controller: facebookEmailController,
+                                        cursorColor:
+                                            Theme.of(context).accentColor,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: InputDecoration(
+                                            prefixIcon: Icon(Icons.email),
+                                            hintText:
+                                                AppLocalizations.of(context)
+                                                    .translate('FacebookEmail'),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
                       /*Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
