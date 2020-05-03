@@ -12,6 +12,9 @@ class SelectLanguagePage extends StatefulWidget {
 class _SelectLanguagePageState extends State<SelectLanguagePage> {
   bool isSelectLanguage = false;
   bool isLoading = false;
+  bool english = false;
+  bool china = false;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -39,13 +42,130 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
     var appLanguage = Provider.of<AppLanguage>(context);
     return isSelectLanguage
         ? Scaffold(
-            appBar: AppBar(
-              title: Text("Select your language"),
-            ),
+            key: scaffoldKey,
             body: Stack(
               children: <Widget>[
                 Container(
-                  child: ListView(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Select Language",
+                              style: TextStyle(fontSize: 22),
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            FlatButton(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 20),
+                                shape: StadiumBorder(),
+                                color: Color(0xffbf9b30),
+                                onPressed: () {
+                                  setState(() {
+                                    china = false;
+                                    english = true;
+                                  });
+                                },
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                        child: Text(
+                                      "English",
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.white),
+                                    )),
+                                    Icon(
+                                      Icons.done,
+                                      color: english == true
+                                          ? Colors.white
+                                          : Color(0xffbf9b30),
+                                    )
+                                  ],
+                                )),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            FlatButton(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 20),
+                                shape: StadiumBorder(),
+                                color: Color(0xffbf9b30),
+                                onPressed: () {
+                                  setState(() {
+                                    china = true;
+                                    english = false;
+                                  });
+                                },
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                        child: Text(
+                                      "中文",
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.white),
+                                    )),
+                                    Icon(
+                                      Icons.done,
+                                      color: china == true
+                                          ? Colors.white
+                                          : Color(0xffbf9b30),
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                      ),
+                      FlatButton(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                          shape: StadiumBorder(),
+                          color: Colors.pink,
+                          onPressed: () {
+                            if (english == false && china == false) {
+                              scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text("Please select any language")));
+                            } else if (english == true) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              appLanguage.changeLanguage(Locale("en"));
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return LoginScreen();
+                              }), (Route<dynamic> route) => false);
+                            } else if (china == true) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              appLanguage.changeLanguage(Locale("zh"));
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return LoginScreen();
+                              }), (Route<dynamic> route) => false);
+                            }
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                  child: Text(
+                                "Confirm",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
+                              )),
+                            ],
+                          )),
+                    ],
+                  ),
+                )
+
+                    /*ListView(
                     children: <Widget>[
                       ListTile(
                         title: Text("English"),
@@ -74,8 +194,8 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
                         },
                       ),
                     ],
-                  ),
-                ),
+                  ),*/
+                    ),
                 Positioned.fill(
                     child: isLoading
                         ? Container(
