@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       await _firebaseAuth.verifyPhoneNumber(
           phoneNumber:
               "${getCountryList.selectedLoginCountryCode}${_phoneNumberController.text}",
-          timeout: const Duration(seconds: 5),
+          timeout: const Duration(minutes: 1),
           verificationCompleted: verificationCompleted,
           verificationFailed: verificationFailed,
           codeSent: codeSent,
