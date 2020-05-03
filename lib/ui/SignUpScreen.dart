@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
@@ -15,13 +16,12 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/MainPage.dart';
-import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'widgets/CountryListPopup.dart';
 import 'widgets/platform_exception_alert_dialog.dart';
 
 class User {
@@ -64,39 +64,97 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   File locProFileImage;
   String imageUrl;
   SharedPreferences prefs;
-  List<Widget> roleWidget = [];
+
   String lastName;
+  String languageCode;
 
-  void _onSelectionChanged(String value) {
-    roleController.text = value;
+  String role;
+  String religion;
+  String nationality;
 
-    ///here we got that selected data from role page
-    ///now you understend?
-    ///we cam
-  }
+  List<Widget> roleWidget = [];
+  List<Widget> religionWidget = [];
+  List<Widget> nationalityWidget = [];
 
-//  this._SignUpScreenState.roleController.text = ${widget.roled}
+  List<DataList> listNationalityData = [];
+  List<DataList> listReligionData = [];
+  List<DataList> listRoleData = [];
+
   @override
   void didInitState() {
     var dataService = Provider.of<DataListService>(context);
     dataService.callListData(context);
+
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-    // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put
-    roles.forEach((f) {
-      roleWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            roleController.text = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
+
+    var appLanguage = Provider.of<DataListService>(context);
+    listNationalityData = appLanguage.listNationalityData;
+    listReligionData = appLanguage.listReligionData;
+    listRoleData = appLanguage.listRoleData;
+  }
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
+
+  @override
+  void initState() {
+    super.initState();
     mobileController.text = widget.mobileNumber;
 
-    ///assign value in didInitState
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+
+      listRoleData.forEach((f) {
+        roleWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              roleController.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              role = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+
+      listNationalityData.forEach((f) {
+        nationalityWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              nationalityController.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              nationality = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+
+      listReligionData.forEach((f) {
+        religionWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              religionController.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              religion = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    });
   }
 
   Future uploadFile() async {
@@ -117,16 +175,16 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           lastname: lastnameController.text ?? "",
           firstname: firstnameController.text ?? "",
           username: usernameController.text ?? "",
-          role: roleController.text ?? "",
+          role: role ?? "",
           gender: genderSelectedValue,
           email: emailController.text ?? "",
           phone: mobileController.text ?? "",
           password: "",
           //passwordController.text ?? "",
-          nationality: nationalityController.text ?? "",
-          religion: religionController.text ?? "",
+          nationality: nationality ?? "",
+          religion: religion ?? "",
           profileImageUrl: imageUrl,
-          type: roleController.text ?? "",
+          type: role ?? "",
           education: "",
           order: 0,
           parentId: 0,
@@ -167,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   }
 
   Future<void> _submit() async {
-    var getCountryList = Provider.of<GetCountryListService>(context);
+    //  var getCountryList = Provider.of<GetCountryListService>(context);
     final database = Provider.of<FirestoreDatabase>(context);
     if (locProFileImage == null) {
       scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -194,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_username')),
       ));
-    } else if (roleController.text == "") {
+    } else if (role == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content:
             Text(AppLocalizations.of(context).translate('Please_enter_role')),
@@ -210,12 +268,12 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         content: Text("Please enter password"),
       ));
     }*/
-    else if (nationalityController.text == "") {
+    else if (nationality == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_nationality')),
       ));
-    } else if (religionController.text == "") {
+    } else if (religion == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(
             AppLocalizations.of(context).translate('Please_enter_religion')),
@@ -234,15 +292,15 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           lastname: lastnameController.text ?? "",
           firstname: firstnameController.text ?? "",
           username: usernameController.text ?? "",
-          role: roleController.text ?? "",
+          role: role ?? "",
           gender: genderSelectedValue,
           email: emailController.text ?? "",
           phone: mobileController.text ?? "",
           password: "",
           //passwordController.text ?? "",
-          nationality: nationalityController.text ?? "",
-          religion: religionController.text ?? "",
-          type: roleController.text ?? "",
+          nationality: nationality ?? "",
+          religion: religion ?? "",
+          type: role ?? "",
           education: "",
           order: 0,
           parentId: 0,
@@ -250,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           userId: widget.mobileUserId,
           countryCode: widget.countryCode,
         );
-        await database.createUser(flContent,widget.mobileUserId);
+        await database.createUser(flContent, widget.mobileUserId);
         uploadFile();
       } on PlatformException catch (e) {
         PlatformExceptionAlertDialog(
@@ -392,7 +450,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
 
   @override
   Widget build(BuildContext context) {
-    var getCountryList = Provider.of<GetCountryListService>(context);
+    // var getCountryList = Provider.of<GetCountryListService>(context);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -555,14 +613,15 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                           controller: mobileController,
                                           keyboardType:
                                               TextInputType.numberWithOptions(
-                                                  signed: false, decimal: false),
+                                                  signed: false,
+                                                  decimal: false),
                                           cursorColor:
                                               Theme.of(context).accentColor,
                                           decoration: InputDecoration(
                                               prefixIcon: Icon(Icons.call),
-                                              hintText:
-                                                  AppLocalizations.of(context)
-                                                      .translate('MobileNumber'),
+                                              hintText: AppLocalizations.of(
+                                                      context)
+                                                  .translate('MobileNumber'),
                                               border: InputBorder.none),
                                         ),
                                       ),
@@ -815,6 +874,40 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                       hintText: AppLocalizations.of(context)
                                           .translate('Nationality'),
                                       border: InputBorder.none),
+                                  onTap: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    final action = CupertinoActionSheet(
+                                      title: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('Nationality'),
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                      message: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('Select_any_option'),
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                      actions: nationalityWidget,
+                                      cancelButton: CupertinoActionSheetAction(
+                                        child: Text(AppLocalizations.of(context)
+                                            .translate('Cancel')),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    );
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => action);
+                                    /*Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) {
+                                      return RoleUser(onChanged: _onSelectionChanged,);
+                                    }));*/
+                                  },
+
+                                  ///here i make one onchange function got back data from last page
+                                  ///now try
                                 ),
                               ),
                             ),
@@ -845,6 +938,40 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                       hintText: AppLocalizations.of(context)
                                           .translate('Religion'),
                                       border: InputBorder.none),
+                                  onTap: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    final action = CupertinoActionSheet(
+                                      title: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('Religion'),
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                      message: Text(
+                                        AppLocalizations.of(context)
+                                            .translate('Select_any_option'),
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                      actions: religionWidget,
+                                      cancelButton: CupertinoActionSheetAction(
+                                        child: Text(AppLocalizations.of(context)
+                                            .translate('Cancel')),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    );
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => action);
+                                    /*Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) {
+                                      return RoleUser(onChanged: _onSelectionChanged,);
+                                    }));*/
+                                  },
+
+                                  ///here i make one onchange function got back data from last page
+                                  ///now try
                                 ),
                               ),
                             ),
