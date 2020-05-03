@@ -275,12 +275,24 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
     return User(uid: user.uid);
   }
 
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981); //Change end gradient color here
+
   @override
   Widget build(BuildContext context) {
     var getCountryList = Provider.of<GetCountryListService>(context);
     return Scaffold(
       key: scaffoldKey,
       body: Container(
+          decoration: BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [gradientStart, gradientEnd],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
+            ),
+          ),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
@@ -324,13 +336,13 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                             Expanded(
                               child: Text(
                                 getCountryList.selectedLoginCountry,
-                                style:
-                                    TextStyle(fontSize: 18, color: Colors.grey),
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Icon(Icons.arrow_forward, color: Colors.grey)
+                            Icon(Icons.arrow_forward, color: Colors.white)
                           ],
                         ),
                       ),
