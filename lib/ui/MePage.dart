@@ -46,6 +46,7 @@ class _MePageState extends State<MePage> {
     SizeConfig().init(context);
     var appLanguage = Provider.of<AppLanguage>(context);
     return Scaffold(
+      appBar: AppBar(title: Text("Me"),),
       key: scaffoldKey,
       body: Container(
         width: SizeConfig.screenWidth,

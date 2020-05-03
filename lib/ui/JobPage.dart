@@ -29,6 +29,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Job"),),
       floatingActionButton: FloatingActionButton(
         heroTag: null,
         onPressed: () {

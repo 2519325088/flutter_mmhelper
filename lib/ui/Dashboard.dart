@@ -185,16 +185,14 @@ class _DashboardState extends State<Dashboard>
   }
 
   getCurrentUserId() async {
-
-      querySnapshot = await Firestore.instance
-          .collection("mb_content")
-          .where("phone", isEqualTo: widget.mobileNo)
-          .getDocuments();
-      currentUserId = querySnapshot.documents[0].data["userId"];
-      prefs = await SharedPreferences.getInstance();
-      prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
-      print("this is i got:$currentUserId");
-
+    querySnapshot = await Firestore.instance
+        .collection("mb_content")
+        .where("phone", isEqualTo: widget.mobileNo)
+        .getDocuments();
+    currentUserId = querySnapshot.documents[0].data["userId"];
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+    print("this is i got:$currentUserId");
   }
 
   Future<String> getImageUrl(DocumentReference imageReference) {
@@ -216,11 +214,26 @@ class _DashboardState extends State<Dashboard>
     final callSearch = Provider.of<CallSearch>(context);
     SizeConfig().init(context);
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Home"),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SearchPage(
+                      onChanged: onChangeSearchList,
+                      listProfileData: listProfileData,
+                    );
+                  }));
+                }),
+          ],
+        ),
         key: scaffoldKey,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            FloatingActionButton(
+            /*FloatingActionButton(
               heroTag: null,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -234,7 +247,7 @@ class _DashboardState extends State<Dashboard>
             ),
             SizedBox(
               height: 10,
-            ),
+            ),*/
             FloatingActionButton(
               heroTag: null,
               onPressed: () {

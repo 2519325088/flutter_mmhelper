@@ -122,7 +122,7 @@ class _MainPageState extends State<MainPage>
     ];
     final database = Provider.of<FirestoreDatabase>(context);
     return Scaffold(
-      drawer: Drawer(
+      /*drawer: Drawer(
         child: ListView(children: <Widget>[
           DrawerHeader(child: null),
           ListTile(
@@ -141,8 +141,8 @@ class _MainPageState extends State<MainPage>
             title: Text("Logout"),
           )
         ]),
-      ),
-      appBar: AppBar(
+      ),*/
+      /*appBar: AppBar(
         title: Text(titleText),
         actions: <Widget>[
           isShow
@@ -155,7 +155,7 @@ class _MainPageState extends State<MainPage>
                   })
               : SizedBox(),
         ],
-      ),
+      ),*/
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
