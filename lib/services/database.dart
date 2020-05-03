@@ -101,6 +101,11 @@ class FirestoreDatabase with ChangeNotifier {
         builder: (data, documentId) => DataList.fromMap(data),
       );
 
+  Stream<List<DataList>> mbRoleStream() => _service.collectionStream(
+    path: APIPath.roleList(),
+    builder: (data, documentId) => DataList.fromMap(data),
+  );
+
   Future<Facebookdata> facebookCall(
     _scaffoldKey,
     String token,

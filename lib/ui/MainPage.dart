@@ -186,6 +186,6 @@ class _MainPageState extends State<MainPage>
   @override
   void didInitState() {
     var appLanguage = Provider.of<DataListService>(context);
-    appLanguage.callEducationData(context);
+    appLanguage.callListData(context);
   }
 }

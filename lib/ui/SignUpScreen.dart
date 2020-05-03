@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
@@ -77,6 +78,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
 //  this._SignUpScreenState.roleController.text = ${widget.roled}
   @override
   void didInitState() {
+    var dataService = Provider.of<DataListService>(context);
+    dataService.callListData(context);
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
     // roleController.text = widget.dataFromOtherScreen;///like this/// you need to put

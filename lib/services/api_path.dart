@@ -15,6 +15,7 @@ class APIPath {
   static String langList() => 'mb_lang_list';
   static String nationalityList() => 'mb_nationality_list';
   static String locationList() => 'mb_location_list';
+  static String roleList() => 'mb_role_list';
   static String imageFirebaseData(String imageId) => 'fl_files/$imageId';
 
 }
