@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mmhelper/services/AppLanguage.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
+import 'package:flutter_mmhelper/ui/SelectLanguagePage.dart';
 import 'package:provider/provider.dart';
 
 import 'services/DataListService.dart';
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
               DefaultCupertinoLocalizations.delegate
             ],
             theme: ThemeData(primarySwatch: Colors.pink),
-            home: LoginScreen(),
+            home: SelectLanguagePage(),
           );
         }));
   }
