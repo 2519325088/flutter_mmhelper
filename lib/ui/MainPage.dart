@@ -120,7 +120,7 @@ class _MainPageState extends State<MainPage>
         querySnapshot: querySnapshot,
       ),
     ];
-    final database = Provider.of<FirestoreDatabase>(context);
+
     return Scaffold(
       /*drawer: Drawer(
         child: ListView(children: <Widget>[

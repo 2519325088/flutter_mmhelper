@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/services/AppLanguage.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
+import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MePage extends StatefulWidget {
   @override
@@ -21,6 +24,7 @@ class _MePageState extends State<MePage> {
   BorderSide borderSide = BorderSide(color: Colors.black.withOpacity(0.1));
   String userType;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -46,7 +50,24 @@ class _MePageState extends State<MePage> {
     SizeConfig().init(context);
     var appLanguage = Provider.of<AppLanguage>(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Me"),),
+      appBar: AppBar(
+        title: Text("Me"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () async {
+              final database = Provider.of<FirestoreDatabase>(context);
+              database.lastUserId = null;
+              prefs = await SharedPreferences.getInstance();
+              prefs.clear();
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return LoginScreen();
+              }), (Route<dynamic> route) => false);
+            },
+          )
+        ],
+      ),
       key: scaffoldKey,
       body: Container(
         width: SizeConfig.screenWidth,
@@ -210,7 +231,8 @@ class _MePageState extends State<MePage> {
                                 ]);
                           });
                     },
-                    title: Text("${AppLocalizations.of(context).translate('languageTitle')}: ${AppLocalizations.of(context).translate('language')}"),
+                    title: Text(
+                        "${AppLocalizations.of(context).translate('languageTitle')}: ${AppLocalizations.of(context).translate('language')}"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
