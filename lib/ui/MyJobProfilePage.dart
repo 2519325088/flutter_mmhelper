@@ -151,7 +151,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               typeStringList: workingSkillStringList,
               isSelected: onValue.documents[0]["workskill"]
                   .toString()
-                  .contains(f.nameEn),
+                  .contains(f.nameId),
             ));
             workingSkillWidget.add(SizedBox(
               width: 5,
@@ -165,7 +165,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               typeStringList: languageStringList,
               isSelected: onValue.documents[0]["language"]
                   .toString()
-                  .contains(f.nameEn),
+                  .contains(f.nameId),
             ));
             languageWidget.add(SizedBox(
               width: 5,
@@ -175,9 +175,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listEducationData.forEach((f) {
             if (onValue.documents[0]["education"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               eduCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.education = f.nameEn;
+              profileData.education = f.nameId;
             }
             eduWidget.add(
               CupertinoActionSheetActionWidget(
@@ -185,8 +185,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 dataList: f,
                 onPressedCall: (dataList) {
                   eduCtr.text = dataList.getValueByLanguageCode(languageCode);
-                  profileData.education = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.education = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -196,9 +196,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listReligionData.forEach((f) {
             if (onValue.documents[0]["religion"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               religionCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.religion = f.nameEn;
+              profileData.religion = f.nameId;
             }
             religionWidget.add(
               CupertinoActionSheetActionWidget(
@@ -207,8 +207,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   religionCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.religion = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.religion = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -216,9 +216,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
 
           listMaritalData.forEach((f) {
-            if (onValue.documents[0]["marital"].toString().contains(f.nameEn)) {
+            if (onValue.documents[0]["marital"].toString().contains(f.nameId)) {
               maritalCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.marital = f.nameEn;
+              profileData.marital = f.nameId;
             }
             maritalStatusWidget.add(
               CupertinoActionSheetActionWidget(
@@ -227,8 +227,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   maritalCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.marital = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.marital = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -238,9 +238,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listChildrenData.forEach((f) {
             if (onValue.documents[0]["children"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               childCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.children = f.nameEn;
+              profileData.children = f.nameId;
             }
             childrenWidget.add(
               CupertinoActionSheetActionWidget(
@@ -248,8 +248,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 dataList: f,
                 onPressedCall: (dataList) {
                   childCtr.text = dataList.getValueByLanguageCode(languageCode);
-                  profileData.children = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.children = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -257,9 +257,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
 
           listJobTypeData.forEach((f) {
-            if (onValue.documents[0]["jobtype"].toString().contains(f.nameEn)) {
+            if (onValue.documents[0]["jobtype"].toString().contains(f.nameId)) {
               jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.jobtype = f.nameEn;
+              profileData.jobtype = f.nameId;
             }
             jobTypeWidget.add(
               CupertinoActionSheetActionWidget(
@@ -268,8 +268,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   jobTypeCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.jobtype = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.jobtype = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -279,9 +279,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listJobCapData.forEach((f) {
             if (onValue.documents[0]["jobcapacity"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               jobCapCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.jobcapacity = f.nameEn;
+              profileData.jobcapacity = f.nameId;
             }
             jobCapWidget.add(
               CupertinoActionSheetActionWidget(
@@ -290,8 +290,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   jobCapCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.jobcapacity = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.jobcapacity = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -301,9 +301,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listContractData.forEach((f) {
             if (onValue.documents[0]["contract"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               contractCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.contract = f.nameEn;
+              profileData.contract = f.nameId;
             }
             contractWidget.add(
               CupertinoActionSheetActionWidget(
@@ -312,8 +312,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   contractCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.contract = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.contract = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -323,9 +323,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           listNationalityData.forEach((f) {
             if (onValue.documents[0]["nationaity"]
                 .toString()
-                .contains(f.nameEn)) {
+                .contains(f.nameId)) {
               nationalityCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.nationality = f.nameEn;
+              profileData.nationality = f.nameId;
             }
             nationalityWidget.add(
               CupertinoActionSheetActionWidget(
@@ -334,8 +334,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   nationalityCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.nationality = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.nationality = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -343,9 +343,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
 
           listLocationData.forEach((f) {
-            if (onValue.documents[0]["current"].toString().contains(f.nameEn)) {
+            if (onValue.documents[0]["current"].toString().contains(f.nameId)) {
               locationCtr.text = f.getValueByLanguageCode(languageCode);
-              profileData.current = f.nameEn;
+              profileData.current = f.nameId;
             }
             locationWidget.add(
               CupertinoActionSheetActionWidget(
@@ -354,8 +354,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.current = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.current = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -419,8 +419,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 dataList: f,
                 onPressedCall: (dataList) {
                   eduCtr.text = dataList.getValueByLanguageCode(languageCode);
-                  profileData.education = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.education = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -431,9 +431,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             if (widget.loginUserData.documents.length != 0) {
               if (widget.loginUserData.documents[0]["religion"]
                   .toString()
-                  .contains(f.nameEn)) {
+                  .contains(f.nameId)) {
                 religionCtr.text = f.getValueByLanguageCode(languageCode);
-                profileData.religion = f.nameEn;
+                profileData.religion = f.nameId;
               }
             }
             religionWidget.add(
@@ -443,8 +443,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   religionCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.religion = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.religion = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -459,8 +459,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   maritalCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.marital = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.marital = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -474,8 +474,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 dataList: f,
                 onPressedCall: (dataList) {
                   childCtr.text = dataList.getValueByLanguageCode(languageCode);
-                  profileData.children = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.children = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -490,8 +490,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   jobTypeCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.jobtype = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.jobtype = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -506,8 +506,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   jobCapCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.jobcapacity = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.jobcapacity = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -522,8 +522,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   contractCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.contract = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.contract = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -534,9 +534,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             if (widget.loginUserData.documents.length != 0) {
               if (widget.loginUserData.documents[0]["nationaity"]
                   .toString()
-                  .contains(f.nameEn)) {
+                  .contains(f.nameId)) {
                 nationalityCtr.text = f.getValueByLanguageCode(languageCode);
-                profileData.nationality = f.nameEn;
+                profileData.nationality = f.nameId;
               }
             }
             nationalityWidget.add(
@@ -546,8 +546,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   nationalityCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.nationality = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.nationality = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),
@@ -562,8 +562,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 onPressedCall: (dataList) {
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
-                  profileData.current = dataList.nameEn;
-                  print(dataList.nameEn);
+                  profileData.current = dataList.nameId;
+                  print(dataList.nameId);
                   Navigator.pop(context);
                 },
               ),

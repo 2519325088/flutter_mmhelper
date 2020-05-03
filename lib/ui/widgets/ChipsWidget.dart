@@ -21,7 +21,7 @@ class _ChipsWidgetState extends State<ChipsWidget> {
     super.initState();
     isSelected = widget.isSelected;
     if (isSelected) {
-      widget.typeStringList.add(widget.dataList.nameEn);
+      widget.typeStringList.add(widget.dataList.nameId);
     }
   }
 
@@ -36,11 +36,11 @@ class _ChipsWidgetState extends State<ChipsWidget> {
         setState(() {
           isSelected = selected;
           if (isSelected == true) {
-            widget.typeStringList.add(widget.dataList.nameEn);
+            widget.typeStringList.add(widget.dataList.nameId);
             print(widget.typeStringList);
           } else {
             widget.typeStringList.removeAt(
-                widget.typeStringList.indexOf(widget.dataList.nameEn));
+                widget.typeStringList.indexOf(widget.dataList.nameId));
             print(widget.typeStringList);
           }
         });
