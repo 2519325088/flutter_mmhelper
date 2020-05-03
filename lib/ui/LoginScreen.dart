@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   String _verificationId;
   bool isShowSms = false;
   bool isLoading = false;
-
+  bool isUserAvailable;
   Facebookdata facebookdata = Facebookdata();
   final _service = FirestoreService.instance;
   SharedPreferences prefs;
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
   }
 
   void _signInWithPhoneNumber() async {
-    final database = Provider.of<FirestoreDatabase>(context);
+    var getCountryList = Provider.of<GetCountryListService>(context);
     if (_smsController.text != "") {
       print("sms");
       final AuthCredential credential = PhoneAuthProvider.getCredential(
@@ -157,13 +157,24 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           prefs.setString("PhoneUserId", user.uid);
           prefs.setString("UserPhone", _phoneNumberController.text);
           _message = 'Successfully signed in, uid: ' + user.uid;
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) {
-            return MainPage(
-              mobileNo: _phoneNumberController.text,
-              isFromLogin: true,
-            );
-          }), (Route<dynamic> route) => false);
+          if (isUserAvailable == true) {
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return MainPage(
+                mobileNo: _phoneNumberController.text,
+                isFromLogin: true,
+              );
+            }), (Route<dynamic> route) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return SignUpScreen(
+                mobileUserId: user.uid,
+                mobileNumber: _phoneNumberController.text,
+                countryCode: "${getCountryList.selectedLoginCountryCode}",
+              );
+            }), (Route<dynamic> route) => false);
+          }
           /*final Contents = await database
               .flContentsStream()
               .first;
@@ -483,11 +494,14 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                 .getDocuments();
                             print(querySnapshot.documents);
                             if (querySnapshot.documents.length == 0) {
-                              scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text(AppLocalizations.of(context)
-                                      .translate(
-                                          'No_mobile_number_found_please_sign_up_first'))));
+                              isUserAvailable = false;
+                              if (isShowSms) {
+                                _signInWithPhoneNumber();
+                              } else {
+                                _verifyPhoneNumber();
+                              }
                             } else {
+                              isUserAvailable = true;
                               if (isShowSms) {
                                 _signInWithPhoneNumber();
                               } else {
@@ -510,7 +524,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                         ),
                       ),
                     ),
-                    Padding(
+                    /*Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -535,7 +549,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                           color: Colors.red,
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
                 /*Expanded(

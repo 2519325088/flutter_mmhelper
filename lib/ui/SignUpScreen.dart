@@ -36,9 +36,9 @@ class SignUpScreen extends StatefulWidget {
   /// here you need to make constrictor
   /// here this variable pass from any page from you want to pass data we can
   /// also daclir default value
-  SignUpScreen({this.dataFromOtherScreen = "Role"});
+  SignUpScreen({this.mobileUserId, this.mobileNumber, this.countryCode});
 
-  String dataFromOtherScreen;
+  String mobileUserId, mobileNumber, countryCode;
 
   ///now we can use this data with widget.SignUpScreen
 }
@@ -91,6 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         ),
       );
     });
+    mobileController.text = widget.mobileNumber;
 
     ///assign value in didInitState
   }
@@ -117,7 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           gender: genderSelectedValue,
           email: emailController.text ?? "",
           phone: mobileController.text ?? "",
-          password: "123456",
+          password: "",
           //passwordController.text ?? "",
           nationality: nationalityController.text ?? "",
           religion: religionController.text ?? "",
@@ -127,7 +128,8 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
           order: 0,
           parentId: 0,
           whatsApp: "",
-          userId: database.lastUserId,
+          userId: widget.mobileUserId,
+          countryCode: widget.countryCode,
         );
         _service
             .setData(
@@ -135,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                 data: flContent.toMap())
             .then((onValue) async {
           prefs = await SharedPreferences.getInstance();
-          prefs.setString("PhoneUserId", database.lastUserId);
+          prefs.setString("PhoneUserId", widget.mobileUserId);
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
             return MainPage(
@@ -168,11 +170,6 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context)
             .translate('Please_select_profile_Image')),
-      ));
-    } else if (getCountryList.selectedCountryCode == "Select Code") {
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(
-            AppLocalizations.of(context).translate('Please_select_dial_code')),
       ));
     } else if (mobileController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -230,33 +227,28 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
         isLoading = true;
       });
       try {
-        createUserWithEmailAndPassword(
-                password: "123456", email: emailController.text)
-            .then((onValue) async {
-          print(onValue);
-          if (onValue != null) {
-            final flContent = FlContent(
-              lastname: lastnameController.text ?? "",
-              firstname: firstnameController.text ?? "",
-              username: usernameController.text ?? "",
-              role: roleController.text ?? "",
-              gender: genderSelectedValue,
-              email: emailController.text ?? "",
-              phone: mobileController.text ?? "",
-              password: "123456",
-              //passwordController.text ?? "",
-              nationality: nationalityController.text ?? "",
-              religion: religionController.text ?? "",
-              type: roleController.text ?? "",
-              education: "",
-              order: 0,
-              parentId: 0,
-              whatsApp: "",
-            );
-            await database.createUser(flContent);
-            uploadFile();
-          }
-        });
+        final flContent = FlContent(
+          lastname: lastnameController.text ?? "",
+          firstname: firstnameController.text ?? "",
+          username: usernameController.text ?? "",
+          role: roleController.text ?? "",
+          gender: genderSelectedValue,
+          email: emailController.text ?? "",
+          phone: mobileController.text ?? "",
+          password: "",
+          //passwordController.text ?? "",
+          nationality: nationalityController.text ?? "",
+          religion: religionController.text ?? "",
+          type: roleController.text ?? "",
+          education: "",
+          order: 0,
+          parentId: 0,
+          whatsApp: "",
+          userId: widget.mobileUserId,
+          countryCode: widget.countryCode,
+        );
+        await database.createUser(flContent,widget.mobileUserId);
+        uploadFile();
       } on PlatformException catch (e) {
         PlatformExceptionAlertDialog(
           title: AppLocalizations.of(context).translate('Operation_failed'),
@@ -454,7 +446,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                       SizedBox(
                         height: 10,
                       ),
-                      GestureDetector(
+                      /*GestureDetector(
                         onTap: () {
                           FocusScope.of(context).unfocus();
                           showDialog(
@@ -483,10 +475,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                             ],
                           ),
                         ),
-                      ),
+                      ),*/
                       Row(
                         children: <Widget>[
-                          Padding(
+                          /*Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -536,7 +528,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 ),
                               ],
                             ),
-                          ),
+                          ),*/
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -554,19 +546,22 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8),
-                                      child: TextFormField(
-                                        controller: mobileController,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                signed: false, decimal: false),
-                                        cursorColor:
-                                            Theme.of(context).accentColor,
-                                        decoration: InputDecoration(
-                                            prefixIcon: Icon(Icons.call),
-                                            hintText:
-                                                AppLocalizations.of(context)
-                                                    .translate('MobileNumber'),
-                                            border: InputBorder.none),
+                                      child: IgnorePointer(
+                                        ignoring: true,
+                                        child: TextFormField(
+                                          controller: mobileController,
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  signed: false, decimal: false),
+                                          cursorColor:
+                                              Theme.of(context).accentColor,
+                                          decoration: InputDecoration(
+                                              prefixIcon: Icon(Icons.call),
+                                              hintText:
+                                                  AppLocalizations.of(context)
+                                                      .translate('MobileNumber'),
+                                              border: InputBorder.none),
+                                        ),
                                       ),
                                     ),
                                   ),

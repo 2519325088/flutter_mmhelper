@@ -32,11 +32,11 @@ class FirestoreDatabase with ChangeNotifier {
     return lastUserId;
   }
 
-  Future<void> createUser(FlContent flContent) async {
+  Future<void> createUser(FlContent flContent,String userId) async {
     documentIdFromCurrentDate();
-    flContent.userId = lastUserId;
+    flContent.userId = userId;
     await _service.setData(
-      path: APIPath.newCandidate(lastUserId),
+      path: APIPath.newCandidate(userId),
       data: flContent.toMap(),
     );
   }

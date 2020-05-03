@@ -185,7 +185,7 @@ class _DashboardState extends State<Dashboard>
   }
 
   getCurrentUserId() async {
-    if (widget.isFromLogin) {
+
       querySnapshot = await Firestore.instance
           .collection("mb_content")
           .where("phone", isEqualTo: widget.mobileNo)
@@ -194,11 +194,7 @@ class _DashboardState extends State<Dashboard>
       prefs = await SharedPreferences.getInstance();
       prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
       print("this is i got:$currentUserId");
-    } else {
-      prefs = await SharedPreferences.getInstance();
-      currentUserId = prefs.getString('loginUid');
-      print("currentUser:${currentUserId}");
-    }
+
   }
 
   Future<String> getImageUrl(DocumentReference imageReference) {
