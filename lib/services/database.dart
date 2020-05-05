@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/FacebookModel.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:dio/dio.dart';
@@ -31,11 +32,11 @@ class FirestoreDatabase with ChangeNotifier {
     return lastUserId;
   }
 
-  Future<void> createUser(FlContent flContent) async {
+  Future<void> createUser(FlContent flContent,String userId) async {
     documentIdFromCurrentDate();
-    flContent.userId = lastUserId;
+    flContent.userId = userId;
     await _service.setData(
-      path: APIPath.newCandidate(lastUserId),
+      path: APIPath.newCandidate(userId),
       data: flContent.toMap(),
     );
   }
@@ -44,6 +45,66 @@ class FirestoreDatabase with ChangeNotifier {
         path: APIPath.candidateList(),
         builder: (data, documentId) => ProfileData.fromMap(data),
       );
+
+  Stream<List<DataList>> mbEducationStream() => _service.collectionStream(
+        path: APIPath.educationList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbReligionStream() => _service.collectionStream(
+        path: APIPath.religionList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbMaritalStream() => _service.collectionStream(
+        path: APIPath.maritalList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbChildrenStream() => _service.collectionStream(
+        path: APIPath.childrenList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbJobTypeStream() => _service.collectionStream(
+        path: APIPath.jobTypeList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbJobCapStream() => _service.collectionStream(
+        path: APIPath.jobCapList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbContractStream() => _service.collectionStream(
+        path: APIPath.contractList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbWorkSkillStream() => _service.collectionStream(
+        path: APIPath.workSkillList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbLangStream() => _service.collectionStream(
+        path: APIPath.langList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbNationalityStream() => _service.collectionStream(
+        path: APIPath.nationalityList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbLocationStream() => _service.collectionStream(
+        path: APIPath.locationList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbRoleStream() => _service.collectionStream(
+    path: APIPath.roleList(),
+    builder: (data, documentId) => DataList.fromMap(data),
+  );
 
   Future<Facebookdata> facebookCall(
     _scaffoldKey,

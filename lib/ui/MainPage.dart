@@ -1,7 +1,12 @@
+import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
+import 'package:flutter_mmhelper/interface/search_listenter.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
 import 'package:flutter_mmhelper/ui/JobPage.dart';
@@ -11,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Dashboard.dart';
 import 'LoginScreen.dart';
-import 'index.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -23,7 +27,9 @@ class MainPage extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage>
+    with AfterInitMixin
+    implements SearchClickListener {
   int selectedIndex = 0;
   String titleText = "Home";
   final _firebaseAuth = FirebaseAuth.instance;
@@ -62,15 +68,24 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  SearchClickUtil searchClickUtil;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrentUserId();
+    searchClickUtil = SearchClickUtil();
+    searchClickUtil.setScreenListener(this);
+  }
+
+  @override
+  onClickSearch() {
+    print("MainPage onClickSearch");
+    return null;
   }
 
   getCurrentUserId() async {
-    if (widget.isFromLogin) {
+    /*if (widget.isFromLogin) {*/
       isMeLoading = true;
       querySnapshot = await Firestore.instance
           .collection("mb_content")
@@ -80,10 +95,10 @@ class _MainPageState extends State<MainPage> {
       prefs = await SharedPreferences.getInstance();
       prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
       isMeLoading = false;
-    } else {
+    /*} else {
       prefs = await SharedPreferences.getInstance();
       currentUserId = prefs.getString('loginUid');
-    }
+    }*/
   }
 
   @override
@@ -105,9 +120,9 @@ class _MainPageState extends State<MainPage> {
         querySnapshot: querySnapshot,
       ),
     ];
-    final database = Provider.of<FirestoreDatabase>(context);
+
     return Scaffold(
-      drawer: Drawer(
+      /*drawer: Drawer(
         child: ListView(children: <Widget>[
           DrawerHeader(child: null),
           ListTile(
@@ -126,22 +141,21 @@ class _MainPageState extends State<MainPage> {
             title: Text("Logout"),
           )
         ]),
-      ),
-      appBar: AppBar(
+      ),*/
+      /*appBar: AppBar(
         title: Text(titleText),
         actions: <Widget>[
           isShow
               ? IconButton(
-                  icon: Icon(Icons.video_call),
+                  icon: Icon(Icons.search),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return IndexPage();
-                    }));
+                    var onClickService = Provider.of<CallSearch>(context);
+                    onClickService.onChangeMethod(!true);
+                    searchClickUtil.onClickSearchButton();
                   })
               : SizedBox(),
         ],
-      ),
+      ),*/
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -167,5 +181,11 @@ class _MainPageState extends State<MainPage> {
         children: widgetOptions,
       ),*/
     );
+  }
+
+  @override
+  void didInitState() {
+    var appLanguage = Provider.of<DataListService>(context);
+    appLanguage.callListData(context);
   }
 }

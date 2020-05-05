@@ -2,10 +2,15 @@ import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/services/AppLanguage.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
+import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MePage extends StatefulWidget {
   @override
@@ -19,30 +24,52 @@ class _MePageState extends State<MePage> {
   BorderSide borderSide = BorderSide(color: Colors.black.withOpacity(0.1));
   String userType;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  SharedPreferences prefs;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Employer")) {
-      userType = "1";
-    } else if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Foreign Helper")) {
-      userType = "2";
-    } else if (widget.querySnapshot.documents[0]["type"]
-        .toString()
-        .contains("Local Auntie")) {
-      userType = "3";
+    if (widget.querySnapshot != null) {
+      if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Employer")) {
+        userType = "1";
+      } else if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Foreign Helper")) {
+        userType = "2";
+      } else if (widget.querySnapshot.documents[0]["type"]
+          .toString()
+          .contains("Local Auntie")) {
+        userType = "3";
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    var appLanguage = Provider.of<AppLanguage>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Me"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () async {
+              final database = Provider.of<FirestoreDatabase>(context);
+              database.lastUserId = null;
+              prefs = await SharedPreferences.getInstance();
+              prefs.clear();
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return LoginScreen();
+              }), (Route<dynamic> route) => false);
+            },
+          )
+        ],
+      ),
       key: scaffoldKey,
       body: Container(
         width: SizeConfig.screenWidth,
@@ -153,6 +180,7 @@ class _MePageState extends State<MePage> {
                             return MyJobProfilePage(
                               userId: widget.querySnapshot.documents[0]
                                   ["userId"],
+                              loginUserData: widget.querySnapshot,
                             );
                           }));
                         } else {
@@ -174,6 +202,39 @@ class _MePageState extends State<MePage> {
                       border: Border.all(color: Colors.black.withOpacity(0.1))),
                   child: ListTile(
                     title: Text("Job offers"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black.withOpacity(0.1))),
+                  child: ListTile(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    onTap: () {
+                                      appLanguage.changeLanguage(Locale("en"));
+                                      Navigator.pop(context);
+                                    },
+                                    title: Text("English"),
+                                  ),
+                                  ListTile(
+                                    onTap: () {
+                                      appLanguage.changeLanguage(Locale("zh"));
+                                      Navigator.pop(context);
+                                    },
+                                    title: Text("中文"),
+                                  ),
+                                ]);
+                          });
+                    },
+                    title: Text(
+                        "${AppLocalizations.of(context).translate('languageTitle')}: ${AppLocalizations.of(context).translate('language')}"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),

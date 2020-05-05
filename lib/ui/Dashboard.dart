@@ -8,17 +8,16 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
+import 'package:flutter_mmhelper/interface/search_listenter.dart';
+import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
-import 'package:flutter_mmhelper/ui/ChatUserPage.dart';
-import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/SearchPage.dart';
-import 'package:flutter_mmhelper/ui/widgets/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'index.dart';
 import 'widgets/profile_dateil.dart';
 
 class Dashboard extends StatefulWidget {
@@ -32,7 +31,9 @@ class Dashboard extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _DashboardState extends State<Dashboard> with AfterInitMixin {
+class _DashboardState extends State<Dashboard>
+    with AfterInitMixin
+    implements SearchClickListener {
   final _firebaseAuth = FirebaseAuth.instance;
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
@@ -43,10 +44,25 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   QuerySnapshot querySnapshot;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  SearchClickUtil searchClickUtil;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    searchClickUtil = SearchClickUtil();
+    searchClickUtil.setScreenListener(this);
+  }
+
+  @override
+  onClickSearch() {
+    print("Dashboard onClickSearch");
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SearchPage(
+        onChanged: onChangeSearchList,
+        listProfileData: listProfileData,
+      );
+    }));
+    return null;
   }
 
   @override
@@ -86,7 +102,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   Widget GridCardWidget(ProfileData element) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
             profileData: element,
@@ -147,7 +163,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                             color: Colors.white),
                       ),
                       Text(
-                        element.nationaity ?? "No nationality",
+                        element.nationality ?? "No nationality",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -169,20 +185,14 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   getCurrentUserId() async {
-    if (widget.isFromLogin) {
-      querySnapshot = await Firestore.instance
-          .collection("mb_content")
-          .where("phone", isEqualTo: widget.mobileNo)
-          .getDocuments();
-      currentUserId = querySnapshot.documents[0].data["userId"];
-      prefs = await SharedPreferences.getInstance();
-      prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
-      print("this is i got:$currentUserId");
-    } else {
-      prefs = await SharedPreferences.getInstance();
-      currentUserId = prefs.getString('loginUid');
-      print("currentUser:${currentUserId}");
-    }
+    querySnapshot = await Firestore.instance
+        .collection("mb_content")
+        .where("phone", isEqualTo: widget.mobileNo)
+        .getDocuments();
+    currentUserId = querySnapshot.documents[0].data["userId"];
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+    print("this is i got:$currentUserId");
   }
 
   Future<String> getImageUrl(DocumentReference imageReference) {
@@ -201,14 +211,29 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<FirestoreDatabase>(context);
+    final callSearch = Provider.of<CallSearch>(context);
     SizeConfig().init(context);
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Home"),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SearchPage(
+                      onChanged: onChangeSearchList,
+                      listProfileData: listProfileData,
+                    );
+                  }));
+                }),
+          ],
+        ),
         key: scaffoldKey,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            FloatingActionButton(
+            /*FloatingActionButton(
               heroTag: null,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -222,7 +247,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             ),
             SizedBox(
               height: 10,
-            ),
+            ),*/
             FloatingActionButton(
               heroTag: null,
               onPressed: () {
@@ -230,6 +255,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MyJobProfilePage(
                       userId: querySnapshot.documents[0]["userId"],
+                      loginUserData: querySnapshot,
                     );
                   }));
                 } else {
@@ -317,8 +343,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
-            /*proSnapshot: snapshot.data.documents[index],*/
-          );
+              /*proSnapshot: snapshot.data.documents[index],*/
+              );
         }));
       },
       child: Card(

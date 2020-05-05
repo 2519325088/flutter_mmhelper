@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,13 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
 import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
-import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
+import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +26,9 @@ class MyJobProfilePage extends StatefulWidget {
   @override
   _MyJobProfilePageState createState() => _MyJobProfilePageState();
   final String userId;
+  QuerySnapshot loginUserData;
 
-  MyJobProfilePage({this.userId});
+  MyJobProfilePage({this.userId, this.loginUserData});
 }
 
 class _MyJobProfilePageState extends State<MyJobProfilePage>
@@ -55,6 +58,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   DateTime startDate;
   DateTime birthDayDate;
   ProfileData profileData = ProfileData();
+
   List<Widget> eduWidget = [];
   List<Widget> religionWidget = [];
   List<Widget> maritalStatusWidget = [];
@@ -64,15 +68,37 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<Widget> contractWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
+  List<Widget> nationalityWidget = [];
+  List<Widget> locationWidget = [];
+
+  String languageCode;
+
   List<String> workingSkillStringList = [];
-  List<String> languageChips = [];
+  List<String> languageStringList = [];
+
+  List<DataList> listEducationData = [];
+  List<DataList> listReligionData = [];
+  List<DataList> listMaritalData = [];
+  List<DataList> listChildrenData = [];
+  List<DataList> listJobTypeData = [];
+  List<DataList> listJobCapData = [];
+  List<DataList> listContractData = [];
+  List<DataList> listWorkSkillData = [];
+  List<DataList> listLangData = [];
+  List<DataList> listNationalityData = [];
+  List<DataList> listLocationData = [];
+
   List<Asset> imagesa = List<Asset>();
-  String _error = 'No Error Dectected';
   final _service = FirestoreService.instance;
   QuerySnapshot profileQuerySnapshot;
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   Future<QuerySnapshot> getMyJobProfile() async {
     return await Firestore.instance
@@ -83,188 +109,469 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileData.imagelist = [];
     profileData.workexperiences = [];
-    getMyJobProfile().then((onValue) {
-      if (onValue.documents.length != 0) {
-        firstNameCtr.text = onValue.documents[0]["firstname"];
-        profileData.firstname = onValue.documents[0]["firstname"];
-        lastNameCtr.text = onValue.documents[0]["lastname"];
-        profileData.lastname = onValue.documents[0]["lastname"];
-        genderCtr.text = onValue.documents[0]["gender"];
-        profileData.gender = onValue.documents[0]["gender"];
-        birthDayCtr.text = DateFormat.yMMMMEEEEd()
-            .format(DateTime.parse(onValue.documents[0]["birthday"]));
-        profileData.birthday = DateTime.parse(onValue.documents[0]["birthday"]);
-        nationalityCtr.text = onValue.documents[0]["nationaity"];
-        profileData.nationaity = onValue.documents[0]["nationaity"];
-        eduCtr.text = onValue.documents[0]["education"];
-        profileData.education = onValue.documents[0]["education"];
-        religionCtr.text = onValue.documents[0]["religion"];
-        profileData.religion = onValue.documents[0]["religion"];
-        maritalCtr.text = onValue.documents[0]["marital"];
-        profileData.marital = onValue.documents[0]["marital"];
-        childCtr.text = onValue.documents[0]["children"];
-        profileData.children = onValue.documents[0]["children"];
-        locationCtr.text = onValue.documents[0]["current"];
-        profileData.current = onValue.documents[0]["current"];
-        whatsAppCtr.text = onValue.documents[0]["whatsapp"];
-        profileData.whatsapp = onValue.documents[0]["whatsapp"];
-        phoneCtr.text = onValue.documents[0]["phone"];
-        profileData.phone = onValue.documents[0]["phone"];
-        jobTypeCtr.text = onValue.documents[0]["jobtype"];
-        profileData.jobtype = onValue.documents[0]["jobtype"];
-        jobCapCtr.text = onValue.documents[0]["jobcapacity"];
-        profileData.jobcapacity = onValue.documents[0]["jobcapacity"];
-        contractCtr.text = onValue.documents[0]["contract"];
-        profileData.contract = onValue.documents[0]["contract"];
-        expectedSalaryCtr.text = onValue.documents[0]["expectedsalary"];
-        profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
-        startDateCtr.text = DateFormat.yMMMMEEEEd()
-            .format(DateTime.parse(onValue.documents[0]["employment"]));
-        profileData.employment =
-            DateTime.parse(onValue.documents[0]["employment"]);
-        selfCtr.text = onValue.documents[0]["selfintroduction"];
-        profileData.selfintroduction = onValue.documents[0]["selfintroduction"];
-        texttags.forEach((f) {
-          workingSkillWidget.add(WorkChips(
-            title: f,
-            workingSkillStringList: workingSkillStringList,
-            isSelected:
-                onValue.documents[0]["workskill"].toString().contains(f),
-          ));
-          workingSkillWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        language.forEach((f) {
-          languageWidget.add(LanguageChips(
-            title: f,
-            languageStringList: languageChips,
-            isSelected: onValue.documents[0]["language"].toString().contains(f),
-          ));
-          languageWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        setState(() {});
-        onValue.documents[0]["workexperiences"].forEach((f) {
-          profileData.workexperiences.add(Workexperience.fromMap((f)));
-        });
-        onValue.documents[0]["imagelist"].forEach((f) {
-          profileData.imagelist.add(f);
-        });
-        profileData.primaryImage = onValue.documents[0]["primaryimage"];
-      } else {
-        texttags.forEach((f) {
-          workingSkillWidget.add(WorkChips(
-            title: f,
-            workingSkillStringList: workingSkillStringList,
-            isSelected: false,
-          ));
-          workingSkillWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        language.forEach((f) {
-          languageWidget.add(LanguageChips(
-            title: f,
-            languageStringList: languageChips,
-            isSelected: false,
-          ));
-          languageWidget.add(SizedBox(
-            width: 5,
-          ));
-        });
-        setState(() {});
-      }
-    });
 
-    education.forEach((f) {
-      eduWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            eduCtr.text = f;
-            profileData.education = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    religion.forEach((f) {
-      religionWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            religionCtr.text = f;
-            profileData.religion = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    marital.forEach((f) {
-      maritalStatusWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            maritalCtr.text = f;
-            profileData.marital = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    children.forEach((f) {
-      childrenWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            childCtr.text = f;
-            profileData.children = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    jobtype.forEach((f) {
-      jobTypeWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            jobTypeCtr.text = f;
-            profileData.jobtype = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    jobcapacity.forEach((f) {
-      jobCapWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            jobCapCtr.text = f;
-            profileData.jobcapacity = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    contract.forEach((f) {
-      contractWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            contractCtr.text = f;
-            profileData.contract = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+
+      getMyJobProfile().then((onValue) {
+        if (onValue.documents.length != 0) {
+          firstNameCtr.text = onValue.documents[0]["firstname"];
+          profileData.firstname = onValue.documents[0]["firstname"];
+          lastNameCtr.text = onValue.documents[0]["lastname"];
+          profileData.lastname = onValue.documents[0]["lastname"];
+          genderCtr.text = onValue.documents[0]["gender"];
+          profileData.gender = onValue.documents[0]["gender"];
+          birthDayCtr.text = DateFormat.yMMMMEEEEd()
+              .format(DateTime.parse(onValue.documents[0]["birthday"]));
+          profileData.birthday =
+              DateTime.parse(onValue.documents[0]["birthday"]);
+
+          whatsAppCtr.text = onValue.documents[0]["whatsapp"];
+          profileData.whatsapp = onValue.documents[0]["whatsapp"];
+          phoneCtr.text = onValue.documents[0]["phone"];
+          profileData.phone = onValue.documents[0]["phone"];
+
+          expectedSalaryCtr.text = onValue.documents[0]["expectedsalary"];
+          profileData.expectedsalary = onValue.documents[0]["expectedsalary"];
+          startDateCtr.text = DateFormat.yMMMMEEEEd()
+              .format(DateTime.parse(onValue.documents[0]["employment"]));
+          profileData.employment =
+              DateTime.parse(onValue.documents[0]["employment"]);
+          selfCtr.text = onValue.documents[0]["selfintroduction"];
+          profileData.selfintroduction =
+              onValue.documents[0]["selfintroduction"];
+
+          listWorkSkillData.forEach((f) {
+            workingSkillWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: workingSkillStringList,
+              isSelected: onValue.documents[0]["workskill"]
+                  .toString()
+                  .contains(f.nameId),
+            ));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          listLangData.forEach((f) {
+            languageWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: languageStringList,
+              isSelected: onValue.documents[0]["language"]
+                  .toString()
+                  .contains(f.nameId),
+            ));
+            languageWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          listEducationData.forEach((f) {
+            if (onValue.documents[0]["education"]
+                .toString()
+                .contains(f.nameId)) {
+              eduCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.education = f.nameId;
+            }
+            eduWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  eduCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.education = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listReligionData.forEach((f) {
+            if (onValue.documents[0]["religion"]
+                .toString()
+                .contains(f.nameId)) {
+              religionCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.religion = f.nameId;
+            }
+            religionWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  religionCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.religion = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listMaritalData.forEach((f) {
+            if (onValue.documents[0]["marital"].toString().contains(f.nameId)) {
+              maritalCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.marital = f.nameId;
+            }
+            maritalStatusWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  maritalCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.marital = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listChildrenData.forEach((f) {
+            if (onValue.documents[0]["children"]
+                .toString()
+                .contains(f.nameId)) {
+              childCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.children = f.nameId;
+            }
+            childrenWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  childCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.children = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobTypeData.forEach((f) {
+            if (onValue.documents[0]["jobtype"].toString().contains(f.nameId)) {
+              jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.jobtype = f.nameId;
+            }
+            jobTypeWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobTypeCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobtype = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobCapData.forEach((f) {
+            if (onValue.documents[0]["jobcapacity"]
+                .toString()
+                .contains(f.nameId)) {
+              jobCapCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.jobcapacity = f.nameId;
+            }
+            jobCapWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobCapCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobcapacity = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listContractData.forEach((f) {
+            if (onValue.documents[0]["contract"]
+                .toString()
+                .contains(f.nameId)) {
+              contractCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.contract = f.nameId;
+            }
+            contractWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  contractCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.contract = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listNationalityData.forEach((f) {
+            if (onValue.documents[0]["nationaity"]
+                .toString()
+                .contains(f.nameId)) {
+              nationalityCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.nationality = f.nameId;
+            }
+            nationalityWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  nationalityCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.nationality = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listLocationData.forEach((f) {
+            if (onValue.documents[0]["current"].toString().contains(f.nameId)) {
+              locationCtr.text = f.getValueByLanguageCode(languageCode);
+              profileData.current = f.nameId;
+            }
+            locationWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  locationCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.current = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          setState(() {});
+
+          onValue.documents[0]["workexperiences"].forEach((f) {
+            profileData.workexperiences.add(Workexperience.fromMap((f)));
+          });
+          onValue.documents[0]["imagelist"].forEach((f) {
+            profileData.imagelist.add(f);
+          });
+          profileData.primaryImage = onValue.documents[0]["primaryimage"];
+        } else {
+          if (widget.loginUserData.documents.length != 0) {
+            firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
+            profileData.firstname =
+                widget.loginUserData.documents[0]["firstname"];
+
+            lastNameCtr.text = widget.loginUserData.documents[0]["lastname"];
+            profileData.lastname =
+                widget.loginUserData.documents[0]["lastname"];
+
+            genderCtr.text = widget.loginUserData.documents[0]["gender"];
+            profileData.gender = widget.loginUserData.documents[0]["gender"];
+
+            phoneCtr.text = widget.loginUserData.documents[0]["phone"];
+            profileData.phone = widget.loginUserData.documents[0]["phone"];
+          }
+
+          listWorkSkillData.forEach((f) {
+            workingSkillWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: workingSkillStringList,
+              isSelected: false,
+            ));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          listLangData.forEach((f) {
+            languageWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: languageStringList,
+              isSelected: false,
+            ));
+            languageWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+
+          listEducationData.forEach((f) {
+            eduWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  eduCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.education = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listReligionData.forEach((f) {
+            if (widget.loginUserData.documents.length != 0) {
+              if (widget.loginUserData.documents[0]["religion"]
+                  .toString()
+                  .contains(f.nameId)) {
+                religionCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.religion = f.nameId;
+              }
+            }
+            religionWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  religionCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.religion = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listMaritalData.forEach((f) {
+            maritalStatusWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  maritalCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.marital = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listChildrenData.forEach((f) {
+            childrenWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  childCtr.text = dataList.getValueByLanguageCode(languageCode);
+                  profileData.children = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobTypeData.forEach((f) {
+            jobTypeWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobTypeCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobtype = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listJobCapData.forEach((f) {
+            jobCapWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  jobCapCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.jobcapacity = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listContractData.forEach((f) {
+            contractWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  contractCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.contract = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listNationalityData.forEach((f) {
+            if (widget.loginUserData.documents.length != 0) {
+              if (widget.loginUserData.documents[0]["nationaity"]
+                  .toString()
+                  .contains(f.nameId)) {
+                nationalityCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.nationality = f.nameId;
+              }
+            }
+            nationalityWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  nationalityCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.nationality = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+
+          listLocationData.forEach((f) {
+            locationWidget.add(
+              CupertinoActionSheetActionWidget(
+                languageCode: languageCode,
+                dataList: f,
+                onPressedCall: (dataList) {
+                  locationCtr.text =
+                      dataList.getValueByLanguageCode(languageCode);
+                  profileData.current = dataList.nameId;
+                  print(dataList.nameId);
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          });
+          setState(() {});
+        }
+      });
     });
   }
 
@@ -279,7 +586,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     firstNameCtr.dispose();
     lastNameCtr.dispose();
@@ -325,72 +631,92 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text("My Job Profile"),
+        title: Text(AppLocalizations.of(context).translate('My_Job_Profile')),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.done),
               onPressed: () {
                 if (isLoading == false) {
                   if (firstNameCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please enter first name")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_firstname'))));
                   } else if (lastNameCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please enter last name")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_lastname'))));
                   } else if (genderCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select gender")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_gender'))));
                   } else if (birthDayCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select birth date")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_birth_date'))));
                   } else if (nationalityCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please enter nationality")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_nationality'))));
                   } else if (eduCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select education")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_education'))));
                   } else if (religionCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select religion")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_religion'))));
                   } else if (maritalCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please select marital status")));
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_marital_status'))));
                   } else if (childCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select child")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_child'))));
                   } else if (locationCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please enter location")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_location'))));
                   } else if (whatsAppCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please enter whatsapp number")));
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_whatsapp_number'))));
                   } else if (phoneCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please enter phone")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_phone'))));
                   } else if (jobTypeCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select job type")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_job_type'))));
                   } else if (jobCapCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select job capacity")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_job_capacity'))));
                   } else if (contractCtr.text == "") {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select contract")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_contract'))));
                   } else if (workingSkillStringList.length == 0) {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select working skill")));
-                  } else if (languageChips.length == 0) {
-                    scaffoldKey.currentState.showSnackBar(
-                        SnackBar(content: Text("Please select language")));
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_working_skill'))));
+                  } else if (languageStringList.length == 0) {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_select_language'))));
                   } else if (expectedSalaryCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please enter expected salary")));
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_expected_salary'))));
                   } else if (startDateCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please select employement start date")));
+                        content: Text(AppLocalizations.of(context).translate(
+                            'Please_select_employement_start_date'))));
                   } else if (selfCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("Please enter self introduction")));
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_self_introduction'))));
                   } else {
                     setState(() {
                       isLoading = true;
@@ -400,9 +726,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     workingSkillStringList.forEach((f) {
                       workingSkillString += "$f;";
                     });
-                    languageChips.forEach((f) {
+                    languageStringList.forEach((f) {
                       languageString += "$f;";
                     });
+                    print("Upload education ${profileData.education}");
                     profileData.workskill = workingSkillString;
                     profileData.language = languageString;
                     profileData.id = DateTime.parse(widget.userId);
@@ -428,7 +755,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               imagesa.clear();
                             });
                             scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text("Profile Update Succussfully.")));
+                                content: Text(AppLocalizations.of(context)
+                                    .translate(
+                                        'Profile_Update_Successfully'))));
                           });
                         }
                       });
@@ -444,20 +773,23 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                             imagesa.clear();
                           });
                           scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text("Profile Update Succussfully.")));
+                              content: Text(AppLocalizations.of(context)
+                                  .translate('Profile_Update_Successfully'))));
                         });
                       } else {
                         setState(() {
                           isLoading = false;
                         });
-                        scaffoldKey.currentState.showSnackBar(
-                            SnackBar(content: Text("Please select Image")));
+                        scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text(AppLocalizations.of(context)
+                                .translate('Please_select_Image'))));
                       }
                     }
                   }
                 } else {
-                  scaffoldKey.currentState.showSnackBar(
-                      SnackBar(content: Text("Wait data is updating...")));
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context)
+                          .translate('Wait_data_is_updating'))));
                 }
               })
         ],
@@ -481,7 +813,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Basic Information",
+                                  AppLocalizations.of(context)
+                                      .translate('Basic_Information'),
                                   style: cardTitleText,
                                 ),
                               )),
@@ -506,7 +839,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "First Name:",
+                                            "${AppLocalizations.of(context).translate('FirstName')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -516,7 +849,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: firstNameCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: "Enter first name"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Enter_first_name')),
                                           )
                                         ],
                                       ),
@@ -543,7 +879,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Last Name:",
+                                            "${AppLocalizations.of(context).translate('LastName')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -553,7 +889,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: lastNameCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: "Enter last name"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Enter_last_name')),
                                           )
                                         ],
                                       ),
@@ -580,52 +919,80 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Gender:",
+                                            "${AppLocalizations.of(context).translate('Gender')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: genderCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Select Gender"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Select_Gender')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Gender",
+                                                  AppLocalizations.of(context)
+                                                      .translate('Gender'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: <Widget>[
                                                   CupertinoActionSheetAction(
-                                                    child: Text("Male"),
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate('Male')),
                                                     onPressed: () {
-                                                      genderCtr.text = "Male";
+                                                      genderCtr.text =
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .translate(
+                                                                  'Male');
                                                       profileData.gender =
-                                                          "Male";
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .translate(
+                                                                  'Male');
                                                       Navigator.pop(context);
                                                     },
                                                   ),
                                                   CupertinoActionSheetAction(
-                                                    child: Text("Female"),
+                                                    child: Text(AppLocalizations
+                                                            .of(context)
+                                                        .translate('Female')),
                                                     onPressed: () {
-                                                      genderCtr.text = "Female";
+                                                      genderCtr.text =
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .translate(
+                                                                  'Female');
                                                       profileData.gender =
-                                                          "Female";
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .translate(
+                                                                  'Female');
                                                       Navigator.pop(context);
                                                     },
                                                   )
                                                 ],
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -661,7 +1028,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Birthday:",
+                                            "${AppLocalizations.of(context).translate('Birthday')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -695,7 +1062,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: birthDayCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: "Select Birthday"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Select_Birthday')),
                                           )
                                         ],
                                       ),
@@ -722,17 +1092,51 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Nationality:",
+                                            "${AppLocalizations.of(context).translate('Nationality')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.nationaity = newText;
-                                            },
-                                            controller: nationalityCtr,
                                             style: dataText,
+                                            controller: nationalityCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Enter nationality"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Nationality')),
+                                            onTap: () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              final action =
+                                                  CupertinoActionSheet(
+                                                title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate('Nationality'),
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                                message: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
+                                                  style:
+                                                      TextStyle(fontSize: 15.0),
+                                                ),
+                                                actions: nationalityWidget,
+                                                cancelButton:
+                                                    CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              );
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => action);
+                                            },
                                           )
                                         ],
                                       ),
@@ -758,7 +1162,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Detail Information",
+                                  AppLocalizations.of(context)
+                                      .translate('Detail_Information'),
                                   style: cardTitleText,
                                 ),
                               )),
@@ -783,33 +1188,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Education:",
+                                            "${AppLocalizations.of(context).translate('Education')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: eduCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Select Education"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Education')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Education",
+                                                  AppLocalizations.of(context)
+                                                      .translate('Education'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: eduWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -845,33 +1259,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Religion:",
+                                            "${AppLocalizations.of(context).translate('Religion')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: religionCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Select Religion"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Select_Religion')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Religion",
+                                                  AppLocalizations.of(context)
+                                                      .translate('Religion'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: religionWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -907,34 +1330,43 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Marital Status:",
+                                            "${AppLocalizations.of(context).translate('Marital_Status')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: maritalCtr,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Select Marital Status"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Marital_Status')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Marital Status",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Marital_Status'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: maritalStatusWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -970,33 +1402,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Children:",
+                                            "${AppLocalizations.of(context).translate('Children')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: childCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Select Children"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Select_Children')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Children",
+                                                  AppLocalizations.of(context)
+                                                      .translate('Children'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: childrenWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -1032,18 +1473,52 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Current Location:",
+                                            "${AppLocalizations.of(context).translate('Current_Location')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.current = newText;
-                                            },
-                                            controller: locationCtr,
                                             style: dataText,
+                                            controller: locationCtr,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Enter current location"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Current_Location')),
+                                            onTap: () {
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
+                                              final action =
+                                                  CupertinoActionSheet(
+                                                title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Current_Location'),
+                                                  style:
+                                                      TextStyle(fontSize: 30),
+                                                ),
+                                                message: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
+                                                  style:
+                                                      TextStyle(fontSize: 15.0),
+                                                ),
+                                                actions: locationWidget,
+                                                cancelButton:
+                                                    CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              );
+                                              showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => action);
+                                            },
                                           )
                                         ],
                                       ),
@@ -1070,7 +1545,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Whatsapp Number:",
+                                            "${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -1092,8 +1567,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: whatsAppCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Enter whatsapp number"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Enter_whatsapp_number')),
                                           )
                                         ],
                                       ),
@@ -1120,7 +1597,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Phone Number (verified):",
+                                            "${AppLocalizations.of(context).translate('Phone_Number_verified')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -1142,7 +1619,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: phoneCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: "Enter Phone number"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Enter_Phone_number')),
                                           )
                                         ],
                                       ),
@@ -1168,7 +1648,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Work Information",
+                                  AppLocalizations.of(context)
+                                      .translate('Work_Information'),
                                   style: cardTitleText,
                                 ),
                               )),
@@ -1193,33 +1674,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Job Type:",
+                                            "${AppLocalizations.of(context).translate('Job_Type')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: jobTypeCtr,
                                             decoration: InputDecoration(
-                                                hintText: "Select Job Type"),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Select_Job_Type')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Job Type",
+                                                  AppLocalizations.of(context)
+                                                      .translate('Job_Type'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: jobTypeWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -1255,34 +1745,43 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Job Capacity:",
+                                            "${AppLocalizations.of(context).translate('Job_Capacity')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: jobCapCtr,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Select Job Capacity"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Job_Capacity')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Job Capacity",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Job_Capacity'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: jobCapWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -1318,34 +1817,43 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Contract Status:",
+                                            "${AppLocalizations.of(context).translate('Contract_Status')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
                                             style: dataText,
                                             controller: contractCtr,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Select Contract Status"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Select_Contract_Status')),
                                             onTap: () {
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
                                               final action =
                                                   CupertinoActionSheet(
                                                 title: Text(
-                                                  "Contract Status",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Contract_Status'),
                                                   style:
                                                       TextStyle(fontSize: 30),
                                                 ),
                                                 message: Text(
-                                                  "Select any option ",
+                                                  AppLocalizations.of(context)
+                                                      .translate(
+                                                          'Select_any_option'),
                                                   style:
                                                       TextStyle(fontSize: 15.0),
                                                 ),
                                                 actions: contractWidget,
                                                 cancelButton:
                                                     CupertinoActionSheetAction(
-                                                  child: Text("Cancel"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('Cancel')),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
@@ -1381,7 +1889,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Working Skill:",
+                                            "${AppLocalizations.of(context).translate('Working_Skill')}:",
                                             style: titleText,
                                           ),
                                           Wrap(children: workingSkillWidget)
@@ -1410,7 +1918,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Language:",
+                                            "${AppLocalizations.of(context).translate('Language')}:",
                                             style: titleText,
                                           ),
                                           Wrap(children: languageWidget)
@@ -1439,7 +1947,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Expected Salary(HKD):",
+                                            "${AppLocalizations.of(context).translate('Expected_Salary_HKD')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -1462,8 +1970,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: expectedSalaryCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText:
-                                                    "Enter expected salary"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate(
+                                                        'Enter_expected_salary')),
                                           )
                                         ],
                                       ),
@@ -1490,7 +2000,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            "Employement Start Date:",
+                                            "${AppLocalizations.of(context).translate('Employement_Start_Date')}:",
                                             style: titleText,
                                           ),
                                           TextFormField(
@@ -1518,7 +2028,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: startDateCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: "Select Date"),
+                                                hintText: AppLocalizations.of(
+                                                        context)
+                                                    .translate('Select_Date')),
                                           )
                                         ],
                                       ),
@@ -1548,7 +2060,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      "Work Experience",
+                                      AppLocalizations.of(context)
+                                          .translate('Work_Experience'),
                                       style: cardTitleText,
                                     ),
                                     GestureDetector(
@@ -1606,7 +2119,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8.0, horizontal: 8),
                                   child: Text(
-                                    "Add your work experince",
+                                    AppLocalizations.of(context)
+                                        .translate('Add_your_work_experince'),
                                     style: titleText,
                                   ),
                                 ),
@@ -1623,7 +2137,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Self Introduction",
+                                  AppLocalizations.of(context)
+                                      .translate('Self_Introduction'),
                                   style: cardTitleText,
                                 ),
                               )),
@@ -1639,7 +2154,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                   controller: selfCtr,
                                   style: dataText,
                                   decoration: InputDecoration(
-                                      hintText: "Enter self introduction"),
+                                      hintText: AppLocalizations.of(context)
+                                          .translate(
+                                              'Enter_self_introduction')),
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -1660,7 +2177,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Image Introduction",
+                                  AppLocalizations.of(context)
+                                      .translate('Image_Introduction'),
                                   style: cardTitleText,
                                 ),
                               )),
@@ -1685,7 +2203,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    "Primary Image",
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Primary_Image'),
                                                     style: titleText,
                                                   ),
                                                 ),
@@ -1715,7 +2235,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    "Server Image",
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Server_Image'),
                                                     style: titleText,
                                                   ),
                                                 ),
@@ -1738,7 +2260,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    "Local Image",
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Local_Image'),
                                                     style: titleText,
                                                   ),
                                                 ),
@@ -1751,7 +2275,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                       Align(
                                         alignment: Alignment.center,
                                         child: RaisedButton(
-                                          child: Text("Pick images"),
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate('Pick_images')),
                                           onPressed: loadAssets,
                                         ),
                                       ),
@@ -1883,7 +2409,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
     setState(() {
       imagesa = resultList;
-      _error = error;
     });
   }
 
@@ -1921,106 +2446,20 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   @override
   void didInitState() {
-    // TODO: implement didInitState
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-  }
-}
 
-class WorkChips extends StatefulWidget {
-  @override
-  _WorkChipsState createState() => _WorkChipsState();
-  final String title;
-  List<String> workingSkillStringList;
-  bool isSelected;
-
-  WorkChips({this.title, this.workingSkillStringList, this.isSelected});
-}
-
-class _WorkChipsState extends State<WorkChips> {
-  bool isSelected;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
-      widget.workingSkillStringList.add(widget.title);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.title),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
-      onSelected: (selected) {
-        setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
-            widget.workingSkillStringList.add(widget.title);
-            print(widget.workingSkillStringList);
-          } else {
-            widget.workingSkillStringList
-                .removeAt(widget.workingSkillStringList.indexOf(widget.title));
-            print(widget.workingSkillStringList);
-          }
-        });
-      },
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.black,
-    );
-  }
-}
-
-class LanguageChips extends StatefulWidget {
-  @override
-  _LanguageChipsState createState() => _LanguageChipsState();
-  final String title;
-  bool isSelected;
-  List<String> languageStringList;
-
-  LanguageChips({this.title, this.languageStringList, this.isSelected});
-}
-
-class _LanguageChipsState extends State<LanguageChips> {
-  bool isSelected = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
-      widget.languageStringList.add(widget.title);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      label: Text(widget.title),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
-      onSelected: (selected) {
-        this.setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
-            widget.languageStringList.add(widget.title);
-            print(widget.languageStringList);
-          } else {
-            widget.languageStringList
-                .removeAt(widget.languageStringList.indexOf(widget.title));
-            print(widget.languageStringList);
-          }
-        });
-      },
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.black,
-    );
+    var appLanguage = Provider.of<DataListService>(context);
+    listEducationData = appLanguage.listEducationData;
+    listReligionData = appLanguage.listReligionData;
+    listMaritalData = appLanguage.listMaritalData;
+    listChildrenData = appLanguage.listChildrenData;
+    listContractData = appLanguage.listContractData;
+    listJobTypeData = appLanguage.listJobTypeData;
+    listJobCapData = appLanguage.listJobCapData;
+    listWorkSkillData = appLanguage.listWorkSkillData;
+    listLangData = appLanguage.listLangData;
+    listNationalityData = appLanguage.listNationalityData;
+    listLocationData = appLanguage.listLocationData;
   }
 }

@@ -25,9 +25,9 @@ class _ChatUserPageState extends State<ChatUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text("CHATs"),
-      ),*/
+      appBar: AppBar(
+        title: Text("Chat"),
+      ),
       body: Stack(
         children: <Widget>[
           // List

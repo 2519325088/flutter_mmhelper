@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
-import 'package:flutter_mmhelper/ui/LoginScreen.dart';
-import 'package:intl/intl.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:flutter_mmhelper/ui/AgencyListPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/photpGalleryPage.dart';
+import 'package:intl/intl.dart';
 
 class ProfileDateil extends StatefulWidget {
   @override
@@ -188,7 +185,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           "FirstName:",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.black.withOpacity(0.7),
+                                            color:
+                                                Colors.black.withOpacity(0.7),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -226,7 +224,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           "LastName:",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.black.withOpacity(0.7),
+                                            color:
+                                                Colors.black.withOpacity(0.7),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -357,7 +356,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       "Select"
                                       ? widget.proSnapshot['nationaity']
                                       : "",*/
-                                  widget.profileData.nationaity ?? "",
+                                  widget.profileData.nationality ?? "",
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -1036,14 +1035,16 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                     return Padding(
                                       padding: const EdgeInsets.all(5),
                                       child: Container(
-                                        padding:const EdgeInsets.only(bottom: 10),
-                                        margin: const EdgeInsets.only(bottom: 10),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
                                         decoration: BoxDecoration(
                                           border: Border(
                                             bottom: BorderSide(
-                                                width: 0.5,//宽度
+                                                width: 0.5, //宽度
                                                 color: Colors.grey //边框颜色
-                                            ),
+                                                ),
                                           ),
                                         ),
                                         child: Column(
@@ -1051,7 +1052,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              '#Work Experience ${index+1}#',
+                                              '#Work Experience ${index + 1}#',
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -1071,14 +1072,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.edit_location,
                                                           size: 20,
-                                                          color: Colors.black.withOpacity(0.7),
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Country:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.black.withOpacity(0.7),
-                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1128,7 +1133,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                 Icon(
                                                                   Icons
                                                                       .access_time,
-                                                                  color: Colors.black.withOpacity(0.7),
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.7),
                                                                   size: 20,
                                                                 ),
                                                                 Text(
@@ -1137,8 +1145,13 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                       TextStyle(
                                                                     fontSize:
                                                                         18,
-                                                                        color: Colors.black.withOpacity(0.7),
-                                                                        fontWeight: FontWeight.bold,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.7),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1186,7 +1199,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                 Icon(
                                                                   Icons
                                                                       .access_time,
-                                                                  color: Colors.black.withOpacity(0.7),
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.7),
                                                                   size: 20,
                                                                 ),
                                                                 Text(
@@ -1195,8 +1211,13 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                       TextStyle(
                                                                     fontSize:
                                                                         18,
-                                                                        color: Colors.black.withOpacity(0.7),
-                                                                        fontWeight: FontWeight.bold,
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.7),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1247,14 +1268,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.work,
                                                           size: 20,
-                                                          color: Colors.black.withOpacity(0.7),
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Type of Jobs:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.black.withOpacity(0.7),
-                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1298,14 +1323,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.assignment,
                                                           size: 20,
-                                                          color: Colors.black.withOpacity(0.7),
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Number of Taken Care:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.black.withOpacity(0.7),
-                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1348,14 +1377,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.assignment_late,
                                                           size: 20,
-                                                          color: Colors.black.withOpacity(0.7),
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Quit Reason:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.black.withOpacity(0.7),
-                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],
@@ -1398,14 +1431,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                         Icon(
                                                           Icons.bookmark,
                                                           size: 20,
-                                                          color: Colors.black.withOpacity(0.7),
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
                                                         ),
                                                         Text(
                                                           "Reterence Letter:",
                                                           style: TextStyle(
                                                             fontSize: 18,
-                                                            color: Colors.black.withOpacity(0.7),
-                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ],

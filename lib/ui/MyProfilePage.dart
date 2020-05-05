@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
-import 'package:flutter_mmhelper/services/database.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -110,7 +108,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                "Upload Image",
+                AppLocalizations.of(context).translate('Upload_Image'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -134,7 +132,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         Icons.camera_alt,
                         size: 50,
                       ),
-                      Text("Camera"),
+                      Text(AppLocalizations.of(context).translate('Camera')),
                     ],
                   ),
                 ),
@@ -149,7 +147,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         Icons.image,
                         size: 50,
                       ),
-                      Text("Gallery"),
+                      Text(AppLocalizations.of(context).translate('Gallery')),
                     ],
                   ),
                 )
@@ -161,7 +159,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           Row(
             children: <Widget>[
               FlatButton(
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context).translate('Cancel')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -222,7 +220,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             Navigator.pop(context);
           } else {
             scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Something goes wrong to upload image"),
+              content: Text(AppLocalizations.of(context)
+                  .translate('Something_goes_wrong_to_upload_image')),
             ));
           }
         }, onError: (err) {
@@ -230,7 +229,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             isLoading = false;
           });
           scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text('This file is not an image'),
+            content: Text(AppLocalizations.of(context)
+                .translate('This_file_is_not_an_image')),
           ));
         });
       } else {
@@ -301,7 +301,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               Navigator.pop(context);
             } else {
               scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text("Something goes wrong to upload image"),
+                content: Text(AppLocalizations.of(context)
+                    .translate('Something_goes_wrong_to_upload_image')),
               ));
             }
           }, onError: (err) {
@@ -309,7 +310,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               isLoading = false;
             });
             scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('This file is not an image'),
+              content: Text(AppLocalizations.of(context)
+                  .translate('This_file_is_not_an_image')),
             ));
           });
         } else {
@@ -344,8 +346,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
         setState(() {
           isLoading = false;
         });
-        scaffoldKey.currentState.showSnackBar(
-            SnackBar(content: Text("Mobile Number already register")));
+        scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('Mobile_Number_already_register'))));
       }
     }
   }
@@ -360,7 +363,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text("My Profile"),
+        title: Text(AppLocalizations.of(context).translate('My_Profile')),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.done),
@@ -449,28 +452,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,
-                              title: "Username",
+                              title: AppLocalizations.of(context)
+                                  .translate('UserName'),
                               filedCtr: userNameCtr,
                               icons: Icons.perm_contact_calendar,
                               maxLine: 1),
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,
-                              title: "First Name",
+                              title: AppLocalizations.of(context)
+                                  .translate('FirstName'),
                               filedCtr: firstNameCtr,
                               icons: Icons.perm_contact_calendar,
                               maxLine: 1),
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,
-                              title: "Last Name",
+                              title: AppLocalizations.of(context)
+                                  .translate('LastName'),
                               filedCtr: lastNameCtr,
                               icons: Icons.perm_contact_calendar,
                               maxLine: 1),
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,
-                              title: "Mobile",
+                              title: AppLocalizations.of(context)
+                                  .translate('Mobile'),
                               filedCtr: mobileCtr,
                               icons: Icons.phone_android,
                               maxLine: 1),
