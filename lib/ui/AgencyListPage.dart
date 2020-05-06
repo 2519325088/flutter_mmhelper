@@ -329,7 +329,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      agencySnapshot["pricing"]["Philipino"]["MSH"],
+                      agencySnapshot["pricing"]["Philipino"]["FCSR"],
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
