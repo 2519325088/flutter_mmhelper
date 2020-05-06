@@ -51,12 +51,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Colors.black, width: 0.5),
-                  // 边色与边宽度
-                  borderRadius: new BorderRadius.circular((20.0)),
-                ),
+//                padding: const EdgeInsets.all(10),
                 child: GridView.builder(
                   shrinkWrap: true,
                   //解决 listview 嵌套报错
