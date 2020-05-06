@@ -27,6 +27,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<Widget> jobTypeWidget = [];
   List<Widget> jobCapWidget = [];
   List<Widget> contractWidget = [];
+  List<Widget> nationalityWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
 
@@ -37,6 +38,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<String> jobTypeStringList = [];
   List<String> jobCapStringList = [];
   List<String> contractStringList = [];
+  List<String> nationalityStringList = [];
   List<String> workingSkillStringList = [];
   List<String> languageStringList = [];
 
@@ -51,6 +53,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<DataList> listJobTypeData = [];
   List<DataList> listJobCapData = [];
   List<DataList> listContractData = [];
+  List<DataList> listNationalityData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
 
@@ -72,6 +75,17 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
           isSelected: false,
         ));
         eduWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+      listNationalityData.forEach((f) {
+        nationalityWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: nationalityStringList,
+          isSelected: false,
+        ));
+        nationalityWidget.add(SizedBox(
           width: 5,
         ));
       });
@@ -178,10 +192,13 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         jobCapStringList.length == 0 &&
         contractStringList.length == 0 &&
         workingSkillStringList.length == 0 &&
-        languageStringList.length == 0) {
+        languageStringList.length == 0 &&
+        nationalityStringList.length == 0) {
       widget.onChanged(widget.listProfileData);
     } else {
       widget.listProfileData.forEach((element) {
+        print(element.nationality);
+        print(nationalityStringList);
         bool isAdd = false;
         if (eduStringList.contains(element.education) ||
             religionStringList.contains(element.religion) ||
@@ -190,7 +207,8 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             jobTypeStringList.contains(element.jobtype) ||
             jobCapStringList.contains(element.jobcapacity) ||
             contractStringList.contains(element.contract) ||
-            workingSkillStringList.contains(element.workskill)) {
+            workingSkillStringList.contains(element.workskill) ||
+            nationalityStringList.contains(element.nationality)) {
           isAdd = true;
           listOfCard.add(element);
         }
@@ -212,7 +230,6 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
       print(listOfCard.length);
       widget.onChanged(listOfCard);
     }
-
     Navigator.pop(context);
   }
 
@@ -240,6 +257,10 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
                       widgetList: eduWidget,
                       title:
                           AppLocalizations.of(context).translate('Education')),
+                  chipsCardWidget(
+                      widgetList: nationalityWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Nationality')),
                   chipsCardWidget(
                       widgetList: religionWidget,
                       title:
@@ -331,5 +352,6 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
     listJobCapData = appLanguage.listJobCapData;
     listWorkSkillData = appLanguage.listWorkSkillData;
     listLangData = appLanguage.listLangData;
+    listNationalityData = appLanguage.listNationalityData;
   }
 }
