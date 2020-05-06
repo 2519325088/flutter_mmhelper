@@ -63,7 +63,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                         padding: const EdgeInsets.all(10),
                         child: Center(
                           child: Text(
-                            widget.agencySnapshot["pricing"]["Philipino"]["MSH"],
+                            widget.agencySnapshot["pricing"]["Philipino"]["FCSR"],
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.w800,
