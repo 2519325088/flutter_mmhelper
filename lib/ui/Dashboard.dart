@@ -366,6 +366,7 @@ class _DashboardState extends State<Dashboard>
                 }
               },
               child: Icon(Icons.add),
+              backgroundColor: Theme.of(context).primaryColor,
             ),
           ],
         ),

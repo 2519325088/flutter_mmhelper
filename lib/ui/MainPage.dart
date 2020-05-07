@@ -171,7 +171,7 @@ class _MainPageState extends State<MainPage>
           bottomClick(i);
         },
         unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.pink,
+        selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
       ),

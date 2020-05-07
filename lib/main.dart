@@ -23,12 +23,25 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  Map<int, Color> color = {
+    50: Color.fromRGBO( 194,156,33, .1),
+    100: Color.fromRGBO(194,156,33, .2),
+    200: Color.fromRGBO(194,156,33, .3),
+    300: Color.fromRGBO(194,156,33, .4),
+    400: Color.fromRGBO(194,156,33, .5),
+    500: Color.fromRGBO(194,156,33, .6),
+    600: Color.fromRGBO(194,156,33, .7),
+    700: Color.fromRGBO(194,156,33, .8),
+    800: Color.fromRGBO(194,156,33, .9),
+    900: Color.fromRGBO(194,156,33, 1),
+  };
   final AppLanguage appLanguage;
 
   MyApp({this.appLanguage});
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor colorCustom = MaterialColor(0xFFbf9b30, color);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<AppLanguage>(
@@ -63,7 +76,7 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
               DefaultCupertinoLocalizations.delegate
             ],
-            theme: ThemeData(primarySwatch: Colors.pink),
+            theme: ThemeData(primarySwatch: colorCustom),
             home: SelectLanguagePage(),
           );
         }));
