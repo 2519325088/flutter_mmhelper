@@ -9,6 +9,7 @@ import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
+import 'package:flutter_mmhelper/ui/ApplicationDetails.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -295,6 +296,24 @@ class _MePageState extends State<MePage> {
                           bottom: borderSide)),
                   child: ListTile(
                     title: Text("FAQ / Tutorials"),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide.none,
+                          left: borderSide,
+                          right: borderSide,
+                          bottom: borderSide)),
+                  child: ListTile(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ApplicationDetails();
+                      }));
+                    },
+                    title: Text("Application Details"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
