@@ -151,36 +151,111 @@ class _DashboardState extends State<Dashboard>
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(
-                        element.firstname + " " + element.lastname ??
-                            "No username",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                      Container(
+                        width: SizeConfig.screenWidth / 2 - 20,
+                        child: Text(
+                          element.firstname +
+                              " " +
+                              element.lastname +
+                              " (${(DateTime.now().difference(element.birthday).inDays / 365).round()})",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
+                        ),
                       ),
-                      Text(
-                        element.nationality ?? "No nationality",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            element.contract,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            element.current == "Hong Kong" ||
+                                    element.current == "香港"
+                                ? " (HK)"
+                                : "",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ],
                       ),
-                      Text(
-                        element.gender ?? "No gender",
-                        style: TextStyle(color: Colors.white),
+                      Row(
+                        children: <Widget>[
+                          element.workskill.contains("Care Disabled") ||
+                                  element.workskill.contains("照顧殘疾")
+                              ? skillIconWidget(link: "assets/disabled.png")
+                              : SizedBox(),
+                          element.workskill.contains("Care Elderly") ||
+                                  element.workskill.contains("照顧老人")
+                              ? skillIconWidget(link: "assets/older2.png")
+                              : SizedBox(),
+                          element.workskill.contains("Care Todlers") ||
+                                  element.workskill.contains("護理幼兒")
+                              ? skillIconWidget(link: "assets/baby.png")
+                              : SizedBox(),
+                          element.workskill.contains("Care Kids") ||
+                                  element.workskill.contains("照顧孩子")
+                              ? skillIconWidget(link: "assets/kids.png")
+                              : SizedBox(),
+                          element.workskill.contains("Care Pets") ||
+                                  element.workskill.contains("護理寵物")
+                              ? skillIconWidget(link: "assets/pat.png")
+                              : SizedBox(),
+                          element.workskill.contains("Chinese Food") ||
+                                  element.workskill.contains("中國菜")
+                              ? skillIconWidget(link: "assets/cook.png")
+                              : SizedBox(),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
+              Positioned(
+                child: element.nationality == "Philippines" ||
+                        element.nationality == "菲律賓"
+                    ? Text(
+                        "🇵🇭",
+                        style: TextStyle(fontSize: 30),
+                      )
+                    : element.nationality == "Indonesia" ||
+                            element.nationality == "印度尼西亞"
+                        ? Text(
+                            "🇮🇩",
+                            style: TextStyle(fontSize: 30),
+                          )
+                        : SizedBox(),
+                right: 5,
+              )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget skillIconWidget({String link}) {
+    return Row(
+      children: <Widget>[
+        Image.asset(
+          link,
+          width: 20,
+          height: 20,
+        ),
+        SizedBox(
+          width: 5,
+        )
+      ],
     );
   }
 
@@ -393,9 +468,9 @@ class _DashboardState extends State<Dashboard>
                     children: <Widget>[
                       Text(
                         snapshot.data.documents[index]["firstname"] +
-                                " " +
-                                snapshot.data.documents[index]["lastname"] ??
-                            "No username",
+                            " " +
+                            snapshot.data.documents[index]["lastname"] +
+                            "(${DateTime.now().subtract(snapshot.data.documents[index]["birthday"])})",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
