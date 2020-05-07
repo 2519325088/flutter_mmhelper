@@ -312,3 +312,30 @@ List quitreasons = List.generate(3, (index)=>{
 List references = List.generate(2, (index)=>{
   "name": reference[index],
 });
+
+
+List apptitle =[
+  "Submitted",
+  "Paid",
+  "Preparing",
+  "Documents ready",
+  "Processing of working visa",
+  "Working Visa Active ",
+  "Arrival in HK",
+];
+
+List apptext = [
+  "Application details have been sent to the agency.They will be contactinf you and your helper to confirm the eligibility for paper processing.",
+  "You are required to pay to our recommended accredited agencies through MamaHelpers'tracking system.",
+  "Please fill in all your information in the app.The agency will prepar all the documents for your helper to sign and mail them to your address for you to sign as well.",
+  "Please mail back the all required physical documents to the agency.",
+  "Agency received all documents and notarizate the contract from Philippine Consulate and verifiy with the Hong Kong Immigration Department",
+  "After working visa approved, we will arrange OEC and arrival in Hong Kong",
+  "After working visa approved, we will arrange OEC and arrival in Hong Kong",
+];
+
+List applications = List.generate(7, (index)=>{
+  "title":apptitle[index],
+  "text": apptext[index],
+});
+
