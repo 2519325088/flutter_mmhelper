@@ -941,8 +941,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['employment'] != "Select"
                                     ? widget.proSnapshot['employment']
                                     : "",*/
-                                DateFormat.yMMMMEEEEd()
-                                    .format(widget.profileData.employment),
+                                widget.profileData.employment!="" &&  widget.profileData.employment!=null? DateFormat.yMMMMEEEEd()
+                                    .format(widget.profileData.employment) : "",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
