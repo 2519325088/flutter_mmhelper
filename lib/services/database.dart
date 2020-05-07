@@ -32,7 +32,7 @@ class FirestoreDatabase with ChangeNotifier {
     return lastUserId;
   }
 
-  Future<void> createUser(FlContent flContent,String userId) async {
+  Future<void> createUser(FlContent flContent, String userId) async {
     documentIdFromCurrentDate();
     flContent.userId = userId;
     await _service.setData(
@@ -102,9 +102,19 @@ class FirestoreDatabase with ChangeNotifier {
       );
 
   Stream<List<DataList>> mbRoleStream() => _service.collectionStream(
-    path: APIPath.roleList(),
-    builder: (data, documentId) => DataList.fromMap(data),
-  );
+        path: APIPath.roleList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbAccommodationStream() => _service.collectionStream(
+        path: APIPath.accommodationList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbHolidayNoStream() => _service.collectionStream(
+        path: APIPath.weekHolidayList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
 
   Future<Facebookdata> facebookCall(
     _scaffoldKey,

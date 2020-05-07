@@ -64,6 +64,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
         color: Colors.black.withOpacity(0.7),
         fontWeight: FontWeight.bold);
     TextStyle dataText = TextStyle(fontSize: 18);
+    Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+    Color gradientEnd = Color(0xffe7d981);
     return Scaffold(
       appBar: AppBar(
         title: Text("Job Post Details"),
@@ -127,7 +129,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                               bottomLeft: Radius.circular(5),
                               bottomRight: Radius.circular(5)),
                           gradient: LinearGradient(
-                              colors: [Colors.pink, Colors.red])),
+                              colors: [gradientStart, gradientEnd])),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,

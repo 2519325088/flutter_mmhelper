@@ -1,12 +1,19 @@
+import 'package:after_init/after_init.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/PostJobModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/GetCountryListService.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PostJobPage extends StatefulWidget {
   @override
@@ -16,7 +23,7 @@ class PostJobPage extends StatefulWidget {
   PostJobPage({this.currentUserId});
 }
 
-class _PostJobPageState extends State<PostJobPage> {
+class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   TextEditingController jobShortDesCtr = TextEditingController();
   TextEditingController workingLocationDesCtr = TextEditingController();
   TextEditingController availableInCtr = TextEditingController();
@@ -38,12 +45,91 @@ class _PostJobPageState extends State<PostJobPage> {
   final _service = FirestoreService.instance;
   PostJob postJob = PostJob();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  List<DataList> listContractData = [];
+  List<Widget> contractWidget = [];
+  List<DataList> listJobTypeData = [];
+  List<Widget> jobTypeWidget = [];
+  List<DataList> listAccommodationData = [];
+  List<Widget> accommodationWidget = [];
+  List<DataList> listWeekHolidayData = [];
+  List<Widget> weekHolidayWidget = [];
+  String languageCode;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     currencyTypeCtr.text = "HKD";
+
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+
+      listContractData.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractTypeCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              postJob.contractType = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+
+      listJobTypeData.forEach((f) {
+        jobTypeWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              jobTypeCtr.text = dataList.getValueByLanguageCode(languageCode);
+              postJob.jobType = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+
+      listAccommodationData.forEach((f) {
+        accommodationWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              accommodationCtr.text = dataList.getValueByLanguageCode(languageCode);
+              postJob.accommodation = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+
+      listWeekHolidayData.forEach((f) {
+        weekHolidayWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              weeklyHolidayCtr.text = dataList.getValueByLanguageCode(languageCode);
+              postJob.weeklyHoliday = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    });
+  }
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
   }
 
   @override
@@ -179,82 +265,36 @@ class _PostJobPageState extends State<PostJobPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Contract Type:",
+                                    "${AppLocalizations.of(context).translate('Contract_Status')}:",
                                     style: titleText,
                                   ),
-                                  /*DropdownButtonFormField<String>(
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Contract Type 1",
-                                          style: dataText,
-                                        ),
-                                        value: "Contract Type 1",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Contract Type 2",
-                                          style: dataText,
-                                        ),
-                                        value: "Contract Type 2",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Contract Type 3",
-                                          style: dataText,
-                                        ),
-                                        value: "Contract Type 3",
-                                      )
-                                    ],
-                                    hint: Text(
-                                      "Unselected",
-                                      style: dataText,
-                                    ),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        contractType = newValue;
-                                        postJob.contractType =
-                                            newValue.toString();
-                                      });
-                                    },
-                                    value: contractType,
-                                  )*/
                                   TextFormField(
                                     style: dataText,
                                     controller: contractTypeCtr,
                                     decoration: InputDecoration(
-                                        hintText: "Select contract type"),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate(
+                                                'Select_Contract_Status')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
                                       final action = CupertinoActionSheet(
                                         title: Text(
-                                          "Contract Type",
+                                          AppLocalizations.of(context)
+                                              .translate('Contract_Status'),
                                           style: TextStyle(fontSize: 30),
                                         ),
                                         message: Text(
-                                          "Select any option ",
+                                          AppLocalizations.of(context)
+                                              .translate('Select_any_option'),
                                           style: TextStyle(fontSize: 15.0),
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("option 1"),
-                                            onPressed: () {
-                                              contractTypeCtr.text = "option 1";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("option 2"),
-                                            onPressed: () {
-                                              contractTypeCtr.text = "option 2";
-                                              Navigator.pop(context);
-                                            },
-                                          )
-                                        ],
+                                        actions: contractWidget,
                                         cancelButton:
                                             CupertinoActionSheetAction(
-                                          child: Text("Cancel"),
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate('Cancel')),
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
@@ -311,7 +351,7 @@ class _PostJobPageState extends State<PostJobPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Icon(
-                              Icons.perm_contact_calendar,
+                              Icons.dashboard,
                               color: Colors.black54,
                               size: 20,
                             ),
@@ -320,92 +360,46 @@ class _PostJobPageState extends State<PostJobPage> {
                             ),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Job Type:",
+                                    "${AppLocalizations.of(context).translate('Job_Type')}:",
                                     style: titleText,
                                   ),
-                                  /*DropdownButtonFormField<String>(
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Full Time",
-                                          style: dataText,
-                                        ),
-                                        value: "Full Time",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Part Time",
-                                          style: dataText,
-                                        ),
-                                        value: "Part Time",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Permanent",
-                                          style: dataText,
-                                        ),
-                                        value: "Permanent",
-                                      )
-                                    ],
-                                    hint: Text(
-                                      "Unselected",
-                                      style: dataText,
-                                    ),
-                                    onChanged: (newValue) {
-                                      postJob.jobType = newValue;
-
-                                      setState(() {
-                                        jobType = newValue;
-                                      });
-                                    },
-                                    value: jobType,
-                                  )*/
                                   TextFormField(
                                     style: dataText,
                                     controller: jobTypeCtr,
                                     decoration: InputDecoration(
-                                        hintText: "Select job type"),
+                                        hintText:
+                                        AppLocalizations.of(context)
+                                            .translate(
+                                            'Select_Job_Type')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
-                                      final action = CupertinoActionSheet(
+                                      final action =
+                                      CupertinoActionSheet(
                                         title: Text(
-                                          "Job Type",
-                                          style: TextStyle(fontSize: 30),
+                                          AppLocalizations.of(context)
+                                              .translate('Job_Type'),
+                                          style:
+                                          TextStyle(fontSize: 30),
                                         ),
                                         message: Text(
-                                          "Select any option ",
-                                          style: TextStyle(fontSize: 15.0),
+                                          AppLocalizations.of(context)
+                                              .translate(
+                                              'Select_any_option'),
+                                          style:
+                                          TextStyle(fontSize: 15.0),
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Full Time"),
-                                            onPressed: () {
-                                              jobTypeCtr.text = "Full Time";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Part Time"),
-                                            onPressed: () {
-                                              jobTypeCtr.text = "Part Time";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Permanent"),
-                                            onPressed: () {
-                                              jobTypeCtr.text = "Permanent";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
+                                        actions: jobTypeWidget,
                                         cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel"),
+                                        CupertinoActionSheetAction(
+                                          child: Text(
+                                              AppLocalizations.of(
+                                                  context)
+                                                  .translate('Cancel')),
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
@@ -642,7 +636,7 @@ class _PostJobPageState extends State<PostJobPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Icon(
-                              Icons.airline_seat_individual_suite,
+                              Icons.dashboard,
                               color: Colors.black54,
                               size: 20,
                             ),
@@ -654,76 +648,36 @@ class _PostJobPageState extends State<PostJobPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Accommodation:",
+                                    "${AppLocalizations.of(context).translate('accommodation')}:",
                                     style: titleText,
                                   ),
-                                  /*DropdownButtonFormField<String>(
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Shared bedroom",
-                                          style: dataText,
-                                        ),
-                                        value: "Shared bedroom",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "Private bedroom",
-                                          style: dataText,
-                                        ),
-                                        value: "Private bedroom",
-                                      ),
-                                    ],
-                                    hint: Text(
-                                      "Unselected",
-                                      style: dataText,
-                                    ),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        accommodation = newValue;
-                                        postJob.accommodation = newValue;
-                                      });
-                                    },
-                                    value: accommodation,
-                                  )*/
                                   TextFormField(
                                     style: dataText,
                                     controller: accommodationCtr,
                                     decoration: InputDecoration(
-                                        hintText: "Select accommodation"),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate(
+                                            'Select_accommodation')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
                                       final action = CupertinoActionSheet(
                                         title: Text(
-                                          "Accommodation",
+                                          AppLocalizations.of(context)
+                                              .translate('accommodation'),
                                           style: TextStyle(fontSize: 30),
                                         ),
                                         message: Text(
-                                          "Select any option ",
+                                          AppLocalizations.of(context)
+                                              .translate('Select_any_option'),
                                           style: TextStyle(fontSize: 15.0),
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Shared bedroom"),
-                                            onPressed: () {
-                                              accommodationCtr.text =
-                                                  "Shared bedroom";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Private bedroom"),
-                                            onPressed: () {
-                                              accommodationCtr.text =
-                                                  "Private bedroom";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
+                                        actions: accommodationWidget,
                                         cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel"),
+                                        CupertinoActionSheetAction(
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate('Cancel')),
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
@@ -746,7 +700,7 @@ class _PostJobPageState extends State<PostJobPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Icon(
-                              Icons.photo_size_select_actual,
+                              Icons.dashboard,
                               color: Colors.black54,
                               size: 20,
                             ),
@@ -758,74 +712,36 @@ class _PostJobPageState extends State<PostJobPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Weekly Holiday:",
+                                    "${AppLocalizations.of(context).translate('weekly_holiday')}:",
                                     style: titleText,
                                   ),
-                                  /*DropdownButtonFormField<String>(
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "1",
-                                          style: dataText,
-                                        ),
-                                        value: "1",
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        child: Text(
-                                          "2",
-                                          style: dataText,
-                                        ),
-                                        value: "2",
-                                      ),
-                                    ],
-                                    hint: Text(
-                                      "Unselected",
-                                      style: dataText,
-                                    ),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        weeklyHoliday = newValue;
-                                        postJob.weeklyHoliday = newValue;
-                                      });
-                                    },
-                                    value: weeklyHoliday,
-                                  )*/
                                   TextFormField(
                                     style: dataText,
                                     controller: weeklyHolidayCtr,
                                     decoration: InputDecoration(
-                                        hintText: "Select weekly holiday"),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate(
+                                            'Select_weekly_holiday')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
                                       final action = CupertinoActionSheet(
                                         title: Text(
-                                          "Weekly Holiday",
+                                          AppLocalizations.of(context)
+                                              .translate('weekly_holiday'),
                                           style: TextStyle(fontSize: 30),
                                         ),
                                         message: Text(
-                                          "Select any option ",
+                                          AppLocalizations.of(context)
+                                              .translate('Select_any_option'),
                                           style: TextStyle(fontSize: 15.0),
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("1"),
-                                            onPressed: () {
-                                              weeklyHolidayCtr.text = "1";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("2"),
-                                            onPressed: () {
-                                              weeklyHolidayCtr.text = "2";
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
+                                        actions: weekHolidayWidget,
                                         cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel"),
+                                        CupertinoActionSheetAction(
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate('Cancel')),
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
@@ -937,5 +853,17 @@ class _PostJobPageState extends State<PostJobPage> {
         postJob.available = _date;
       });
     }
+  }
+
+  @override
+  void didInitState() {
+    var getCountryList = Provider.of<GetCountryListService>(context);
+    getCountryList.getCountryList();
+
+    var appLanguage = Provider.of<DataListService>(context);
+    listContractData = appLanguage.listContractData;
+    listJobTypeData = appLanguage.listJobTypeData;
+    listAccommodationData = appLanguage.listAccommodationData;
+    listWeekHolidayData = appLanguage.listWeekHolidayData;
   }
 }

@@ -16,6 +16,8 @@ class DataListService with ChangeNotifier {
   List<DataList> listNationalityData = [];
   List<DataList> listLocationData = [];
   List<DataList> listRoleData = [];
+  List<DataList> listWeekHolidayData = [];
+  List<DataList> listAccommodationData = [];
 
   callListData(context) async {
     listEducationData = [];
@@ -30,8 +32,22 @@ class DataListService with ChangeNotifier {
     listNationalityData = [];
     listLocationData = [];
     listRoleData = [];
+    listWeekHolidayData = [];
+    listAccommodationData = [];
 
     final database = Provider.of<FirestoreDatabase>(context);
+    database.mbAccommodationStream().first.then((contents) {
+      contents.forEach((element) async {
+        listAccommodationData.add(element);
+      });
+      notifyListeners();
+    });
+    database.mbHolidayNoStream().first.then((contents) {
+      contents.forEach((element) async {
+        listWeekHolidayData.add(element);
+      });
+      notifyListeners();
+    });
     database.mbEducationStream().first.then((contents) {
       contents.forEach((element) async {
         listEducationData.add(element);
