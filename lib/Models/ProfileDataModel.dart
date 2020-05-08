@@ -21,7 +21,7 @@ class ProfileData {
   String firstname;
   String fromAgency;
   String gender;
-  DateTime id;
+  String id;
   List<dynamic> imagelist;
   String jobcapacity;
   String jobtype;
@@ -83,7 +83,7 @@ class ProfileData {
         firstname: json["firstname"] == null ? null : json["firstname"],
         fromAgency: json["from_agency"] == null ? null : json["from_agency"],
         gender: json["gender"] == null ? null : json["gender"],
-        id: json["id"] == null ? null : DateTime.parse(json["id"]),
+        id: json["id"] == null ? null : json["id"],
         imagelist: json["imagelist"] == null
             ? null
             : List<dynamic>.from(json["imagelist"].map((x) => x)),
@@ -123,7 +123,7 @@ class ProfileData {
         "firstname": firstname == null ? null : firstname,
         "from_agency": fromAgency == null ? null : fromAgency,
         "gender": gender == null ? null : gender,
-        "id": id == null ? null : id.toIso8601String(),
+        "id": id == null ? null : id,
         "imagelist": imagelist == null
             ? null
             : List<dynamic>.from(imagelist.map((x) => x)),

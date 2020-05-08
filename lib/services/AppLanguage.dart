@@ -17,18 +17,21 @@ class AppLanguage extends ChangeNotifier {
 
 
   void changeLanguage(Locale type) async {
+    print(type);
     var prefs = await SharedPreferences.getInstance();
-    if (_appLocale == type) {
+    /*if (_appLocale == type) {
       return;
-    }
+    }*/
     if (type == Locale("en")) {
       _appLocale = Locale("en");
       await prefs.setString('language_code', 'en');
       await prefs.setString('countryCode', 'EN');
+      print("call en");
     } else if(type == Locale("zh")) {
       _appLocale = Locale("zh");
       await prefs.setString('language_code', 'zh');
       await prefs.setString('countryCode', 'CN');
+      print("call CN");
     }
     notifyListeners();
   }

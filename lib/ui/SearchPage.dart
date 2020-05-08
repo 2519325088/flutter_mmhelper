@@ -197,13 +197,12 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         nationalityStringList.length == 0 &&
         searchController.text == "") {
       widget.onChanged(widget.listProfileData);
+      print("call all");
     } else {
       widget.listProfileData.forEach((element) {
         bool isAdd = false;
-        if (element.selfintroduction != null &&
-            element.firstname != null &&
-            element.lastname != null) if (eduStringList
-                .contains(element.education) ||
+
+        if (eduStringList.contains(element.education) ||
             religionStringList.contains(element.religion) ||
             maritalStringList.contains(element.marital) ||
             childrenStringList.contains(element.children) ||
@@ -211,16 +210,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             jobCapStringList.contains(element.jobcapacity) ||
             contractStringList.contains(element.contract) ||
             workingSkillStringList.contains(element.workskill) ||
-            nationalityStringList.contains(element.nationality) ||
-            element.firstname
-                .toLowerCase()
-                .contains(searchController.text.toLowerCase()) ||
-            element.lastname
-                .toLowerCase()
-                .contains(searchController.text.toLowerCase()) ||
-            element.selfintroduction
-                .toLowerCase()
-                .contains(searchController.text.toLowerCase())) {
+            nationalityStringList.contains(element.nationality)) {
           isAdd = true;
           listOfCard.add(element);
         }
@@ -236,6 +226,24 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
           } else {
             if (languageStringList.contains(element.language))
               listOfCard.add(element);
+          }
+        }
+        if (!isAdd) {
+          if (searchController.text != "") {
+            if (element.selfintroduction != null &&
+                element.firstname != null &&
+                element.lastname != null) if (element.firstname
+                    .toLowerCase()
+                    .contains(searchController.text.toLowerCase()) ||
+                element.lastname
+                    .toLowerCase()
+                    .contains(searchController.text.toLowerCase()) ||
+                element.selfintroduction
+                    .toLowerCase()
+                    .contains(searchController.text.toLowerCase())) {
+              isAdd = true;
+              listOfCard.add(element);
+            }
           }
         }
       });

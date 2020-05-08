@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
             title: "Search 4 Maid",
             supportedLocales: [
               Locale('en', 'US'),
-              const Locale.fromSubtags(languageCode: 'zh'),
+              Locale('zh','CN'),
             ],
             localizationsDelegates: [
               AppLocalizations.delegate,

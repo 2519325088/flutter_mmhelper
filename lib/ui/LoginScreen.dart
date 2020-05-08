@@ -40,16 +40,33 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
 
   @override
   void didInitState() {
-    getPhoneUserId().then((onValue) {
-      if (onValue != null) {
-        getUserPhone().then((onValue) {
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) {
-            return MainPage(
-              mobileNo: onValue,
-              isFromLogin: true,
-            );
-          }), (Route<dynamic> route) => false);
+    getPhoneUserId().then((phoneUserId) {
+      if (phoneUserId != null) {
+        getUserPhone().then((phoneNumber) {
+          getUserCCode().then((userCCode) async {
+            querySnapshot = await Firestore.instance
+                .collection("mb_content")
+                .where("phone", isEqualTo: _phoneNumberController.text)
+                .getDocuments();
+            if (querySnapshot.documents.length == 0) {
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                    return SignUpScreen(
+                      mobileUserId: phoneUserId,
+                      mobileNumber: phoneNumber,
+                      countryCode: userCCode,
+                    );
+                  }), (Route<dynamic> route) => false);
+            } else {
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                    return MainPage(
+                      mobileNo: phoneNumber,
+                      isFromLogin: true,
+                    );
+                  }), (Route<dynamic> route) => false);
+            }
+          });
         });
       } else {
         var getCountryList = Provider.of<GetCountryListService>(context);
@@ -71,6 +88,11 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
     return prefs.getString("UserPhone");
   }
 
+  Future<String> getUserCCode() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString("countrycode");
+  }
+
   void _verifyPhoneNumber() async {
     var getCountryList = Provider.of<GetCountryListService>(context);
     if (getCountryList.selectedLoginCountryCode == "Select Code") {
@@ -81,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
     } else if (_phoneNumberController.text == "") {
       scaffoldKey.currentState.showSnackBar(SnackBar(
         content:
-            Text(AppLocalizations.of(context).translate('Please_enter_mobile')),
+        Text(AppLocalizations.of(context).translate('Please_enter_mobile')),
       ));
     } else {
       setState(() {
@@ -102,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           (AuthException authException) {
         setState(() {
           _message =
-              'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
+          'Phone number verification failed. Code: ${authException
+              .code}. Message: ${authException.message}';
         });
         scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(_message),
@@ -128,7 +151,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
 
       await _firebaseAuth.verifyPhoneNumber(
           phoneNumber:
-              "${getCountryList.selectedLoginCountryCode}${_phoneNumberController.text}",
+          "${getCountryList.selectedLoginCountryCode}${_phoneNumberController
+              .text}",
           timeout: const Duration(minutes: 1),
           verificationCompleted: verificationCompleted,
           verificationFailed: verificationFailed,
@@ -156,24 +180,26 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           prefs = await SharedPreferences.getInstance();
           prefs.setString("PhoneUserId", user.uid);
           prefs.setString("UserPhone", _phoneNumberController.text);
+          prefs.setString(
+              "countrycode", getCountryList.selectedLoginCountryCode);
           _message = 'Successfully signed in, uid: ' + user.uid;
           if (isUserAvailable == true) {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
-              return MainPage(
-                mobileNo: _phoneNumberController.text,
-                isFromLogin: true,
-              );
-            }), (Route<dynamic> route) => false);
+                  return MainPage(
+                    mobileNo: _phoneNumberController.text,
+                    isFromLogin: true,
+                  );
+                }), (Route<dynamic> route) => false);
           } else {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
-              return SignUpScreen(
-                mobileUserId: user.uid,
-                mobileNumber: _phoneNumberController.text,
-                countryCode: "${getCountryList.selectedLoginCountryCode}",
-              );
-            }), (Route<dynamic> route) => false);
+                  return SignUpScreen(
+                    mobileUserId: user.uid,
+                    mobileNumber: _phoneNumberController.text,
+                    countryCode: "${getCountryList.selectedLoginCountryCode}",
+                  );
+                }), (Route<dynamic> route) => false);
           }
           /*final Contents = await database
               .flContentsStream()
@@ -248,10 +274,10 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           }*/
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
-            return MainPage(
-              isFromLogin: true,
-            );
-          }), (Route<dynamic> route) => false);
+                return MainPage(
+                  isFromLogin: true,
+                );
+              }), (Route<dynamic> route) => false);
         });
 
         return _userFromFirebase(authResult.user);
@@ -293,8 +319,14 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
               tileMode: TileMode.clamp,
             ),
           ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -372,14 +404,14 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                       border: Border.all(
                                           color: Colors.black.withOpacity(0.3)),
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
+                                      BorderRadius.all(Radius.circular(5)),
                                       color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12, horizontal: 8),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Expanded(
                                           child: Text(
@@ -411,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                       border: Border.all(
                                           color: Colors.black.withOpacity(0.3)),
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
+                                      BorderRadius.all(Radius.circular(5)),
                                       color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -419,10 +451,12 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                     child: TextFormField(
                                       controller: _phoneNumberController,
                                       keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              signed: false, decimal: false),
+                                      TextInputType.numberWithOptions(
+                                          signed: false, decimal: false),
                                       cursorColor:
-                                          Theme.of(context).accentColor,
+                                      Theme
+                                          .of(context)
+                                          .accentColor,
                                       decoration: InputDecoration(
                                           prefixIcon: Icon(Icons.call),
                                           hintText: AppLocalizations.of(context)
@@ -439,59 +473,61 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                     ),
                     isShowSms
                         ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.black
-                                                  .withOpacity(0.3)),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                          color: Colors.white),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: TextFormField(
-                                          controller: _smsController,
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  signed: false,
-                                                  decimal: false),
-                                          cursorColor:
-                                              Theme.of(context).accentColor,
-                                          decoration: InputDecoration(
-                                              prefixIcon: Icon(Icons.sms),
-                                              hintText: AppLocalizations.of(
-                                                      context)
-                                                  .translate('Enter_SMS_code'),
-                                              border: InputBorder.none),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _verifyPhoneNumber();
-                                },
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black
+                                            .withOpacity(0.3)),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(5)),
+                                    color: Colors.white),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('Not_received_Resend_SMS'),
-                                    style: TextStyle(fontSize: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8),
+                                  child: TextFormField(
+                                    controller: _smsController,
+                                    keyboardType:
+                                    TextInputType.numberWithOptions(
+                                        signed: false,
+                                        decimal: false),
+                                    cursorColor:
+                                    Theme
+                                        .of(context)
+                                        .accentColor,
+                                    decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.sms),
+                                        hintText: AppLocalizations.of(
+                                            context)
+                                            .translate('Enter_SMS_code'),
+                                        border: InputBorder.none),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
-                          )
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _verifyPhoneNumber();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('Not_received_Resend_SMS'),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                         : SizedBox(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -502,7 +538,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                             querySnapshot = await Firestore.instance
                                 .collection("mb_content")
                                 .where("phone",
-                                    isEqualTo: _phoneNumberController.text)
+                                isEqualTo: _phoneNumberController.text)
                                 .getDocuments();
                             print(querySnapshot.documents);
                             if (querySnapshot.documents.length == 0) {
@@ -523,14 +559,15 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                           },
                           child: Center(
                               child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 20),
-                            child: Text(
-                              AppLocalizations.of(context).translate('Submit'),
-                              style:
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 20),
+                                child: Text(
+                                  AppLocalizations.of(context).translate(
+                                      'Submit'),
+                                  style:
                                   TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          )),
+                                ),
+                              )),
                           shape: RoundedRectangleBorder(),
                           color: Colors.pink.withOpacity(0.7),
                         ),
