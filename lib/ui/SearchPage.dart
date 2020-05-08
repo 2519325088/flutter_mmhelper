@@ -56,6 +56,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<DataList> listNationalityData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
+  TextEditingController searchController = new TextEditingController();
 
   Future<String> fetchLanguage() async {
     var prefs = await SharedPreferences.getInstance();
@@ -193,14 +194,16 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         contractStringList.length == 0 &&
         workingSkillStringList.length == 0 &&
         languageStringList.length == 0 &&
-        nationalityStringList.length == 0) {
+        nationalityStringList.length == 0 &&
+        searchController.text == "") {
       widget.onChanged(widget.listProfileData);
     } else {
       widget.listProfileData.forEach((element) {
-        print(element.nationality);
-        print(nationalityStringList);
         bool isAdd = false;
-        if (eduStringList.contains(element.education) ||
+        if (element.selfintroduction != null &&
+            element.firstname != null &&
+            element.lastname != null) if (eduStringList
+                .contains(element.education) ||
             religionStringList.contains(element.religion) ||
             maritalStringList.contains(element.marital) ||
             childrenStringList.contains(element.children) ||
@@ -208,7 +211,16 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             jobCapStringList.contains(element.jobcapacity) ||
             contractStringList.contains(element.contract) ||
             workingSkillStringList.contains(element.workskill) ||
-            nationalityStringList.contains(element.nationality)) {
+            nationalityStringList.contains(element.nationality) ||
+            element.firstname
+                .toLowerCase()
+                .contains(searchController.text.toLowerCase()) ||
+            element.lastname
+                .toLowerCase()
+                .contains(searchController.text.toLowerCase()) ||
+            element.selfintroduction
+                .toLowerCase()
+                .contains(searchController.text.toLowerCase())) {
           isAdd = true;
           listOfCard.add(element);
         }
@@ -253,6 +265,23 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
+                      child: TextField(
+                        style: TextStyle(fontSize: 18.0, color: Colors.black),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              searchController.clear();
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            },
+                          ),
+                          hintText: "Search",
+                        ),
+                        controller: searchController,
+                      )),
                   chipsCardWidget(
                       widgetList: eduWidget,
                       title:

@@ -110,5 +110,9 @@
   "Server_Image": "Server Image",
   "Local_Image": "Local Image",
   "Pick_images": "Pick images",
-  "Category_Search": "Category Search"
+  "Category_Search": "Category Search",
+  "accommodation": "Accommodation",
+  "Select_accommodation": "Select Accommodation",
+  "weekly_holiday": "Weekly Holiday",
+  "Select_weekly_holiday": "Select Weekly Holiday"
 }

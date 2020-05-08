@@ -79,7 +79,7 @@ class StateListPopupState extends State<StateListPopup> {
                                       .requestFocus(new FocusNode());
                                 },
                               ),
-                              hintText: "Search...",
+                              hintText: "Search",
                             ),
                             controller: searchController,
                           )),

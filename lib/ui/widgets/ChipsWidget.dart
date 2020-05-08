@@ -45,7 +45,7 @@ class _ChipsWidgetState extends State<ChipsWidget> {
           }
         });
       },
-      selectedColor: Colors.pink,
+      selectedColor:Theme.of(context).primaryColor,
       checkmarkColor: Colors.black,
     );
   }

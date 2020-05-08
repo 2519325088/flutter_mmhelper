@@ -43,12 +43,19 @@ class _DashboardState extends State<Dashboard>
   String currentUserId;
   QuerySnapshot querySnapshot;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+  TextEditingController searchController = new TextEditingController();
   SearchClickUtil searchClickUtil;
+  String filter;
+  bool isShow = false;
 
   @override
   void initState() {
     super.initState();
+    searchController.addListener(() {
+      setState(() {
+        filter = searchController.text;
+      });
+    });
     searchClickUtil = SearchClickUtil();
     searchClickUtil.setScreenListener(this);
   }
@@ -78,6 +85,7 @@ class _DashboardState extends State<Dashboard>
 
   madeSearchGridList(List<ProfileData> newGridSearchListData) async {
     gridListData = [];
+    gridSearchListData = newGridSearchListData;
     newGridSearchListData.forEach((element) async {
       print(element.education);
       gridListData.add(GridCardWidget(element));
@@ -85,15 +93,31 @@ class _DashboardState extends State<Dashboard>
     setState(() {});
   }
 
+  onSearchChange(String filter) {
+    gridListData = [];
+    if (gridSearchListData.length == 0) {
+      makeSearch(filter: filter, searchListProfileData: listProfileData);
+    } else {
+      makeSearch(filter: filter, searchListProfileData: gridSearchListData);
+    }
+  }
+
+  void makeSearch({String filter, List<ProfileData> searchListProfileData}) {
+    searchListProfileData.forEach((f) {
+      if (f.firstname.toLowerCase().contains(filter.toLowerCase()) ||
+          f.selfintroduction.toLowerCase().contains(filter.toLowerCase()))
+        gridListData.add(GridCardWidget(f));
+    });
+    setState(() {});
+  }
+
   madeGridList() async {
     listProfileData = [];
     gridListData = [];
-    gridSearchListData = [];
     final database = Provider.of<FirestoreDatabase>(context);
     database.flContentsStream().first.then((contents) {
       contents.forEach((element) async {
         listProfileData.add(element);
-        gridSearchListData.add(element);
         gridListData.add(GridCardWidget(element));
       });
       setState(() {});
@@ -291,6 +315,7 @@ class _DashboardState extends State<Dashboard>
     return Scaffold(
         appBar: AppBar(
           title: Text("Home"),
+          centerTitle: true,
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.search),
@@ -341,6 +366,7 @@ class _DashboardState extends State<Dashboard>
                 }
               },
               child: Icon(Icons.add),
+              backgroundColor: Theme.of(context).primaryColor,
             ),
           ],
         ),
@@ -378,16 +404,45 @@ class _DashboardState extends State<Dashboard>
                 }),
           ],
         ),*/
-        body: gridListData.length != 0
-            ? GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: SizeConfig.safeBlockHorizontal / 4.7,
-                    crossAxisCount: 2),
-                children: gridListData,
-              )
-            : Center(
-                child: Text("No data found"),
-              )
+        body: Column(
+          children: <Widget>[
+            /*isShow?Padding(
+                padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
+                child: TextField(
+                  onChanged: onSearchChange,
+                  style: TextStyle(fontSize: 18.0, color: Colors.black),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        gridSearchListData = [];
+                        madeGridList();
+                        searchController.clear();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      },
+                    ),
+                    hintText: "Search",
+                  ),
+                  controller: searchController,
+                )):SizedBox(),*/
+            gridListData.length != 0
+                ? Expanded(
+                    child: GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio:
+                              SizeConfig.safeBlockHorizontal / 4.7,
+                          crossAxisCount: 2),
+                      children: gridListData,
+                    ),
+                  )
+                : Expanded(
+                    child: Center(
+                      child: Text("No data found"),
+                    ),
+                  ),
+          ],
+        )
         /*StreamBuilder(
           stream: Firestore.instance
               .collection('mb_profile')

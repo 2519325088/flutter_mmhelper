@@ -40,6 +40,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           }));
         },
         child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: StreamBuilder(
         stream: Firestore.instance
