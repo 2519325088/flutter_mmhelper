@@ -66,10 +66,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
-                            Icons.account_box,
-                            color: Colors.grey,
-                            size: 36,
+                          IconButton(
+                            onPressed: (){},
+                            icon: Icon(
+                              Icons.account_box,
+                              color: Colors.grey,
+                              size: 36,
+                            ),
                           ),
                           Text(
                             "Contact info",
@@ -96,10 +99,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
-                            Icons.assignment,
-                            color: Colors.grey,
-                            size: 36,
+                          IconButton(
+                            onPressed: (){},
+                            icon: Icon(
+                              Icons.assignment,
+                              color: Colors.grey,
+                              size: 36,
+                            ),
                           ),
                           Text(
                             "Empolayer info",
@@ -118,10 +124,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
-                            Icons.assignment,
-                            color: Colors.grey,
-                            size: 36,
+                          IconButton(
+                            onPressed: (){},
+                            icon: Icon(
+                              Icons.assignment,
+                              color: Colors.grey,
+                              size: 36,
+                            ),
                           ),
                           Text(
                             "Helper info",
