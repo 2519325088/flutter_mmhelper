@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timeline_list/timeline.dart';
-import 'package:timeline_list/timeline_model.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:flutter/cupertino.dart';
 
 class ApplicationDetails extends StatefulWidget {
   @override
@@ -9,26 +8,30 @@ class ApplicationDetails extends StatefulWidget {
 }
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
+
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: gradientStart,
         title: Text(
           "Application Details",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         centerTitle: true,
         actions: <Widget>[
           RaisedButton(
-            color: Colors.pink,
+            color: gradientStart,
             onPressed: (){},
             child: Text(
               "Delete",
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
           ),
@@ -191,72 +194,98 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       new Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: new Card(
-                          child: new Container(
-                            width: double.infinity,
-                            height: 200.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          "${index+1} ",
-                                          style: TextStyle(
-                                            fontSize: 18,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: new Container(
+                              width: double.infinity,
+                              height: 200.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            "${index+1} ",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          appinfo["title"],
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.pink,
+                                          Text(
+                                            appinfo["title"],
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: gradientStart,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        Text(
-                                          index==0?"5 May 2020":"To be done",
-                                        ),
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                                            child: Container(
-                                              width: 70,
-                                              height: 26,
-                                              child: FlatButton(
-                                                onPressed:(){},
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.all(Radius.circular(10))
-                                                ),
-                                                color:Colors.pink,
-                                                child:Text(
-                                                  'Done',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.normal,
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Text(
+                                            index==0?"5 May 2020":"To be done",
+                                          ),
+                                          Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                                              child: Container(
+                                                width: 70,
+                                                height: 26,
+                                                child: FlatButton(
+                                                  onPressed:(){},
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(Radius.circular(10))
+                                                  ),
+                                                  color: gradientStart,
+                                                  child:Text(
+                                                    'Done',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.normal,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  appinfo["text"],
-                                  style: TextStyle(
-                                    fontSize: 18,
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    appinfo["text"],
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        appinfo["time"],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        child: Text(
+                                          "View more",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        onTap: (){},
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

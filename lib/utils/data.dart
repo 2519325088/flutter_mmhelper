@@ -334,8 +334,19 @@ List apptext = [
   "After working visa approved, we will arrange OEC and arrival in Hong Kong",
 ];
 
+List processtime = [
+  "1 day",
+  "3 days",
+  "3-7 days",
+  "3-7 days",
+  "5- 7 weeks",
+  "2 weeks",
+  "1 weeks",
+];
+
 List applications = List.generate(7, (index)=>{
   "title":apptitle[index],
   "text": apptext[index],
+  "time":processtime[index],
 });
 
