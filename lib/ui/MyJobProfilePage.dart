@@ -732,7 +732,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     print("Upload education ${profileData.education}");
                     profileData.workskill = workingSkillString;
                     profileData.language = languageString;
-                    profileData.id = DateTime.parse(widget.userId);
+                    profileData.id = widget.userId;
                     int i = 1;
                     if (imagesa.length != 0) {
                       imagesa.forEach((upFile) async {
