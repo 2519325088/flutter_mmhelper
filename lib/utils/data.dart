@@ -325,9 +325,9 @@ List apptitle =[
 ];
 
 List apptext = [
-  "Application details have been sent to the agency.They will be contactinf you and your helper to confirm the eligibility for paper processing.",
-  "You are required to pay to our recommended accredited agencies through MamaHelpers'tracking system.",
-  "Please fill in all your information in the app.The agency will prepar all the documents for your helper to sign and mail them to your address for you to sign as well.",
+  "Application details have been sent to the agency. They will contact you and your helper to confirm the eligibility for paper processing.",
+  "Your are required to pay to our recommended accredited agencies directly (NO transaction is allowed in the APP at this moment)",
+  "The physical copy will be collected by the accredited agencies as well. The agency will prepare all the documents for your helper to sign and mail them to your address for you to sign as well. ",
   "Please mail back the all required physical documents to the agency.",
   "Agency received all documents and notarizate the contract from Philippine Consulate and verifiy with the Hong Kong Immigration Department",
   "After working visa approved, we will arrange OEC and arrival in Hong Kong",
