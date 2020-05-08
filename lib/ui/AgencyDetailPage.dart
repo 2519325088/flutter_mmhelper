@@ -1,25 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/database.dart';
+import 'package:flutter_mmhelper/Models/ContractModel.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AgencyDetailPage extends StatefulWidget {
   @override
+  final String price;
+  final String type;
+  final String proId;
   DocumentSnapshot agencySnapshot;
-  AgencyDetailPage({this.agencySnapshot});
+  AgencyDetailPage({this.agencySnapshot,this.price,this.type,this.proId});
   _AgencyDetailPageState createState() => _AgencyDetailPageState();
 }
 
 class _AgencyDetailPageState extends State<AgencyDetailPage> {
 
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
+  final _service = FirestoreService.instance;
+  String datenow= DateTime.now().toIso8601String();
+  SharedPreferences prefs;
+  final userid = "";
+
+
+  Future<void> _submit() async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("PhoneUserId"));
+//          final database = Provider.of<FirestoreDatabase>(context);
+    final procontext = ContractContext(
+      agency_id: widget.agencySnapshot["id"],
+      contract_type: widget.type,
+      created_at: DateTime.now(),
+      created_by: "",
+      current_status: "",
+      employer_id: "",
+      id: widget.agencySnapshot["id"],
+      img_receipt: "",
+      profile_id: widget.proId,
+    );
+//    _service.setData(path: APIPath.newContract(datenow),
+//        data: procontext.toMap());
+//        Navigator.of(context)
+//            .push(MaterialPageRoute(builder: (context) {
+//          return LoginScreen();
+//        }));
+//    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: gradientStart,
         title: Text(
         "收費表",
         style: TextStyle(
-            color: Colors.white
+            color: Colors.black,
         ),
       ),
         centerTitle: true,
@@ -63,7 +104,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                         padding: const EdgeInsets.all(10),
                         child: Center(
                           child: Text(
-                            widget.agencySnapshot["pricing"]["Philipino"]["FCSR"],
+                            widget.price,
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.w800,
@@ -112,6 +153,33 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: FlatButton(
+                      onPressed: _submit,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      color:gradientStart,
+                      child: Text(
+                        'Contract',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),

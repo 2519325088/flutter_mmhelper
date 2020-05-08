@@ -15,15 +15,18 @@ class ProfileDateil extends StatefulWidget {
 }
 
 class _ProfileDateilState extends State<ProfileDateil> {
+
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor:gradientStart,
         title: Text(
           'Profile Detail',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         centerTitle: true,
@@ -123,16 +126,16 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       onPressed: () {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return AgencyListpage();
+                          return AgencyListpage(nationality: widget.profileData.nationality,contract:widget.profileData.contract,protid: widget.profileData.id.toString(),);
                         }));
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
-                      color: Colors.pinkAccent,
+                      color:gradientStart,
                       child: Text(
                         'Hire',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.normal,
                         ),
@@ -308,8 +311,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
-                                DateFormat.yMMMMEEEEd()
-                                    .format(widget.profileData.birthday),
+                                widget.profileData.birthday!="" && widget.profileData.birthday!=null ?DateFormat.yMMMMEEEEd()
+                                    .format(widget.profileData.birthday):"",
                                 //widget.proSnapshot['birthday']!="Select"?widget.proSnapshot['birthday']:"",
                                 style: TextStyle(
                                   fontSize: 18,

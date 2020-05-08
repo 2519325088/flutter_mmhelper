@@ -6,19 +6,27 @@ import 'package:url_launcher/url_launcher.dart';
 class AgencyListpage extends StatefulWidget {
   @override
   _AgencyListpageState createState() => _AgencyListpageState();
+
+  final String nationality;
+  final String contract;
+  final String protid;
+  AgencyListpage({this.nationality,this.contract,this.protid});
 }
 
 class _AgencyListpageState extends State<AgencyListpage> {
+
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: gradientStart,
         title: Text(
           "Agency List",
           style: TextStyle(
-            color: Colors.white
+            color: Colors.black,
           ),
         ),
         centerTitle: true,
@@ -27,6 +35,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
         child: StreamBuilder(
             stream: Firestore.instance
                 .collection('mb_agency')
+                .where("type", isEqualTo: "contract")
                 .snapshots(),
             builder: (context, snapshot) {
               return snapshot.hasData
@@ -50,6 +59,37 @@ class _AgencyListpageState extends State<AgencyListpage> {
   Widget agenxyCard(
       {DocumentSnapshot agencySnapshot,}) {
     var aa = double.parse(agencySnapshot["score"]);
+    var price = "";
+    var type="";
+    if(widget.nationality=="Philippines" && (widget.contract =="Terminated" || widget.contract =="Break")){
+      price = agencySnapshot["pricing"]["Philipino"]["Terminated"];
+      type = "Terminated";
+    }else if(widget.nationality=="Philippines" && (widget.contract =="Ex-HK" || widget.contract =="Ex-Overseas" || widget.contract =="First Time Overseas")){
+      price = agencySnapshot["pricing"]["Philipino"]["Overseas"];
+      type = "Overseas";
+    }else if(widget.nationality=="Philippines" && widget.contract =="Finished"){
+      price = agencySnapshot["pricing"]["Philipino"]["Finished"];
+      type = "Finished";
+    }else if(widget.nationality=="Philippines" && widget.contract =="Employed"){
+      price = agencySnapshot["pricing"]["Philipino"]["FCSR"];
+      type = "FCSR";
+    }else if (widget.nationality=="Indonesia" && (widget.contract =="Terminated" || widget.contract =="Break")){
+      price = agencySnapshot["pricing"]["Indonesian"]["Terminated"];
+      type = "Terminated";
+    }else if(widget.nationality=="Indonesia" && (widget.contract =="Ex-HK" || widget.contract =="Ex-Overseas" || widget.contract =="First Time Overseas")){
+      price = agencySnapshot["pricing"]["Indonesian"]["Overseas"];
+      type = "Overseas";
+    }else if(widget.nationality=="Indonesia" && widget.contract =="Finished"){
+      price = agencySnapshot["pricing"]["Indonesian"]["Finished"];
+      type = "Finished";
+    }else if(widget.nationality=="Indonesia" && widget.contract =="Employed"){
+      price = agencySnapshot["pricing"]["Indonesian"]["FCSR"];
+      type = "FCSR";
+    }else{
+      print(widget.contract);
+      price = agencySnapshot["pricing"]["Indonesian"]["FCSR"];
+      type = "FCSR";
+    }
     return Card(
       child: Padding(
         padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -329,7 +369,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      agencySnapshot["pricing"]["Philipino"]["FCSR"],
+                      price,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -345,7 +385,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                       onTap: (){
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return AgencyDetailPage(agencySnapshot: agencySnapshot,);
+                          return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,);
                         }));
                       },
                     ),
