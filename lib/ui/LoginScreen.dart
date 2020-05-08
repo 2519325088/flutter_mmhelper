@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
           getUserCCode().then((userCCode) async {
             querySnapshot = await Firestore.instance
                 .collection("mb_content")
-                .where("phone", isEqualTo: _phoneNumberController.text)
+                .where("phone", isEqualTo: phoneNumber)
                 .getDocuments();
             if (querySnapshot.documents.length == 0) {
               Navigator.pushAndRemoveUntil(context,

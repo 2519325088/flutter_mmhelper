@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/FlContentModel.dart';
+import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
 import 'package:intl/intl.dart';
 
 class JobDetailPage extends StatefulWidget {
   @override
   _JobDetailPageState createState() => _JobDetailPageState();
-  DocumentSnapshot jobSnapshot;
-  DocumentSnapshot userSnapshot;
+  JobDetailData jobDetailData;
+  FlContent userData;
 
-  JobDetailPage({this.jobSnapshot, this.userSnapshot});
+  JobDetailPage(
+      { this.jobDetailData, this.userData});
 }
 
 class _JobDetailPageState extends State<JobDetailPage> {
@@ -29,14 +32,15 @@ class _JobDetailPageState extends State<JobDetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     availableInCtr.text = DateFormat.yMMMMEEEEd()
-        .format(DateTime.tryParse(widget.jobSnapshot['available']))
+        .format(widget.jobDetailData.available)
         .toString();
-    jobTypeCtr.text = widget.jobSnapshot['job_type'];
-    contractTypeCtr.text = widget.jobSnapshot['contract_type'];
-    workingLocationDesCtr.text = widget.jobSnapshot['working_location'];
+    jobTypeCtr.text = widget.jobDetailData.jobType;
+    contractTypeCtr.text = widget.jobDetailData.contractType;
+    workingLocationDesCtr.text = widget.jobDetailData.workingLocation;
     salaryCtr.text =
-        "${widget.jobSnapshot['salary']} ${widget.jobSnapshot['currencyType']}";
+        "${widget.jobDetailData.salary} ${widget.jobDetailData.currencyType}";
   }
 
   @override
@@ -90,7 +94,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                             child: Row(
                               children: <Widget>[
                                 CircleAvatar(
-                                  child: Text(widget.userSnapshot['firstname']
+                                  child: Text(widget.userData.firstname
                                       .substring(0, 1)
                                       .toUpperCase()),
                                 ),
@@ -101,7 +105,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      widget.userSnapshot['firstname'] ?? "",
+                                      widget.userData.firstname ?? "",
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
@@ -116,7 +120,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                             ),
                           ),
                           Text(
-                            widget.jobSnapshot['job_short_description'],
+                            widget.jobDetailData.jobShortDescription,
                             style: TextStyle(fontSize: 16),
                           ),
                         ],

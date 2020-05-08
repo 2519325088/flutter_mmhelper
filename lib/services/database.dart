@@ -11,6 +11,7 @@ import 'package:flutter_mmhelper/Models/FacebookModel.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_mmhelper/Models/FlImageModel.dart';
+import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
 import 'package:flutter_mmhelper/Models/PostJobModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'api_path.dart';
@@ -45,6 +46,16 @@ class FirestoreDatabase with ChangeNotifier {
         path: APIPath.candidateList(),
         builder: (data, documentId) => ProfileData.fromMap(data),
       );
+
+  Stream<List<FlContent>> flUserStream() => _service.collectionStream(
+    path: APIPath.userList(),
+    builder: (data, documentId) => FlContent.fromMap(data,documentId),
+  );
+
+  Stream<List<JobDetailData>> flJobStream() => _service.jobCollectionStream(
+    path: APIPath.jobList(),
+    builder: (data, documentId) => JobDetailData.fromMap(data),
+  );
 
   Stream<List<DataList>> mbEducationStream() => _service.collectionStream(
         path: APIPath.educationList(),
