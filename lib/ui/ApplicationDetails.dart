@@ -27,7 +27,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         if (snapshot != null &&
             snapshot.documents != null &&
             snapshot.documents.length > 0) {
-          // snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+          snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
           contractId = snapshot.documents[0]['id'];
           Firestore.instance
               .collection('mb_contract_status')
@@ -238,8 +238,6 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                 itemCount: applications.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map appinfo = applications[index];
-                  print('itemBuilder index : $index');
-                  print('itemBuilder title : ${appinfo["title"]}');
                   if (process_status[index] == null ||
                       process_status[index] == '') {
                     getstatus(appinfo["title"], index);
