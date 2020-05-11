@@ -60,7 +60,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     // TODO: implement initState
     super.initState();
     currencyTypeCtr.text = "HKD";
-
+    postJob.currencyType = "HKD";
     fetchLanguage().then((onValue) {
       languageCode = onValue;
 
@@ -615,8 +615,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                       postJob.unitSize = newValue;
                                     },
                                     inputFormatters: [
-                                      WhitelistingTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(4),
+                                      WhitelistingTextInputFormatter.digitsOnly
                                     ],
                                     keyboardType:
                                         TextInputType.numberWithOptions(

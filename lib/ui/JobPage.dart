@@ -1,8 +1,13 @@
 import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/FlContentModel.dart';
+import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
+import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
+import 'package:provider/provider.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -14,6 +19,9 @@ class JobPage extends StatefulWidget {
 
 class _JobPageState extends State<JobPage> with AfterInitMixin {
   String searchText = "";
+  List<Widget> gridListData = [];
+  List<JobDetailData> listJobData = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -24,63 +32,123 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   @override
   void didInitState() {
     // TODO: implement didInitState
+    madeGridList();
+  }
+
+  onChangeSearchList(List<JobDetailData> newGridSearchListData) {
+    print("this is length ${newGridSearchListData.length}");
+    madeSearchGridList(newGridSearchListData);
+  }
+
+  madeSearchGridList(List<JobDetailData> newGridSearchListData) async {
+
+      setState(() {
+        isLoading = true;
+      });
+      int i = 1;
+      gridListData = [];
+      if(newGridSearchListData.length!=0) {
+      final database = Provider.of<FirestoreDatabase>(context);
+      database
+          .flUserStream()
+          .first
+          .then((userDataList) {
+        newGridSearchListData.forEach((jobElement) async {
+          i++;
+          userDataList.forEach((user) {
+            if (jobElement.userId == user.userId) {
+              gridListData.add(jobCard(
+                  userData: user,
+                  jobDetailData: jobElement,
+                  userName: user.username));
+            }
+          });
+          if (newGridSearchListData.length <= i) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        });
+      });
+    }else{
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  madeGridList() async {
+    int i = 1;
+    listJobData = [];
+    gridListData = [];
+    final database = Provider.of<FirestoreDatabase>(context);
+    database.flJobStream().first.then((contents) {
+      database.flUserStream().first.then((userDataList) {
+        contents.forEach((jobElement) async {
+          i++;
+          userDataList.forEach((user) {
+            if (jobElement.userId == user.userId) {
+              listJobData.add(jobElement);
+              gridListData.add(jobCard(
+                  userData: user,
+                  jobDetailData: jobElement,
+                  userName: user.username));
+            }
+          });
+          if (contents.length < i) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        });
+        print(listJobData.length);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Job"),),
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return PostJobPage(
-              currentUserId: widget.currentUserId,
-            );
-          }));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: StreamBuilder(
-        stream: Firestore.instance
-            .collection('fl_job_post')
-            .orderBy("id", descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  padding: EdgeInsets.all(10.0),
-                  itemBuilder: (context, index) {
-                    return StreamBuilder(
-                        stream: Firestore.instance
-                            .collection('mb_content')
-                            .document(snapshot.data.documents[index]["user_id"])
-                            .snapshots(),
-                        builder: (context, snapshot2) {
-                          return snapshot2.hasData
-                              ? jobCard(
-                                  userName: snapshot2.data["firstname"] ?? "",
-                                  shortDes: snapshot.data.documents[index]
-                                          ["job_short_description"] ??
-                                      "",
-                                  jobSnapshot: snapshot.data.documents[index],
-                                  userSnapshot: snapshot2.data)
-                              : SizedBox();
-                        });
-                  },
-                  itemCount: snapshot.data.documents.length,
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                );
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: Text("Job"),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return JobSearchPage(
+                      onChanged: onChangeSearchList,
+                      listJobData: listJobData,
+                    );
+                  }));
+                }),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: null,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return PostJobPage(
+                currentUserId: widget.currentUserId,
+              );
+            }));
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        body: isLoading == false
+            ? gridListData.length!=0?ListView(
+                children: gridListData,
+              ):Center(child: Text("No any job"),)
+            : Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 
   Widget jobCard(
-      {String shortDes,
+      {JobDetailData jobDetailData,
+      FlContent userData,
+      String shortDes,
       String userName,
       DocumentSnapshot jobSnapshot,
       DocumentSnapshot userSnapshot}) {
@@ -118,7 +186,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
               ),
             ),
             Text(
-              shortDes,
+              jobDetailData.jobShortDescription ?? "",
               style: TextStyle(fontSize: 16),
             ),
             Divider(
@@ -128,8 +196,8 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return JobDetailPage(
-                    jobSnapshot: jobSnapshot,
-                    userSnapshot: userSnapshot,
+                    jobDetailData: jobDetailData,
+                    userData: userData,
                   );
                 }));
               },

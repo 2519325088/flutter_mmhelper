@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class FlContent {
-  final List<ImageDeck> imageDeck;
+  //final List<ImageDeck> imageDeck;
   final String education;
   final String email;
   final String gender;
@@ -24,7 +24,7 @@ class FlContent {
   String userId;
 
   FlContent({
-    this.imageDeck,
+    //this.imageDeck,
     this.education,
     this.email,
     this.gender,
@@ -48,8 +48,8 @@ class FlContent {
 
   factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
       FlContent(
-        imageDeck: List<ImageDeck>.from(
-            data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
+       // imageDeck: List<ImageDeck>.from(
+       //     data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
         education: data["education"],
         email: data["email"],
         gender: data["gender"],

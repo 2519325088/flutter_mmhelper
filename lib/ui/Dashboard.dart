@@ -85,7 +85,6 @@ class _DashboardState extends State<Dashboard>
 
   madeSearchGridList(List<ProfileData> newGridSearchListData) async {
     gridListData = [];
-    gridSearchListData = newGridSearchListData;
     newGridSearchListData.forEach((element) async {
       print(element.education);
       gridListData.add(GridCardWidget(element));
@@ -93,7 +92,7 @@ class _DashboardState extends State<Dashboard>
     setState(() {});
   }
 
-  onSearchChange(String filter) {
+  /*onSearchChange(String filter) {
     gridListData = [];
     if (gridSearchListData.length == 0) {
       makeSearch(filter: filter, searchListProfileData: listProfileData);
@@ -109,7 +108,7 @@ class _DashboardState extends State<Dashboard>
         gridListData.add(GridCardWidget(f));
     });
     setState(() {});
-  }
+  }*/
 
   madeGridList() async {
     listProfileData = [];
