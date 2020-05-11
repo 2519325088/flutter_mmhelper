@@ -27,7 +27,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         if (snapshot != null &&
             snapshot.documents != null &&
             snapshot.documents.length > 0) {
-          snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+          //  snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
           contractId = snapshot.documents[0]['id'];
           Firestore.instance
               .collection('mb_contract_status')
@@ -38,7 +38,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
             if (snapshot != null &&
                 snapshot.documents != null &&
                 snapshot.documents.length > 0) {
-              snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+              //  snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
               process_status[index] = snapshot.documents[0]["process_status"];
               setState(() {});
             } else {
