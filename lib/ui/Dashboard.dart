@@ -10,6 +10,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
 import 'package:flutter_mmhelper/interface/search_listenter.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
@@ -47,6 +48,12 @@ class _DashboardState extends State<Dashboard>
   SearchClickUtil searchClickUtil;
   String filter;
   bool isShow = false;
+  String languageCode;
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   @override
   void initState() {
@@ -58,6 +65,9 @@ class _DashboardState extends State<Dashboard>
     });
     searchClickUtil = SearchClickUtil();
     searchClickUtil.setScreenListener(this);
+    fetchLanguage().then((onValue) {
+      languageCode = onValue;
+    });
   }
 
   @override
@@ -124,11 +134,13 @@ class _DashboardState extends State<Dashboard>
   }
 
   Widget GridCardWidget(ProfileData element) {
+    print('${element.firstname + " " + element.lastname}');
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
             profileData: element,
+            languageCode: languageCode,
           );
         }));
       },
@@ -178,17 +190,29 @@ class _DashboardState extends State<Dashboard>
                     children: <Widget>[
                       Container(
                         width: SizeConfig.screenWidth / 2 - 20,
-                        child: Text(
-                          element.firstname +
-                              " " +
-                              element.lastname +
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                element.firstname + " " + element.lastname,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ),
+                            Text(
                               " (${(DateTime.now().difference(element.birthday).inDays / 365).round()})",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
                       Row(
@@ -313,7 +337,7 @@ class _DashboardState extends State<Dashboard>
     SizeConfig().init(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text("Home"),
+          title: Text(AppLocalizations.of(context).translate('Home')),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
@@ -359,7 +383,8 @@ class _DashboardState extends State<Dashboard>
                   }));
                 } else {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text("Please wait..."),
+                    content: Text(
+                        AppLocalizations.of(context).translate('Please_wait')),
                     duration: Duration(seconds: 2),
                   ));
                 }
@@ -437,7 +462,8 @@ class _DashboardState extends State<Dashboard>
                   )
                 : Expanded(
                     child: Center(
-                      child: Text("No data found"),
+                      child: Text(AppLocalizations.of(context)
+                          .translate('No_data_found')),
                     ),
                   ),
           ],

@@ -85,7 +85,6 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
         isLoading = false;
       });
     });
-
   }
 
   searchData() {
@@ -125,13 +124,16 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Job Search"),actions: <Widget>[
-        IconButton(
-            icon: Icon(Icons.done),
-            onPressed: () {
-              searchData();
-            })
-      ],),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).translate('Job_Search')),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.done),
+              onPressed: () {
+                searchData();
+              })
+        ],
+      ),
       body: Stack(
         children: <Widget>[
           Container(
@@ -151,22 +153,23 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
                               FocusScope.of(context).requestFocus(FocusNode());
                             },
                           ),
-                          hintText: "Search",
+                          hintText:
+                              AppLocalizations.of(context).translate('Search'),
                         ),
                         controller: searchController,
                       )),
                   chipsCardWidget(
                       widgetList: jobTypeWidget,
                       title:
-                      AppLocalizations.of(context).translate('Job_Type')),
+                          AppLocalizations.of(context).translate('Job_Type')),
                   chipsCardWidget(
                       widgetList: contractWidget,
                       title: AppLocalizations.of(context)
                           .translate('Contract_Status')),
                   chipsCardWidget(
-                        widgetList: accommodationWidget,
-                      title:
-                      AppLocalizations.of(context).translate('accommodation')),
+                      widgetList: accommodationWidget,
+                      title: AppLocalizations.of(context)
+                          .translate('Accommodation')),
                 ],
               ),
             ),
@@ -174,11 +177,11 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
           Positioned.fill(
               child: isLoading
                   ? Container(
-                color: Colors.black54,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
+                      color: Colors.black54,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
                   : SizedBox())
         ],
       ),

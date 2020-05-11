@@ -209,11 +209,26 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             jobTypeStringList.contains(element.jobtype) ||
             jobCapStringList.contains(element.jobcapacity) ||
             contractStringList.contains(element.contract) ||
-            workingSkillStringList.contains(element.workskill) ||
             nationalityStringList.contains(element.nationality)) {
           isAdd = true;
           listOfCard.add(element);
         }
+
+        if (!isAdd) {
+          List<String> workskills = element.workskill.split(";");
+          if (workskills != null && workskills.length > 0) {
+            workskills.forEach((workskill) {
+              if (workingSkillStringList.contains(workskill) && !isAdd) {
+                isAdd = true;
+                listOfCard.add(element);
+              }
+            });
+          } else {
+            if (workingSkillStringList.contains(element.workskill))
+              listOfCard.add(element);
+          }
+        }
+
         if (!isAdd) {
           List<String> languages = element.language.split(";");
           if (languages != null && languages.length > 0) {
