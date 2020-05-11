@@ -21,6 +21,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/ui/QuestionPage.dart';
 
 class MyJobProfilePage extends StatefulWidget {
   @override
@@ -758,7 +759,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                 content: Text(AppLocalizations.of(context)
                                     .translate(
                                         'Profile_Update_Successfully'))));
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return QuestionPage(skill: profileData.workskill,profileid: profileData.id,);
+                            }));
                           });
+
                         }
                       });
                     } else {
@@ -775,6 +781,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                           scaffoldKey.currentState.showSnackBar(SnackBar(
                               content: Text(AppLocalizations.of(context)
                                   .translate('Profile_Update_Successfully'))));
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return QuestionPage(skill: profileData.workskill,profileid: profileData.id,);
+                          }));
                         });
                       } else {
                         setState(() {
