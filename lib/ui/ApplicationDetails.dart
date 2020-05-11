@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApplicationDetails extends StatefulWidget {
   @override
   _ApplicationDetailsState createState() => _ApplicationDetailsState();
+  String userId;
+  ApplicationDetails({this.userId});
 }
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
@@ -18,40 +20,41 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
 
   void getstatus(String title, int index) {
     String contractId = "";
-    SharedPreferences.getInstance().then((prefs) {
-      Firestore.instance
-          .collection('mb_contract')
-          .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
-          .getDocuments()
-          .then((snapshot) {
-        if (snapshot != null &&
-            snapshot.documents != null &&
-            snapshot.documents.length > 0) {
-          // snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
-          contractId = snapshot.documents[0]['id'];
-          Firestore.instance
-              .collection('mb_contract_status')
-              .where("contract_id", isEqualTo: contractId)
-              .where("status", isEqualTo: title)
-              .getDocuments()
-              .then((snapshot) {
-            if (snapshot != null &&
-                snapshot.documents != null &&
-                snapshot.documents.length > 0) {
-              snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
-              process_status[index] = snapshot.documents[0]["process_status"];
-              setState(() {});
-            } else {
-              process_status[index] = 'N/A';
-              setState(() {});
-            }
-          });
-        } else {
-          process_status[index] = 'N/A';
-          setState(() {});
-        }
+//    SharedPreferences.getInstance().then((prefs) {
+    Firestore.instance
+        .collection('mb_contract')
+        .where('created_by', isEqualTo:widget.userId)
+        .getDocuments()
+        .then((snapshot) {
+          print(snapshot.documents.length);
+          if (snapshot != null &&
+              snapshot.documents != null &&
+              snapshot.documents.length > 0) {
+             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+            contractId = snapshot.documents[0]['id'];
+            Firestore.instance
+                .collection('mb_contract_status')
+                .where("contract_id", isEqualTo: contractId)
+                .where("status", isEqualTo: title)
+                .getDocuments()
+                .then((snapshot) {
+                  if (snapshot != null &&
+                      snapshot.documents != null &&
+                      snapshot.documents.length > 0) {
+        //            snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+                    process_status[index] = snapshot.documents[0]["process_status"];
+                    setState(() {});
+                  } else {
+                    process_status[index] = 'N/A';
+                    setState(() {});
+                  }
+                });
+          } else {
+            process_status[index] = 'N/A';
+            setState(() {});
+          }
       });
-    });
+//    });
   }
 
   @override
@@ -238,8 +241,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                 itemCount: applications.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map appinfo = applications[index];
-                  print('itemBuilder index : $index');
-                  print('itemBuilder title : ${appinfo["title"]}');
+//                  print('itemBuilder index : $index');
+//                  print('itemBuilder title : ${appinfo["title"]}');
                   if (process_status[index] == null ||
                       process_status[index] == '') {
                     getstatus(appinfo["title"], index);

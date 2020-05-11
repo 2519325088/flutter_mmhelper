@@ -310,7 +310,8 @@ class _MePageState extends State<MePage> {
                     onTap: (){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return ApplicationDetails();
+                        return ApplicationDetails(userId:widget.querySnapshot.documents[0]
+                        ["userId"] ,);
                       }));
                     },
                     title: Text("Application Details"),
