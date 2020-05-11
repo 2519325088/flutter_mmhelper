@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ApplicationDetails extends StatefulWidget {
   @override
@@ -11,6 +15,29 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
 
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
+  SharedPreferences prefs;
+
+  Future<String> getstatus(String title) async{
+    String contractId ="";
+    prefs = await SharedPreferences.getInstance();
+    Firestore.instance
+        .collection('mb_contract')
+        .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
+        .getDocuments()
+        .then((snapshot) {
+//      snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+      contractId=snapshot.documents[0]['id'];
+      print(contractId);
+      Firestore.instance
+          .collection('mb_contract_status')
+          .where("contract_id", isEqualTo: snapshot.documents[0]['id'])
+          .where("status", isEqualTo: title)
+        ..getDocuments()
+            .then((snapshot){
+          return snapshot.documents[0]["process_status"];
+        });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -223,36 +250,32 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                           ),
                                         ],
                                       ),
-                                      Column(
-                                        children: <Widget>[
-                                          Text(
-                                            index==0?"5 May 2020":"To be done",
+                                      Text(
+                                        index==0?"5 May 2020":"To be done",
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 80,
+                                        height: 30,
+                                        child: FlatButton(
+                                          onPressed:(){},
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(10))
                                           ),
-                                          Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                                              child: Container(
-                                                width: 70,
-                                                height: 26,
-                                                child: FlatButton(
-                                                  onPressed:(){},
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.all(Radius.circular(10))
-                                                  ),
-                                                  color: gradientStart,
-                                                  child:Text(
-                                                    'Done',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                          color: gradientStart,
+                                          child:Text(
+                                            getstatus(appinfo["title"])!=null  && getstatus(appinfo["title"])!=""?getstatus(appinfo["title"]):"",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -262,27 +285,30 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                       fontSize: 18,
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        appinfo["time"],
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        child: Text(
-                                          "View more",
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          appinfo["time"],
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.grey,
                                           ),
                                         ),
-                                        onTap: (){},
-                                      )
-                                    ],
+                                        GestureDetector(
+                                          child: Text(
+                                            "View more",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          onTap: (){},
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
