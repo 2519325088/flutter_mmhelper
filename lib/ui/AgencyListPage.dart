@@ -100,11 +100,20 @@ class _AgencyListpageState extends State<AgencyListpage> {
               child:Column(
                 children: <Widget>[
                   Container(
+                    margin: const EdgeInsets.only(right: 10),
                     height: 70,
                     width: double.infinity,
-                    child: new Image.network(
-                      agencySnapshot["logo"],
-                      fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,);
+                        }));
+                      },
+                      child: new Image.network(
+                        agencySnapshot["logo"],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Container(
@@ -380,6 +389,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                         "收費詳情",
                         style: TextStyle(
                           fontSize: 18,
+                          color: Colors.blueAccent,
                         ),
                       ),
                       onTap: (){

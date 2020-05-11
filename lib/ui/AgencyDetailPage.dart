@@ -26,7 +26,6 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
   SharedPreferences prefs;
   final userid = "";
 
-
   Future<void> _submit() async {
     prefs = await SharedPreferences.getInstance();
     print(prefs.getString("PhoneUserId"));
@@ -35,15 +34,15 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       agency_id: widget.agencySnapshot["id"],
       contract_type: widget.type,
       created_at: DateTime.now(),
-      created_by: "",
+      created_by: prefs.getString("PhoneUserId"),
       current_status: "",
-      employer_id: "",
-      id: widget.agencySnapshot["id"],
+      employer_id: prefs.getString("PhoneUserId"),
+      id: datenow,
       img_receipt: "",
       profile_id: widget.proId,
     );
-//    _service.setData(path: APIPath.newContract(datenow),
-//        data: procontext.toMap());
+    _service.setData(path: APIPath.newContract(datenow),
+        data: procontext.toMap());
 //        Navigator.of(context)
 //            .push(MaterialPageRoute(builder: (context) {
 //          return LoginScreen();
@@ -69,9 +68,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
         child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 30),
               child: Container(
-                height: 120,
+                height: 80,
                 child: Image.network(
                   widget.agencySnapshot["logo"],
                   fit: BoxFit.cover,
@@ -171,7 +170,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       color:gradientStart,
                       child: Text(
-                        'Contract',
+                        'Confirm',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 22,
