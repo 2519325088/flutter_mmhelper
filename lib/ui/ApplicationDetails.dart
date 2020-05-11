@@ -1,10 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_mmhelper/services/firestore_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class ApplicationDetails extends StatefulWidget {
   @override
@@ -12,31 +10,54 @@ class ApplicationDetails extends StatefulWidget {
 }
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
-
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   SharedPreferences prefs;
 
-  Future<String> getstatus(String title) async{
-    String contractId ="";
-    prefs = await SharedPreferences.getInstance();
-    Firestore.instance
-        .collection('mb_contract')
-        .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
-        .getDocuments()
-        .then((snapshot) {
-//      snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
-      contractId=snapshot.documents[0]['id'];
-      print(contractId);
+  List<String> process_status = new List(applications.length);
+
+  void getstatus(String title, int index) {
+    String contractId = "";
+    SharedPreferences.getInstance().then((prefs) {
       Firestore.instance
-          .collection('mb_contract_status')
-          .where("contract_id", isEqualTo: snapshot.documents[0]['id'])
-          .where("status", isEqualTo: title)
-        ..getDocuments()
-            .then((snapshot){
-          return snapshot.documents[0]["process_status"];
-        });
+          .collection('mb_contract')
+          .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
+          .getDocuments()
+          .then((snapshot) {
+        if (snapshot != null &&
+            snapshot.documents != null &&
+            snapshot.documents.length > 0) {
+          // snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+          contractId = snapshot.documents[0]['id'];
+          Firestore.instance
+              .collection('mb_contract_status')
+              .where("contract_id", isEqualTo: contractId)
+              .where("status", isEqualTo: title)
+              .getDocuments()
+              .then((snapshot) {
+            if (snapshot != null &&
+                snapshot.documents != null &&
+                snapshot.documents.length > 0) {
+              snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+              process_status[index] = snapshot.documents[0]["process_status"];
+              setState(() {});
+            } else {
+              process_status[index] = 'N/A';
+              setState(() {});
+            }
+          });
+        } else {
+          process_status[index] = 'N/A';
+          setState(() {});
+        }
+      });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    process_status = new List(applications.length);
   }
 
   @override
@@ -54,7 +75,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         actions: <Widget>[
           RaisedButton(
             color: gradientStart,
-            onPressed: (){},
+            onPressed: () {},
             child: Text(
               "Delete",
               style: TextStyle(
@@ -88,8 +109,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       decoration: BoxDecoration(
                         border: Border(
                           right: BorderSide(
-                              width: 1,//宽度
-                              color: Colors.grey, //边框颜色
+                            width: 1, //宽度
+                            color: Colors.grey, //边框颜色
                           ),
                         ),
                       ),
@@ -97,7 +118,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           IconButton(
-                            onPressed: (){},
+                            onPressed: () {},
                             icon: Icon(
                               Icons.account_box,
                               color: Colors.grey,
@@ -121,8 +142,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       decoration: BoxDecoration(
                         border: Border(
                           right: BorderSide(
-                              width: 1,//宽度
-                              color: Colors.grey, //边框颜色
+                            width: 1, //宽度
+                            color: Colors.grey, //边框颜色
                           ),
                         ),
                       ),
@@ -130,7 +151,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           IconButton(
-                            onPressed: (){},
+                            onPressed: () {},
                             icon: Icon(
                               Icons.assignment,
                               color: Colors.grey,
@@ -155,7 +176,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           IconButton(
-                            onPressed: (){},
+                            onPressed: () {},
                             icon: Icon(
                               Icons.assignment,
                               color: Colors.grey,
@@ -181,7 +202,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               width: double.infinity,
               height: 40,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,9 +221,9 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               ),
             ),
             Container(
-              child:ListView.separated(
+              child: ListView.separated(
                 shrinkWrap: true,
-                physics:const ScrollPhysics(),
+                physics: const ScrollPhysics(),
                 padding: EdgeInsets.all(10),
                 separatorBuilder: (BuildContext context, int index) {
                   return Align(
@@ -216,6 +238,12 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                 itemCount: applications.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map appinfo = applications[index];
+                  print('itemBuilder index : $index');
+                  print('itemBuilder title : ${appinfo["title"]}');
+                  if (process_status[index] == null ||
+                      process_status[index] == '') {
+                    getstatus(appinfo["title"], index);
+                  }
                   return new Stack(
                     children: <Widget>[
                       new Padding(
@@ -228,15 +256,17 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               height: 200.0,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Row(
                                         children: <Widget>[
                                           Text(
-                                            "${index+1} ",
+                                            "${index + 1} ",
                                             style: TextStyle(
                                               fontSize: 18,
                                             ),
@@ -251,7 +281,9 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                         ],
                                       ),
                                       Text(
-                                        index==0?"5 May 2020":"To be done",
+                                        index == 0
+                                            ? "5 May 2020"
+                                            : "To be done",
                                       ),
                                     ],
                                   ),
@@ -262,20 +294,23 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                         width: 80,
                                         height: 30,
                                         child: FlatButton(
-                                          onPressed:(){},
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(10))
-                                          ),
-                                          color: gradientStart,
-                                          child:Text(
-                                            getstatus(appinfo["title"])!=null  && getstatus(appinfo["title"])!=""?getstatus(appinfo["title"]):"",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
+                                            onPressed: () {},
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10))),
+                                            color: gradientStart,
+                                            child: Text(
+                                              process_status[index] != null &&
+                                                      process_status[index] !=
+                                                          ''
+                                                  ? process_status[index]
+                                                  : '',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            )),
                                       ),
                                     ],
                                   ),
@@ -288,7 +323,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
                                           appinfo["time"],
@@ -305,7 +341,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                               color: Colors.grey,
                                             ),
                                           ),
-                                          onTap: (){},
+                                          onTap: () {},
                                         )
                                       ],
                                     ),
@@ -342,7 +378,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                             width: 10.0,
                             decoration: new BoxDecoration(
                               shape: BoxShape.circle,
-                              border: new Border.all(width: 2, color: Colors.red),
+                              border:
+                                  new Border.all(width: 2, color: Colors.red),
                             ),
                           ),
                         ),
