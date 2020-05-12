@@ -15,13 +15,13 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
+import 'package:flutter_mmhelper/ui/QuestionPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_mmhelper/ui/QuestionPage.dart';
 
 class MyJobProfilePage extends StatefulWidget {
   @override
@@ -761,10 +761,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                         'Profile_Update_Successfully'))));
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
-                              return QuestionPage(skill: profileData.workskill,profileid: profileData.id,);
+                              return QuestionPage(
+                                skill: profileData.workskill,
+                                profileid: profileData.id,
+                              );
                             }));
                           });
-
                         }
                       });
                     } else {
@@ -783,7 +785,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                   .translate('Profile_Update_Successfully'))));
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
-                            return QuestionPage(skill: profileData.workskill,profileid: profileData.id,);
+                            return QuestionPage(
+                              skill: profileData.workskill,
+                              profileid: profileData.id,
+                            );
                           }));
                         });
                       } else {

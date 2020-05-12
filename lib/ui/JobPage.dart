@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
 import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -18,7 +20,6 @@ class JobPage extends StatefulWidget {
 }
 
 class _JobPageState extends State<JobPage> with AfterInitMixin {
-  String searchText = "";
   List<Widget> gridListData = [];
   List<JobDetailData> listJobData = [];
   bool isLoading = true;
@@ -27,6 +28,16 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+ /*   SharedPreferences.getInstance().then((prefs) {
+      print(prefs.getString("PhoneUserId"));
+      var contract = Firestore.instance
+          .collection('mb_contract')
+          .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
+          .getDocuments()
+          .then((snapshot) {
+        snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+      });
+    });*/
   }
 
   @override
@@ -41,18 +52,14 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   }
 
   madeSearchGridList(List<JobDetailData> newGridSearchListData) async {
-
-      setState(() {
-        isLoading = true;
-      });
-      int i = 1;
-      gridListData = [];
-      if(newGridSearchListData.length!=0) {
+    setState(() {
+      isLoading = true;
+    });
+    int i = 1;
+    gridListData = [];
+    if (newGridSearchListData.length != 0) {
       final database = Provider.of<FirestoreDatabase>(context);
-      database
-          .flUserStream()
-          .first
-          .then((userDataList) {
+      database.flUserStream().first.then((userDataList) {
         newGridSearchListData.forEach((jobElement) async {
           i++;
           userDataList.forEach((user) {
@@ -70,7 +77,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           }
         });
       });
-    }else{
+    } else {
       setState(() {
         isLoading = false;
       });
@@ -110,7 +117,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Job"),
+          title: Text(AppLocalizations.of(context).translate('Job')),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.search),
@@ -137,9 +144,14 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: isLoading == false
-            ? gridListData.length!=0?ListView(
-                children: gridListData,
-              ):Center(child: Text("No any job"),)
+            ? gridListData.length != 0
+                ? ListView(
+                    children: gridListData,
+                  )
+                : Center(
+                    child: Text(
+                        AppLocalizations.of(context).translate('No_any_job')),
+                  )
             : Center(
                 child: CircularProgressIndicator(),
               ));
@@ -205,7 +217,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "View more",
+                    AppLocalizations.of(context).translate('View_More'),
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   )
                 ],

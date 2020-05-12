@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/ui/AgencyListPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/photpGalleryPage.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProfileDateil extends StatefulWidget {
   @override
@@ -10,21 +13,23 @@ class ProfileDateil extends StatefulWidget {
 
   // DocumentSnapshot proSnapshot;
   ProfileData profileData;
-
-  ProfileDateil({/*this.proSnapshot,*/ this.profileData});
+  String languageCode;
+  ProfileDateil({/*this.proSnapshot,*/ this.profileData, this.languageCode});
 }
 
 class _ProfileDateilState extends State<ProfileDateil> {
-
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
+  DataListService dataListService;
+
   @override
   Widget build(BuildContext context) {
+    dataListService = Provider.of<DataListService>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:gradientStart,
+        backgroundColor: gradientStart,
         title: Text(
-          'Profile Detail',
+          AppLocalizations.of(context).translate('Profile_Detail'),
           style: TextStyle(
             color: Colors.black,
           ),
@@ -126,14 +131,18 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       onPressed: () {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return AgencyListpage(nationality: widget.profileData.nationality,contract:widget.profileData.contract,protid: widget.profileData.id.toString(),);
+                          return AgencyListpage(
+                            nationality: widget.profileData.nationality,
+                            contract: widget.profileData.contract,
+                            protid: widget.profileData.id.toString(),
+                          );
                         }));
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
-                      color:gradientStart,
+                      color: gradientStart,
                       child: Text(
-                        'Hire',
+                        AppLocalizations.of(context).translate('Hire'),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 22,
@@ -157,7 +166,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Basic Information",
+                            AppLocalizations.of(context)
+                                .translate('Basic_Information'),
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         )),
@@ -180,7 +190,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           size: 20,
                                         ),
                                         Text(
-                                          "FirstName:",
+                                          "${AppLocalizations.of(context).translate('FirstName')}:",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color:
@@ -219,7 +229,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           size: 20,
                                         ),
                                         Text(
-                                          "LastName:",
+                                          "${AppLocalizations.of(context).translate('LastName')}:",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color:
@@ -262,7 +272,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Gender:",
+                                  "${AppLocalizations.of(context).translate('Gender')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -275,7 +285,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                               padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
                                 //widget.proSnapshot['gender'],
-                                widget.profileData.gender,
+                                AppLocalizations.of(context)
+                                    .translate(widget.profileData.gender),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -299,7 +310,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Birthday:",
+                                  "${AppLocalizations.of(context).translate('Birthday')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -311,8 +322,11 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Padding(
                               padding: const EdgeInsets.only(left: 20, top: 10),
                               child: Text(
-                                widget.profileData.birthday!="" && widget.profileData.birthday!=null ?DateFormat.yMMMMEEEEd()
-                                    .format(widget.profileData.birthday):"",
+                                widget.profileData.birthday != "" &&
+                                        widget.profileData.birthday != null
+                                    ? DateFormat.yMMMMEEEEd()
+                                        .format(widget.profileData.birthday)
+                                    : "",
                                 //widget.proSnapshot['birthday']!="Select"?widget.proSnapshot['birthday']:"",
                                 style: TextStyle(
                                   fontSize: 18,
@@ -337,7 +351,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Nationaity:",
+                                  "${AppLocalizations.of(context).translate('Nationality')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -354,7 +368,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       "Select"
                                       ? widget.proSnapshot['nationaity']
                                       : "",*/
-                                  widget.profileData.nationality ?? "",
+                                  dataListService.getNationalityValue(
+                                      languageCode: widget.languageCode,
+                                      nationality:
+                                          widget.profileData.nationality ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -378,7 +395,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Detail Information",
+                            AppLocalizations.of(context)
+                                .translate('Detail_Information'),
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         )),
@@ -396,7 +414,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Education:",
+                                  "${AppLocalizations.of(context).translate('Education')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -411,7 +429,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['education'] != "Select"
                                     ? widget.proSnapshot['education']
                                     : "",*/
-                                widget.profileData.education ?? "",
+                                dataListService.getEducationValue(
+                                    languageCode: widget.languageCode,
+                                    education:
+                                        widget.profileData.education ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -435,7 +456,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Religion:",
+                                  "${AppLocalizations.of(context).translate('Religion')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -450,7 +471,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['religion'] != "Select"
                                     ? widget.proSnapshot['religion']
                                     : "",*/
-                                widget.profileData.religion ?? "",
+                                dataListService.getReligionValue(
+                                    languageCode: widget.languageCode,
+                                    religion:
+                                        widget.profileData.religion ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -474,7 +498,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Marital Status:",
+                                  "${AppLocalizations.of(context).translate('Marital_Status')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -489,7 +513,9 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['marital'] != "Select"
                                     ? widget.proSnapshot['marital']
                                     : "",*/
-                                widget.profileData.marital ?? "",
+                                dataListService.getMaritalValue(
+                                    languageCode: widget.languageCode,
+                                    marital: widget.profileData.marital ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -513,7 +539,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Chilren:",
+                                  "${AppLocalizations.of(context).translate('Children')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -530,7 +556,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                 "Select"
                                             ? widget.proSnapshot['children']
                                             : "",*/
-                                  widget.profileData.children ?? "",
+                                  dataListService.getChildrenValue(
+                                      languageCode: widget.languageCode,
+                                      children:
+                                          widget.profileData.children ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -553,7 +582,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Current Location:",
+                                  "${AppLocalizations.of(context).translate('Current_Location')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -570,7 +599,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                 "Select"
                                             ? widget.proSnapshot['current']
                                             : "",*/
-                                  widget.profileData.current ?? "",
+                                  dataListService.getCurrentLocationValue(
+                                      languageCode: widget.languageCode,
+                                      location:
+                                          widget.profileData.current ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -593,7 +625,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "WhatsApp:",
+                                  "${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -633,7 +665,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Phone Number:",
+                                  "${AppLocalizations.of(context).translate('Phone_number')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -675,7 +707,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Work Information",
+                            AppLocalizations.of(context)
+                                .translate('Work_Information'),
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         )),
@@ -693,7 +726,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Job Type:",
+                                  "${AppLocalizations.of(context).translate('Job_Type')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -708,7 +741,9 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['jobtype'] != "Select"
                                     ? widget.proSnapshot['jobtype']
                                     : "",*/
-                                widget.profileData.jobtype ?? "",
+                                dataListService.getJobTypeValue(
+                                    languageCode: widget.languageCode,
+                                    jobtype: widget.profileData.jobtype ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -732,7 +767,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Job Capacity:",
+                                  "${AppLocalizations.of(context).translate('Job_Capacity')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -747,7 +782,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['jobcapacity'] != "Select"
                                     ? widget.proSnapshot['jobcapacity']
                                     : "",*/
-                                widget.profileData.jobcapacity ?? "",
+                                dataListService.getJobCapacityValue(
+                                    languageCode: widget.languageCode,
+                                    jobcapacity:
+                                        widget.profileData.jobcapacity ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -771,7 +809,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Contract Status:",
+                                  "${AppLocalizations.of(context).translate('Contract_Status')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -786,7 +824,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /* widget.proSnapshot['contract'] != "Select"
                                     ? widget.proSnapshot['contract']
                                     : "",*/
-                                widget.profileData.contract ?? "",
+                                dataListService.getContractValue(
+                                    languageCode: widget.languageCode,
+                                    contract:
+                                        widget.profileData.contract ?? ""),
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -810,7 +851,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Working Skills:",
+                                  "${AppLocalizations.of(context).translate('Working_Skill')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -827,7 +868,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                 "Select"
                                             ? widget.proSnapshot['workskill']
                                             : "",*/
-                                  widget.profileData.workskill ?? "",
+                                  dataListService.getWorkSkillValue(
+                                      languageCode: widget.languageCode,
+                                      workskill:
+                                          widget.profileData.workskill ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -850,7 +894,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Languages:",
+                                  "${AppLocalizations.of(context).translate('Language')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -867,7 +911,10 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                 "Select"
                                             ? widget.proSnapshot['language']
                                             : "",*/
-                                  widget.profileData.language ?? "",
+                                  dataListService.getLanguageValue(
+                                      languageCode: widget.languageCode,
+                                      language:
+                                          widget.profileData.language ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -890,7 +937,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "ExpectedSalary(HKD):",
+                                  "${AppLocalizations.of(context).translate('Expected_Salary_HKD')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -929,7 +976,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "Employment Start Date:",
+                                  "${AppLocalizations.of(context).translate('Employement_Start_Date')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -944,8 +991,11 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 /*widget.proSnapshot['employment'] != "Select"
                                     ? widget.proSnapshot['employment']
                                     : "",*/
-                                widget.profileData.employment!="" &&  widget.profileData.employment!=null? DateFormat.yMMMMEEEEd()
-                                    .format(widget.profileData.employment) : "",
+                                widget.profileData.employment != "" &&
+                                        widget.profileData.employment != null
+                                    ? DateFormat.yMMMMEEEEd()
+                                        .format(widget.profileData.employment)
+                                    : "",
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -971,7 +1021,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Self Introduction",
+                            AppLocalizations.of(context)
+                                .translate('Self_Introduction'),
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         )),
@@ -999,7 +1050,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Work Experiences",
+                            AppLocalizations.of(context)
+                                .translate('Work_Experience'),
                             style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                         )),
@@ -1050,7 +1102,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              '#Work Experience ${index + 1}#',
+                                              "#${AppLocalizations.of(context).translate('Work_Experience')}${index + 1}#",
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -1074,7 +1126,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "Country:",
+                                                          "${AppLocalizations.of(context).translate('Country')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1138,7 +1190,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                   size: 20,
                                                                 ),
                                                                 Text(
-                                                                  "Start Date:",
+                                                                  "${AppLocalizations.of(context).translate('Start_Date')}:",
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -1204,7 +1256,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                   size: 20,
                                                                 ),
                                                                 Text(
-                                                                  "End Date:",
+                                                                  "${AppLocalizations.of(context).translate('End_Date')}:",
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -1270,7 +1322,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "Type of Jobs:",
+                                                          "${AppLocalizations.of(context).translate('Type_of_Jobs')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1325,7 +1377,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "Number of Taken Care:",
+                                                          "${AppLocalizations.of(context).translate('Number_of_Taken_Care')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1379,7 +1431,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "Quit Reason:",
+                                                          "${AppLocalizations.of(context).translate('Quit_Reason')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1433,7 +1485,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "Reterence Letter:",
+                                                          "${AppLocalizations.of(context).translate('Reterence_Letter')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1479,7 +1531,8 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                 )
                               : Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text("No Work Experiences"),
+                                  child: Text(AppLocalizations.of(context)
+                                      .translate('No_Work_Experiences')),
                                 ),
                     ),
                   ],
