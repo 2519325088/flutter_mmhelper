@@ -18,6 +18,8 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
   List skilllist = [];
   List questionlist = [];
   List resfullist = [];
+  List questVlue = [];
+
   @override
   void didInitState() {
     print(widget.profileid);
@@ -34,22 +36,52 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
         .where("skill", isEqualTo: skilltext)
         .getDocuments()
         .then((snapshot){
-      snapshot.documents.forEach((f){
+      snapshot.documents.forEach((f) async{
         questionlist.add(f);
+        questVlue.add("1");
+        setState(() {});
         Firestore.instance
             .collection('mb_question_result')
             .where("question_id", isEqualTo: f["ID"])
             .where("profile_id", isEqualTo: widget.profileid)
             .getDocuments()
             .then((snapshot){
-          snapshot.documents.forEach((f){
+          snapshot.documents.forEach((f) async{
             resfullist.add(f);
+            setState(() {});
             print(resfullist.length);
           });
         });
       });
     });
   }
+
+  Widget buildGrid(int index,Map options) {
+    List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
+    Widget content; //单独一个widget组件，用于返回需要生成的内容widget
+    options.forEach((k,v)=>tiles.add(
+      new Flexible(
+        child: RadioListTile<String>(
+          value: v ,
+          title: Text(v),
+          groupValue: questVlue[index],
+          onChanged: (value) {
+            setState(() {
+              questVlue[index] = value;
+            });
+          },
+        ),
+      ),
+    ));
+
+    content = new Row(
+        children: tiles //重点在这里，因为用编辑器写Column生成的children后面会跟一个<Widget>[]，
+      //此时如果我们直接把生成的tiles放在<Widget>[]中是会报一个类型不匹配的错误，把<Widget>[]删了就可以了
+    );
+    return content;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +95,55 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
           ),
         ),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            color: gradientStart,
+            icon: Icon(
+              Icons.check,
+              size: 24,
+            ),
+            onPressed: (){
+
+            },
+          )
+        ],
       ),
       body: Container(
-        child: ListView(
-
+        child: questionlist.length!=0?ListView.separated(
+          shrinkWrap: true,
+          physics:const ScrollPhysics(),
+          padding: EdgeInsets.all(10),
+          separatorBuilder: (BuildContext context, int index) {
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                height: 0.5,
+                width: MediaQuery.of(context).size.width,
+                child: Divider(),
+              ),
+            );
+          },
+          itemCount: questionlist.length,
+          itemBuilder: (BuildContext context, int index) {
+            DocumentSnapshot question = questionlist[index];
+            return Padding(
+              padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "${index+1}. ${question["question"]}",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  buildGrid(index,question["options"]),
+                ],
+              )
+            );
+          },
+        ):Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );

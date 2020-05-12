@@ -26,11 +26,10 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         .where('created_by', isEqualTo:widget.userId)
         .getDocuments()
         .then((snapshot) {
-          print(snapshot.documents.length);
           if (snapshot != null &&
               snapshot.documents != null &&
               snapshot.documents.length > 0) {
-             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
+//             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
             contractId = snapshot.documents[0]['id'];
             Firestore.instance
                 .collection('mb_contract_status')
@@ -38,11 +37,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                 .where("status", isEqualTo: title)
                 .getDocuments()
                 .then((snapshot) {
+                  print(title);
                   if (snapshot != null &&
                       snapshot.documents != null &&
                       snapshot.documents.length > 0) {
         //            snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
                     process_status[index] = snapshot.documents[0]["process_status"];
+                    print(process_status[index]);
                     setState(() {});
                   } else {
                     process_status[index] = 'N/A';
@@ -103,6 +104,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               ),
             ),
             Container(
+              height: 106,
               padding: const EdgeInsets.all(10),
               child: Row(
                 children: <Widget>[
@@ -134,6 +136,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               fontSize: 16,
                               color: Colors.grey,
                             ),
+                            textAlign:TextAlign.center,
                           ),
                         ],
                       ),
@@ -167,6 +170,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               fontSize: 16,
                               color: Colors.grey,
                             ),
+                            textAlign:TextAlign.center,
                           ),
                         ],
                       ),
@@ -192,6 +196,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                               fontSize: 16,
                               color: Colors.grey,
                             ),
+                            textAlign:TextAlign.center,
                           ),
                         ],
                       ),
@@ -255,8 +260,11 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: new Container(
+                              constraints: BoxConstraints(
+                                minHeight: 200,
+                              ),
                               width: double.infinity,
-                              height: 200.0,
+//                              height: 200.0,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -266,22 +274,26 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            "${index + 1} ",
-                                            style: TextStyle(
-                                              fontSize: 18,
+                                      Expanded(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Text(
+                                              "${index + 1}. ",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            appinfo["title"],
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: gradientStart,
+                                            Expanded(
+                                              child: Text(
+                                                appinfo["title"],
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: gradientStart,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                       Text(
                                         index == 0
