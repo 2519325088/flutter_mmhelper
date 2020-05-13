@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/Models/QuestionResultModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:after_init/after_init.dart';
 
 class QuestionPage extends StatefulWidget {
@@ -16,9 +20,11 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
+  int questionIndex = 0;
   List questionlist = [];
   List resfullist = [];
   List questVlue = [];
+  final _service = FirestoreService.instance;
 
   @override
   void didInitState() {
@@ -49,26 +55,63 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
           snapshot.documents.forEach((f) async{
             resfullist.add(f);
             setState(() {});
-            print(resfullist.length);
+//            print(resfullist.length);
           });
         });
       });
     });
   }
 
-  Widget buildGrid(int index,Map options) {
+  Widget buildGrid(int index,Map options,String questionid) {
     List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
     Widget content; //单独一个widget组件，用于返回需要生成的内容widget
     options.forEach((k,v)=>tiles.add(
       new Flexible(
         child: RadioListTile<String>(
-          value: v ,
+          value:v,
           title: Text(v),
           groupValue: questVlue[index],
           onChanged: (value) {
-            setState(() {
-              questVlue[index] = value;
-            });
+            String datenow= DateTime.now().toIso8601String();
+            print(1111);
+            print(questionIndex);
+//            Firestore.instance
+//                .collection('mb_question_result')
+//                .where("question_id", isEqualTo:questionid)
+//                .where("profile_id", isEqualTo: widget.profileid)
+//                .getDocuments()
+//                .then((snapshot){
+//                  print(snapshot.documents.length);
+//                  if(snapshot.documents.length > 0){
+//                    value = snapshot.documents[0]["answer"];
+//                    setState(() {
+//                      questVlue[index] = value;
+//                    });
+//                  }
+////                  snapshot.documents.forEach((f) async{
+////                    if (resfullist.length !=0)
+////                    value = f["answer"];
+////                    print(resfullist.length);
+////                  });
+//            });
+            if (questionIndex < questionlist.length){
+              setState(() {
+                questVlue[index] = value;
+              });
+              final questionresult = QuestionResultContext(
+                ID: datenow,
+                answer: questVlue[index],
+                profile_id: widget.profileid,
+                question_id: questionid,
+              );
+              _service.setData(path: APIPath.newQuestionResult(datenow),
+                  data: questionresult.toMap()).then((value){
+                questionIndex += 1;
+                setState(() {});
+                print(2222);
+                print(questionlist.length);
+              });
+            }
           },
         ),
       ),
@@ -100,6 +143,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
             color: gradientStart,
             icon: Icon(
               Icons.check,
+              color: Colors.black,
               size: 24,
             ),
             onPressed: (){
@@ -109,39 +153,56 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
         ],
       ),
       body: Container(
-        child: questionlist.length!=0?ListView.separated(
-          shrinkWrap: true,
-          physics:const ScrollPhysics(),
-          padding: EdgeInsets.all(10),
-          separatorBuilder: (BuildContext context, int index) {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                height: 0.5,
-                width: MediaQuery.of(context).size.width,
-                child: Divider(),
-              ),
-            );
-          },
-          itemCount: questionlist.length,
-          itemBuilder: (BuildContext context, int index) {
-            DocumentSnapshot question = questionlist[index];
-            return Padding(
-              padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "${index+1}. ${question["question"]}",
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+//        child: questionlist.length!=0?ListView.separated(
+//          shrinkWrap: true,
+//          physics:const ScrollPhysics(),
+//          padding: EdgeInsets.all(10),
+//          separatorBuilder: (BuildContext context, int index) {
+//            return Align(
+//              alignment: Alignment.centerRight,
+//              child: Container(
+//                height: 0.5,
+//                width: MediaQuery.of(context).size.width,
+//                child: Divider(),
+//              ),
+//            );
+//          },
+//          itemCount: questionlist.length,
+//          itemBuilder: (BuildContext context, int index) {
+//            DocumentSnapshot question = questionlist[index];
+//            return Padding(
+//              padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+//              child: Column(
+//                crossAxisAlignment: CrossAxisAlignment.start,
+//                children: <Widget>[
+//                  Text(
+//                    "${index+1}. ${question["question"]}",
+//                    style: TextStyle(
+//                      fontSize: 20,
+//                    ),
+//                  ),
+//                  buildGrid(index,question["options"]),
+//                ],
+//              )
+//            );
+//          },
+//        ):Center(
+//          child: CircularProgressIndicator(),
+//        ),
+        child: questionlist.length!=0?Padding(
+            padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  questionIndex<questionlist.length?"${questionIndex+1}. ${questionlist[questionIndex]["question"]}":"",
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
-                  buildGrid(index,question["options"]),
-                ],
-              )
-            );
-          },
+                ),
+                questionIndex<questionlist.length?buildGrid(questionIndex,questionlist[questionIndex]["options"],questionlist[questionIndex]["ID"]):Text(""),
+              ],
+            )
         ):Center(
           child: CircularProgressIndicator(),
         ),

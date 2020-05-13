@@ -4,6 +4,7 @@ class APIPath {
   static String newProfile(String contentId) => 'mb_profile/$contentId';
   static String newContract(String contentId) => 'mb_contract/$contentId';
   static String newJob(String contentId) => 'fl_job_post/$contentId';
+  static String newQuestionResult(String contentId) => 'mb_question_result/$contentId';
   static String jobList() => 'fl_job_post';
   static String userList() => 'mb_content';
   static String candidateList() => 'mb_profile';
