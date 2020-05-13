@@ -42,7 +42,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
       snapshot.documents.forEach((f) async {
         questionlist.add(f);
         questVlue.add("1");
-        setState(() {});
+        // setState(() {});
         Firestore.instance
             .collection('mb_question_result')
             .where("question_id", isEqualTo: f["ID"])
@@ -56,6 +56,14 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                 snapshot.documents[0].data, snapshot.documents[0].documentID));
             print('data :${snapshot.documents[0].data}}');
             print('documentID :${snapshot.documents[0].documentID}}');
+            setState(() {});
+          } else {
+            resfullist.add(QuestionResultContext(
+              ID: null,
+              answer: null,
+              profile_id: null,
+              question_id: null,
+            ));
             setState(() {});
           }
           /*  snapshot.documents.forEach((f) async {
@@ -83,8 +91,9 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
               onChanged: (value) {
                 String datenow = DateTime.now().toIso8601String();
                 print(1111);
-                print(questionIndex);
-//            Firestore.instance
+                print('value:$value');
+                print('questionIndex:$questionIndex');
+                //            Firestore.instance
 //                .collection('mb_question_result')
 //                .where("question_id", isEqualTo:questionid)
 //                .where("profile_id", isEqualTo: widget.profileid)
@@ -108,7 +117,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                     resfullist[index].answer = value;
                     questVlue[index] = value;
                   });
-                  
+
                   var questionresult;
                   var documentId;
                   if ((index < resfullist.length &&
