@@ -142,13 +142,13 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   _service
                       .setData(
                           path: APIPath.newQuestionResult(documentId),
-                          data: questionresult.toMap())
-                      .then((value) {
-                    questionIndex += 1;
-                    setState(() {});
-                    print(2222);
-                    print(questionlist.length);
-                  });
+                          data: questionresult.toMap());
+//                      .then((value) {
+//                    questionIndex += 1;
+//                    setState(() {});
+//                    print(2222);
+//                    print(questionlist.length);
+//                  });
                 }
               },
             ),
@@ -174,17 +174,17 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
           ),
         ),
         centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            color: gradientStart,
-            icon: Icon(
-              Icons.check,
-              color: Colors.black,
-              size: 24,
-            ),
-            onPressed: () {},
-          )
-        ],
+//        actions: <Widget>[
+//          IconButton(
+//            color: gradientStart,
+//            icon: Icon(
+//              Icons.check,
+//              color: Colors.black,
+//              size: 24,
+//            ),
+//            onPressed: () {},
+//          )
+//        ],
       ),
       body: Container(
 //        child: questionlist.length!=0?ListView.separated(
@@ -243,7 +243,65 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                             questionIndex,
                             questionlist[questionIndex]["options"],
                             questionlist[questionIndex]["ID"])
-                        : Text(""),
+                        : Center(
+                        child: Text(
+                            "Answer completed!",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        )),
+                    questionIndex < questionlist.length?Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FlatButton(
+                            onPressed:(){
+                              questionIndex += 1;
+                              setState(() {});
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                            color:gradientStart,
+                            child:Text(
+                              'Next',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Container(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FlatButton(
+                            onPressed:(){},
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                            color:gradientStart,
+                            child:Text(
+                              'Confirm',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ))
             : Center(
