@@ -165,7 +165,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                             ),
                           ),
                           Text(
-                            "Empolayer info",
+                            "Employer info",
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey,
