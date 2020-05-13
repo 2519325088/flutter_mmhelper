@@ -1,28 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_mmhelper/Models/QuestionResultModel.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_mmhelper/services/firestore_service.dart';
-import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:after_init/after_init.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/Models/QuestionResultModel.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
 
 class QuestionPage extends StatefulWidget {
   @override
   _QuestionPageState createState() => _QuestionPageState();
   String profileid;
   String skill;
-  QuestionPage({this.profileid,this.skill});
+  QuestionPage({this.profileid, this.skill});
 }
 
-class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
-
+class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
   int questionIndex = 0;
   List questionlist = [];
-  List resfullist = [];
+  List<QuestionResultContext> resfullist = [];
   List questVlue = [];
   final _service = FirestoreService.instance;
 
@@ -31,18 +28,18 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
     print(widget.profileid);
     skilllist = widget.skill.split(";");
     print(skilllist);
-    skilllist.forEach((f){
+    skilllist.forEach((f) {
       getQuestions(f);
     });
   }
 
-  Future<String> getQuestions (String skilltext) async{
+  Future<String> getQuestions(String skilltext) async {
     Firestore.instance
         .collection('mb_question_master')
         .where("skill", isEqualTo: skilltext)
         .getDocuments()
-        .then((snapshot){
-      snapshot.documents.forEach((f) async{
+        .then((snapshot) {
+      snapshot.documents.forEach((f) async {
         questionlist.add(f);
         questVlue.add("1");
         setState(() {});
@@ -51,30 +48,42 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
             .where("question_id", isEqualTo: f["ID"])
             .where("profile_id", isEqualTo: widget.profileid)
             .getDocuments()
-            .then((snapshot){
-          snapshot.documents.forEach((f) async{
-            resfullist.add(f);
+            .then((snapshot) {
+          if (snapshot != null &&
+              snapshot.documents != null &&
+              snapshot.documents.length > 0) {
+            resfullist.add(QuestionResultContext.fromMap(
+                snapshot.documents[0].data, snapshot.documents[0].documentID));
+            print('data :${snapshot.documents[0].data}}');
+            print('documentID :${snapshot.documents[0].documentID}}');
             setState(() {});
-//            print(resfullist.length);
-          });
+          }
+          /*  snapshot.documents.forEach((f) async {
+            resfullist.add(f);
+            print('snapshot :${f.data}}');
+            setState(() {});
+          });*/
         });
       });
     });
   }
 
-  Widget buildGrid(int index,Map options,String questionid) {
-    List<Widget> tiles = [];//先建一个数组用于存放循环生成的widget
+  Widget buildGrid(int index, Map options, String questionid) {
+    List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
     Widget content; //单独一个widget组件，用于返回需要生成的内容widget
-    options.forEach((k,v)=>tiles.add(
-      new Flexible(
-        child: RadioListTile<String>(
-          value:v,
-          title: Text(v),
-          groupValue: questVlue[index],
-          onChanged: (value) {
-            String datenow= DateTime.now().toIso8601String();
-            print(1111);
-            print(questionIndex);
+    options.forEach((k, v) => tiles.add(
+          new Flexible(
+            child: RadioListTile<String>(
+              value: v,
+              title: Text(v),
+              groupValue: (index < resfullist.length &&
+                      resfullist[index].answer != null)
+                  ? resfullist[index].answer
+                  : '',
+              onChanged: (value) {
+                String datenow = DateTime.now().toIso8601String();
+                print(1111);
+                print(questionIndex);
 //            Firestore.instance
 //                .collection('mb_question_result')
 //                .where("question_id", isEqualTo:questionid)
@@ -94,44 +103,62 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
 ////                    print(resfullist.length);
 ////                  });
 //            });
-            if (questionIndex < questionlist.length){
-              setState(() {
-                questVlue[index] = value;
-              });
-              final questionresult = QuestionResultContext(
-                ID: datenow,
-                answer: questVlue[index],
-                profile_id: widget.profileid,
-                question_id: questionid,
-              );
-              _service.setData(path: APIPath.newQuestionResult(datenow),
-                  data: questionresult.toMap()).then((value){
-                questionIndex += 1;
-                setState(() {});
-                print(2222);
-                print(questionlist.length);
-              });
-            }
-          },
-        ),
-      ),
-    ));
+                if (questionIndex < questionlist.length) {
+                  setState(() {
+                    resfullist[index].answer = value;
+                    questVlue[index] = value;
+                  });
+                  
+                  var questionresult;
+                  var documentId;
+                  if ((index < resfullist.length &&
+                      resfullist[index].documentId != null)) {
+                    documentId = resfullist[index].documentId;
+                    print('documentID :${resfullist[index].documentId}}');
+                    questionresult = QuestionResultContext(
+                      ID: resfullist[index].documentId,
+                      answer: resfullist[index].answer,
+                      profile_id: widget.profileid,
+                      question_id: questionid,
+                    );
+                  } else {
+                    documentId = datenow;
+                    questionresult = QuestionResultContext(
+                      ID: datenow,
+                      answer: resfullist[index].answer,
+                      profile_id: widget.profileid,
+                      question_id: questionid,
+                    );
+                  }
+                  _service
+                      .setData(
+                          path: APIPath.newQuestionResult(documentId),
+                          data: questionresult.toMap())
+                      .then((value) {
+                    questionIndex += 1;
+                    setState(() {});
+                    print(2222);
+                    print(questionlist.length);
+                  });
+                }
+              },
+            ),
+          ),
+        ));
 
     content = new Row(
         children: tiles //重点在这里，因为用编辑器写Column生成的children后面会跟一个<Widget>[]，
-      //此时如果我们直接把生成的tiles放在<Widget>[]中是会报一个类型不匹配的错误，把<Widget>[]删了就可以了
-    );
+        //此时如果我们直接把生成的tiles放在<Widget>[]中是会报一个类型不匹配的错误，把<Widget>[]删了就可以了
+        );
     return content;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:gradientStart,
-        title:Text(
+        backgroundColor: gradientStart,
+        title: Text(
           "Question",
           style: TextStyle(
             color: Colors.black,
@@ -146,9 +173,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
               color: Colors.black,
               size: 24,
             ),
-            onPressed: (){
-
-            },
+            onPressed: () {},
           )
         ],
       ),
@@ -189,23 +214,32 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin{
 //        ):Center(
 //          child: CircularProgressIndicator(),
 //        ),
-        child: questionlist.length!=0?Padding(
-            padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  questionIndex<questionlist.length?"${questionIndex+1}. ${questionlist[questionIndex]["question"]}":"",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                questionIndex<questionlist.length?buildGrid(questionIndex,questionlist[questionIndex]["options"],questionlist[questionIndex]["ID"]):Text(""),
-              ],
-            )
-        ):Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: questionlist.length != 0
+            ? Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      questionIndex < questionlist.length
+                          ? "${questionIndex + 1}. ${questionlist[questionIndex]["question"]}"
+                          : "",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    questionIndex < questionlist.length
+                        ? buildGrid(
+                            questionIndex,
+                            questionlist[questionIndex]["options"],
+                            questionlist[questionIndex]["ID"])
+                        : Text(""),
+                  ],
+                ))
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
     );
   }
