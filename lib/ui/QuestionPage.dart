@@ -1,5 +1,6 @@
 import 'package:after_init/after_init.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/QuestionResultModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
@@ -14,6 +15,8 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
+
+  final TextEditingController answerController = TextEditingController();
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
@@ -155,7 +158,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
           ),
         ));
 
-    content = new Row(
+    content = new Column(
         children: tiles //重点在这里，因为用编辑器写Column生成的children后面会跟一个<Widget>[]，
         //此时如果我们直接把生成的tiles放在<Widget>[]中是会报一个类型不匹配的错误，把<Widget>[]删了就可以了
         );
@@ -238,19 +241,86 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                         fontSize: 20,
                       ),
                     ),
-                    questionIndex < questionlist.length
-                        ? buildGrid(
-                            questionIndex,
-                            questionlist[questionIndex]["options"],
-                            questionlist[questionIndex]["ID"])
-                        : Center(
-                        child: Text(
-                            "Answer completed!",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: questionIndex < questionlist.length
+                          ? (questionlist[questionIndex]["type"]=="mc"?buildGrid(
+                              questionIndex,
+                              questionlist[questionIndex]["options"],
+                              questionlist[questionIndex]["ID"]):TextFormField(
+//                        scrollPadding:EdgeInsets.zero,
+                        controller: answerController,
+                        cursorColor: Theme.of(context).accentColor,
+                        maxLines: 5,
+                        maxLength: 50,
+                        textInputAction:TextInputAction.done,
+                        decoration: InputDecoration(
+//                            contentPadding: new EdgeInsets.all(0.0),
+//                            isDense: true,
+                            hintText: (questionIndex< resfullist.length &&
+                        resfullist[questionIndex].answer != null)
+                            ? resfullist[questionIndex].answer
+                            : '',
+                            hintStyle:TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
-                        )),
+                            border: InputBorder.none
+                        ),
+                        onFieldSubmitted: (String value) {
+                          print(questionIndex);
+                          String datenow = DateTime.now().toIso8601String();
+                          resfullist[questionIndex].answer =
+                              answerController.text;
+                          if (questionIndex < questionlist.length) {
+                            setState(() {
+                              resfullist[questionIndex].answer = value;
+                              questVlue[questionIndex] = value;
+                            });
+
+                            var questionresult;
+                            var documentId;
+                            if ((questionIndex < resfullist.length &&
+                                resfullist[questionIndex].documentId != null)) {
+                              documentId = resfullist[questionIndex].documentId;
+                              print('documentID :${resfullist[questionIndex]
+                                  .documentId}}');
+                              questionresult = QuestionResultContext(
+                                ID: resfullist[questionIndex].documentId,
+                                answer: resfullist[questionIndex].answer,
+                                profile_id: widget.profileid,
+                                question_id: questionlist[questionIndex]["ID"],
+                              );
+                            } else {
+                              documentId = datenow;
+                              questionresult = QuestionResultContext(
+                                ID: datenow,
+                                answer: resfullist[questionIndex].answer,
+                                profile_id: widget.profileid,
+                                question_id: questionlist[questionIndex]["ID"],
+                              );
+                            }
+                            _service
+                                .setData(
+                                path: APIPath.newQuestionResult(documentId),
+                                data: questionresult.toMap());
+                            }
+                          },
+                          onEditingComplete:
+                              () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            resfullist[questionIndex].answer =
+                                answerController.text;
+                          },
+                      ))
+                      : Center(
+                          child: Text(
+                              "Answer completed!",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                          )),
+                    ),
                     questionIndex < questionlist.length?Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),

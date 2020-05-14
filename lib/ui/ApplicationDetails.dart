@@ -131,7 +131,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                             ),
                           ),
                           Text(
-                            "Contact info",
+                            "Contract info",
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey,
