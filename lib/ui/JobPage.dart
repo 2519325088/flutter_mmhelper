@@ -9,7 +9,6 @@ import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
 import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -28,7 +27,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
- /*   SharedPreferences.getInstance().then((prefs) {
+    /*   SharedPreferences.getInstance().then((prefs) {
       print(prefs.getString("PhoneUserId"));
       var contract = Firestore.instance
           .collection('mb_contract')
@@ -113,6 +112,11 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     });
   }
 
+  List<String> contractStringList = [];
+  List<String> jobTypeStringList = [];
+  List<String> accommodationStringList = [];
+  List<String> searchText = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,10 +126,15 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
             IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
+                  if (searchText.length == 0) searchText.add('');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return JobSearchPage(
                       onChanged: onChangeSearchList,
                       listJobData: listJobData,
+                      searchText: searchText,
+                      contractStringList: contractStringList,
+                      jobTypeStringList: jobTypeStringList,
+                      accommodationStringList: accommodationStringList,
                     );
                   }));
                 }),

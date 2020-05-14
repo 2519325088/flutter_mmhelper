@@ -14,13 +14,11 @@ class ChipsWidget extends StatefulWidget {
 }
 
 class _ChipsWidgetState extends State<ChipsWidget> {
-  bool isSelected;
-
   @override
   void initState() {
     super.initState();
-    isSelected = widget.isSelected;
-    if (isSelected) {
+    if (widget.isSelected &&
+        !widget.typeStringList.contains(widget.dataList.nameId)) {
       widget.typeStringList.add(widget.dataList.nameId);
     }
   }
@@ -30,12 +28,13 @@ class _ChipsWidgetState extends State<ChipsWidget> {
     return FilterChip(
       padding: EdgeInsets.symmetric(horizontal: 5),
       label: Text(widget.dataList.getValueByLanguageCode(widget.languageCode)),
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-      selected: isSelected,
+      labelStyle:
+          TextStyle(color: widget.isSelected ? Colors.white : Colors.black),
+      selected: widget.isSelected,
       onSelected: (selected) {
         setState(() {
-          isSelected = selected;
-          if (isSelected == true) {
+          widget.isSelected = selected;
+          if (widget.isSelected) {
             widget.typeStringList.add(widget.dataList.nameId);
             print(widget.typeStringList);
           } else {
@@ -45,7 +44,7 @@ class _ChipsWidgetState extends State<ChipsWidget> {
           }
         });
       },
-      selectedColor:Theme.of(context).primaryColor,
+      selectedColor: Theme.of(context).primaryColor,
       checkmarkColor: Colors.black,
     );
   }

@@ -16,21 +16,6 @@ class SearchPage extends StatefulWidget {
   final List<ProfileData> listProfileData;
   final List<DataList> listEducationData;
 
-  SearchPage({this.onChanged, this.listProfileData, this.listEducationData});
-}
-
-class _SearchPageState extends State<SearchPage> with AfterInitMixin {
-  List<Widget> eduWidget = [];
-  List<Widget> religionWidget = [];
-  List<Widget> maritalStatusWidget = [];
-  List<Widget> childrenWidget = [];
-  List<Widget> jobTypeWidget = [];
-  List<Widget> jobCapWidget = [];
-  List<Widget> contractWidget = [];
-  List<Widget> nationalityWidget = [];
-  List<Widget> workingSkillWidget = [];
-  List<Widget> languageWidget = [];
-
   List<String> eduStringList = [];
   List<String> religionStringList = [];
   List<String> maritalStringList = [];
@@ -41,6 +26,39 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<String> nationalityStringList = [];
   List<String> workingSkillStringList = [];
   List<String> languageStringList = [];
+  List<String> searchText = [];
+
+  SearchPage({
+    this.onChanged,
+    this.listProfileData,
+    this.searchText,
+    this.listEducationData,
+    this.eduStringList,
+    this.religionStringList,
+    this.maritalStringList,
+    this.childrenStringList,
+    this.jobTypeStringList,
+    this.jobCapStringList,
+    this.contractStringList,
+    this.nationalityStringList,
+    this.workingSkillStringList,
+    this.languageStringList,
+  });
+}
+
+class _SearchPageState extends State<SearchPage> with AfterInitMixin {
+  Color gradientStart = Color(0xffbf9b30);
+
+  List<Widget> eduWidget = [];
+  List<Widget> religionWidget = [];
+  List<Widget> maritalStatusWidget = [];
+  List<Widget> childrenWidget = [];
+  List<Widget> jobTypeWidget = [];
+  List<Widget> jobCapWidget = [];
+  List<Widget> contractWidget = [];
+  List<Widget> nationalityWidget = [];
+  List<Widget> workingSkillWidget = [];
+  List<Widget> languageWidget = [];
 
   List<ProfileData> listOfCard = [];
   String languageCode;
@@ -66,150 +84,171 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      isLoading = true;
+    });
     fetchLanguage().then((onValue) {
       languageCode = onValue;
-      listEducationData.forEach((f) {
-        eduWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: eduStringList,
-          isSelected: false,
-        ));
-        eduWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listNationalityData.forEach((f) {
-        nationalityWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: nationalityStringList,
-          isSelected: false,
-        ));
-        nationalityWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listReligionData.forEach((f) {
-        religionWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: religionStringList,
-          isSelected: false,
-        ));
-        religionWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listMaritalData.forEach((f) {
-        maritalStatusWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: maritalStringList,
-          isSelected: false,
-        ));
-        maritalStatusWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listChildrenData.forEach((f) {
-        childrenWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: childrenStringList,
-          isSelected: false,
-        ));
-        childrenWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listJobTypeData.forEach((f) {
-        jobTypeWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: jobTypeStringList,
-          isSelected: false,
-        ));
-        jobTypeWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listJobCapData.forEach((f) {
-        jobCapWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: jobCapStringList,
-          isSelected: false,
-        ));
-        jobCapWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listContractData.forEach((f) {
-        contractWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: contractStringList,
-          isSelected: false,
-        ));
-        contractWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listWorkSkillData.forEach((f) {
-        workingSkillWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: workingSkillStringList,
-          isSelected: false,
-        ));
-        workingSkillWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listLangData.forEach((f) {
-        languageWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: languageStringList,
-          isSelected: false,
-        ));
-        languageWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      setState(() {
-        isLoading = false;
-      });
+      initData();
+    });
+  }
+
+  initData() {
+    setState(() {
+      isLoading = true;
+    });
+    eduWidget = [];
+    religionWidget = [];
+    maritalStatusWidget = [];
+    childrenWidget = [];
+    jobTypeWidget = [];
+    jobCapWidget = [];
+    contractWidget = [];
+    nationalityWidget = [];
+    workingSkillWidget = [];
+    languageWidget = [];
+    searchController.text = widget.searchText[0];
+    listEducationData.forEach((f) {
+      eduWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.eduStringList,
+        isSelected: widget.eduStringList.contains(f.nameId),
+      ));
+      eduWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listNationalityData.forEach((f) {
+      nationalityWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.nationalityStringList,
+        isSelected: widget.nationalityStringList.contains(f.nameId),
+      ));
+      nationalityWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listReligionData.forEach((f) {
+      religionWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.religionStringList,
+        isSelected: widget.religionStringList.contains(f.nameId),
+      ));
+      religionWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listMaritalData.forEach((f) {
+      maritalStatusWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.maritalStringList,
+        isSelected: widget.maritalStringList.contains(f.nameId),
+      ));
+      maritalStatusWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listChildrenData.forEach((f) {
+      childrenWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.childrenStringList,
+        isSelected: widget.childrenStringList.contains(f.nameId),
+      ));
+      childrenWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listJobTypeData.forEach((f) {
+      jobTypeWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.jobTypeStringList,
+        isSelected: widget.jobTypeStringList.contains(f.nameId),
+      ));
+      jobTypeWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listJobCapData.forEach((f) {
+      jobCapWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.jobCapStringList,
+        isSelected: widget.jobCapStringList.contains(f.nameId),
+      ));
+      jobCapWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listContractData.forEach((f) {
+      contractWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.contractStringList,
+        isSelected: widget.contractStringList.contains(f.nameId),
+      ));
+      contractWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listWorkSkillData.forEach((f) {
+      workingSkillWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.workingSkillStringList,
+        isSelected: widget.workingSkillStringList.contains(f.nameId),
+      ));
+      workingSkillWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listLangData.forEach((f) {
+      languageWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.languageStringList,
+        isSelected: widget.languageStringList.contains(f.nameId),
+      ));
+      languageWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    setState(() {
+      isLoading = false;
     });
   }
 
   searchData() {
-    if (eduStringList.length == 0 &&
-        religionStringList.length == 0 &&
-        maritalStringList.length == 0 &&
-        childrenStringList.length == 0 &&
-        jobTypeStringList.length == 0 &&
-        jobCapStringList.length == 0 &&
-        contractStringList.length == 0 &&
-        workingSkillStringList.length == 0 &&
-        languageStringList.length == 0 &&
-        nationalityStringList.length == 0 &&
-        searchController.text == "") {
+    widget.searchText[0] = searchController.text;
+    if (widget.eduStringList.length == 0 &&
+        widget.religionStringList.length == 0 &&
+        widget.maritalStringList.length == 0 &&
+        widget.childrenStringList.length == 0 &&
+        widget.jobTypeStringList.length == 0 &&
+        widget.jobCapStringList.length == 0 &&
+        widget.contractStringList.length == 0 &&
+        widget.workingSkillStringList.length == 0 &&
+        widget.languageStringList.length == 0 &&
+        widget.nationalityStringList.length == 0 &&
+        widget.searchText[0] == "") {
       widget.onChanged(widget.listProfileData);
-      print("call all");
     } else {
       widget.listProfileData.forEach((element) {
         bool isAdd = false;
 
-        if (eduStringList.contains(element.education) ||
-            religionStringList.contains(element.religion) ||
-            maritalStringList.contains(element.marital) ||
-            childrenStringList.contains(element.children) ||
-            jobTypeStringList.contains(element.jobtype) ||
-            jobCapStringList.contains(element.jobcapacity) ||
-            contractStringList.contains(element.contract) ||
-            nationalityStringList.contains(element.nationality)) {
+        if (widget.eduStringList.contains(element.education) ||
+            widget.religionStringList.contains(element.religion) ||
+            widget.maritalStringList.contains(element.marital) ||
+            widget.childrenStringList.contains(element.children) ||
+            widget.jobTypeStringList.contains(element.jobtype) ||
+            widget.jobCapStringList.contains(element.jobcapacity) ||
+            widget.contractStringList.contains(element.contract) ||
+            widget.nationalityStringList.contains(element.nationality)) {
           isAdd = true;
           listOfCard.add(element);
         }
@@ -218,13 +257,13 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
           List<String> workskills = element.workskill.split(";");
           if (workskills != null && workskills.length > 0) {
             workskills.forEach((workskill) {
-              if (workingSkillStringList.contains(workskill) && !isAdd) {
+              if (widget.workingSkillStringList.contains(workskill) && !isAdd) {
                 isAdd = true;
                 listOfCard.add(element);
               }
             });
           } else {
-            if (workingSkillStringList.contains(element.workskill))
+            if (widget.workingSkillStringList.contains(element.workskill))
               listOfCard.add(element);
           }
         }
@@ -233,29 +272,29 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
           List<String> languages = element.language.split(";");
           if (languages != null && languages.length > 0) {
             languages.forEach((language) {
-              if (languageStringList.contains(language) && !isAdd) {
+              if (widget.languageStringList.contains(language) && !isAdd) {
                 isAdd = true;
                 listOfCard.add(element);
               }
             });
           } else {
-            if (languageStringList.contains(element.language))
+            if (widget.languageStringList.contains(element.language))
               listOfCard.add(element);
           }
         }
         if (!isAdd) {
-          if (searchController.text != "") {
+          if (widget.searchText[0] != "") {
             if (element.selfintroduction != null &&
                 element.firstname != null &&
                 element.lastname != null) if (element.firstname
                     .toLowerCase()
-                    .contains(searchController.text.toLowerCase()) ||
+                    .contains(widget.searchText[0].toLowerCase()) ||
                 element.lastname
                     .toLowerCase()
-                    .contains(searchController.text.toLowerCase()) ||
+                    .contains(widget.searchText[0].toLowerCase()) ||
                 element.selfintroduction
                     .toLowerCase()
-                    .contains(searchController.text.toLowerCase())) {
+                    .contains(widget.searchText[0].toLowerCase())) {
               isAdd = true;
               listOfCard.add(element);
             }
@@ -288,6 +327,131 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: const EdgeInsets.all(5.0),
+                          height: 30,
+                          child: FlatButton(
+                            onPressed: () {
+                              print('Clear All');
+
+                              searchController.clear();
+                              widget.searchText[0] = '';
+
+                              if (widget.eduStringList.length > 0) {
+                                for (int i = (widget.eduStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.eduStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.religionStringList.length > 0) {
+                                for (int i =
+                                        (widget.religionStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.religionStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.maritalStringList.length > 0) {
+                                for (int i =
+                                        (widget.maritalStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.maritalStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.childrenStringList.length > 0) {
+                                for (int i =
+                                        (widget.childrenStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.childrenStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.jobTypeStringList.length > 0) {
+                                for (int i =
+                                        (widget.jobTypeStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.jobTypeStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.jobCapStringList.length > 0) {
+                                for (int i =
+                                        (widget.jobCapStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.jobCapStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.contractStringList.length > 0) {
+                                for (int i =
+                                        (widget.contractStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.contractStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.nationalityStringList.length > 0) {
+                                for (int i =
+                                        (widget.nationalityStringList.length -
+                                            1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.nationalityStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.workingSkillStringList.length > 0) {
+                                for (int i =
+                                        (widget.workingSkillStringList.length -
+                                            1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.workingSkillStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.languageStringList.length > 0) {
+                                for (int i =
+                                        (widget.languageStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.languageStringList.removeAt(i);
+                                }
+                              }
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              initData();
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            color: gradientStart,
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('Clear_All'),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
                       padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
                       child: TextField(
@@ -298,6 +462,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
                             icon: Icon(Icons.close),
                             onPressed: () {
                               searchController.clear();
+                              widget.searchText[0] = '';
                               FocusScope.of(context).requestFocus(FocusNode());
                             },
                           ),
