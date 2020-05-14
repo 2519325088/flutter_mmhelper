@@ -8,8 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
-import 'package:flutter_mmhelper/interface/firebase_phone_util.dart';
-import 'package:flutter_mmhelper/interface/search_listenter.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/callSearch.dart';
 import 'package:flutter_mmhelper/services/database.dart';
@@ -32,9 +30,7 @@ class Dashboard extends StatefulWidget {
   bool isFromLogin;
 }
 
-class _DashboardState extends State<Dashboard>
-    with AfterInitMixin
-    implements SearchClickListener {
+class _DashboardState extends State<Dashboard> with AfterInitMixin {
   final _firebaseAuth = FirebaseAuth.instance;
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
@@ -45,7 +41,7 @@ class _DashboardState extends State<Dashboard>
   QuerySnapshot querySnapshot;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController searchController = new TextEditingController();
-  SearchClickUtil searchClickUtil;
+
   String filter;
   bool isShow = false;
   String languageCode;
@@ -63,23 +59,10 @@ class _DashboardState extends State<Dashboard>
         filter = searchController.text;
       });
     });
-    searchClickUtil = SearchClickUtil();
-    searchClickUtil.setScreenListener(this);
+
     fetchLanguage().then((onValue) {
       languageCode = onValue;
     });
-  }
-
-  @override
-  onClickSearch() {
-    print("Dashboard onClickSearch");
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SearchPage(
-        onChanged: onChangeSearchList,
-        listProfileData: listProfileData,
-      );
-    }));
-    return null;
   }
 
   @override
@@ -89,7 +72,6 @@ class _DashboardState extends State<Dashboard>
   }
 
   onChangeSearchList(List<ProfileData> newGridSearchListData) {
-    print("this is length ${newGridSearchListData.length}");
     madeSearchGridList(newGridSearchListData);
   }
 
@@ -331,6 +313,18 @@ class _DashboardState extends State<Dashboard>
     return completer.future;
   }
 
+  List<String> eduStringList = [];
+  List<String> religionStringList = [];
+  List<String> maritalStringList = [];
+  List<String> childrenStringList = [];
+  List<String> jobTypeStringList = [];
+  List<String> jobCapStringList = [];
+  List<String> contractStringList = [];
+  List<String> nationalityStringList = [];
+  List<String> workingSkillStringList = [];
+  List<String> languageStringList = [];
+  List<String> searchText = [];
+
   @override
   Widget build(BuildContext context) {
     final callSearch = Provider.of<CallSearch>(context);
@@ -343,10 +337,22 @@ class _DashboardState extends State<Dashboard>
             IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
+                  if (searchText.length == 0) searchText.add('');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return SearchPage(
                       onChanged: onChangeSearchList,
                       listProfileData: listProfileData,
+                      searchText: searchText,
+                      eduStringList: eduStringList,
+                      religionStringList: religionStringList,
+                      maritalStringList: maritalStringList,
+                      childrenStringList: childrenStringList,
+                      jobTypeStringList: jobTypeStringList,
+                      jobCapStringList: jobCapStringList,
+                      contractStringList: contractStringList,
+                      nationalityStringList: nationalityStringList,
+                      workingSkillStringList: workingSkillStringList,
+                      languageStringList: languageStringList,
                     );
                   }));
                 }),

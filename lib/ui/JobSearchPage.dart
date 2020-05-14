@@ -13,19 +13,29 @@ class JobSearchPage extends StatefulWidget {
   @override
   _JobSearchPageState createState() => _JobSearchPageState();
   final ValueChanged<List<JobDetailData>> onChanged;
+
   final List<JobDetailData> listJobData;
-
-  JobSearchPage({this.onChanged, this.listJobData});
-}
-
-class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
-  List<Widget> contractWidget = [];
-  List<Widget> jobTypeWidget = [];
-  List<Widget> accommodationWidget = [];
 
   List<String> contractStringList = [];
   List<String> jobTypeStringList = [];
   List<String> accommodationStringList = [];
+  List<String> searchText = [];
+
+  JobSearchPage(
+      {this.onChanged,
+      this.listJobData,
+      this.searchText,
+      this.contractStringList,
+      this.jobTypeStringList,
+      this.accommodationStringList});
+}
+
+class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
+  Color gradientStart = Color(0xffbf9b30);
+
+  List<Widget> contractWidget = [];
+  List<Widget> jobTypeWidget = [];
+  List<Widget> accommodationWidget = [];
 
   List<JobDetailData> listOfCard = [];
   String languageCode;
@@ -44,71 +54,82 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchLanguage().then((onValue) {
       languageCode = onValue;
-      listContractData.forEach((f) {
-        contractWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: contractStringList,
-          isSelected: false,
-        ));
-        contractWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listAccommodationData.forEach((f) {
-        accommodationWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: accommodationStringList,
-          isSelected: false,
-        ));
-        accommodationWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      listJobTypeData.forEach((f) {
-        jobTypeWidget.add(ChipsWidget(
-          languageCode: languageCode,
-          dataList: f,
-          typeStringList: jobTypeStringList,
-          isSelected: false,
-        ));
-        jobTypeWidget.add(SizedBox(
-          width: 5,
-        ));
-      });
-      setState(() {
-        isLoading = false;
-      });
+      initData();
+    });
+  }
+
+  initData() {
+    setState(() {
+      isLoading = true;
+    });
+    contractWidget = [];
+    jobTypeWidget = [];
+    accommodationWidget = [];
+    searchController.text = widget.searchText[0];
+
+    listContractData.forEach((f) {
+      contractWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.contractStringList,
+        isSelected: widget.contractStringList.contains(f.nameId),
+      ));
+      contractWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listAccommodationData.forEach((f) {
+      accommodationWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.accommodationStringList,
+        isSelected: widget.accommodationStringList.contains(f.nameId),
+      ));
+      accommodationWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    listJobTypeData.forEach((f) {
+      jobTypeWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.jobTypeStringList,
+        isSelected: widget.jobTypeStringList.contains(f.nameId),
+      ));
+      jobTypeWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+    setState(() {
+      isLoading = false;
     });
   }
 
   searchData() {
-    if (contractStringList.length == 0 &&
-        jobTypeStringList.length == 0 &&
-        accommodationStringList.length == 0 &&
-        searchController.text == "") {
+    widget.searchText[0] = searchController.text;
+    if (widget.contractStringList.length == 0 &&
+        widget.jobTypeStringList.length == 0 &&
+        widget.accommodationStringList.length == 0 &&
+        widget.searchText[0] == "") {
       widget.onChanged(widget.listJobData);
-      print("call all");
     } else {
       widget.listJobData.forEach((element) {
         bool isAdd = false;
 
-        if (contractStringList.contains(element.contractType) ||
-            jobTypeStringList.contains(element.jobType) ||
-            accommodationStringList.contains(element.accommodation)) {
+        if (widget.contractStringList.contains(element.contractType) ||
+            widget.jobTypeStringList.contains(element.jobType) ||
+            widget.accommodationStringList.contains(element.accommodation)) {
           isAdd = true;
           listOfCard.add(element);
         }
         if (!isAdd) {
-          if (searchController.text != "") {
+          if (widget.searchText[0] != "") {
             if (element.moreDescription != null) if (element.moreDescription
                 .toLowerCase()
-                .contains(searchController.text.toLowerCase())) {
+                .contains(widget.searchText[0].toLowerCase())) {
               isAdd = true;
               listOfCard.add(element);
             }
@@ -140,6 +161,69 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: const EdgeInsets.all(5.0),
+                          height: 30,
+                          child: FlatButton(
+                            onPressed: () {
+                              print('Clear All');
+
+                              searchController.clear();
+                              widget.searchText[0] = '';
+
+                              if (widget.contractStringList.length > 0) {
+                                for (int i =
+                                        (widget.contractStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.contractStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.jobTypeStringList.length > 0) {
+                                for (int i =
+                                        (widget.jobTypeStringList.length - 1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.jobTypeStringList.removeAt(i);
+                                }
+                              }
+
+                              if (widget.accommodationStringList.length > 0) {
+                                for (int i =
+                                        (widget.accommodationStringList.length -
+                                            1);
+                                    i >= 0;
+                                    i--) {
+                                  widget.accommodationStringList.removeAt(i);
+                                }
+                              }
+
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              initData();
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            color: gradientStart,
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('Clear_All'),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
                       padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
                       child: TextField(
@@ -149,6 +233,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () {
+                              widget.searchText[0] = '';
                               searchController.clear();
                               FocusScope.of(context).requestFocus(FocusNode());
                             },
