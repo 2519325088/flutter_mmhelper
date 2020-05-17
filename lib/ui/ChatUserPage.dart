@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
@@ -87,7 +88,10 @@ class _ChatUserPageState extends State<ChatUserPage> {
             return Column(
               children: <Widget>[
                 ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios,size: 15,),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
                   subtitle: Text(
                     snapshot.data.documents[0]["content"],
                     overflow: TextOverflow.ellipsis,
@@ -133,7 +137,10 @@ class _ChatUserPageState extends State<ChatUserPage> {
             return Column(
               children: <Widget>[
                 ListTile(
-                  trailing: Icon(Icons.arrow_forward_ios,size: 15,),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -145,11 +152,19 @@ class _ChatUserPageState extends State<ChatUserPage> {
                                 )));
                   },
                   leading: document['profileImageUrl'] != null
-                      ? CircleAvatar(
-                          radius: SizeConfig.safeBlockVertical * 3.5,
-                          backgroundImage:
-                              NetworkImage(document['profileImageUrl']),
-                          backgroundColor: Colors.white,
+                      ? CachedNetworkImage(
+                          imageUrl: document['profileImageUrl'],
+                          placeholder: (context, url) =>
+                              CircleAvatar(child: Center(child: CircularProgressIndicator(),),),
+                          errorWidget: (context, url, error) =>
+                              CircleAvatar(child: Icon(Icons.error)),
+                          imageBuilder: (context, image) {
+                            return CircleAvatar(
+                              radius: SizeConfig.safeBlockVertical * 3.5,
+                              backgroundImage: image,
+                              backgroundColor: Colors.white,
+                            );
+                          },
                         )
                       : CircleAvatar(
                           radius: SizeConfig.safeBlockVertical * 3.5,
