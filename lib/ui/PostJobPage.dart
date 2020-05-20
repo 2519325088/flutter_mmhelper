@@ -208,7 +208,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
                   _service
-                      .setData(path: APIPath.newJob(id), data: postJob.toMap())
+                      .addData(path: APIPath.newJob(id), data: postJob.toMap())
                       .then((onValue) {
                     Navigator.pop(context);
                   });
