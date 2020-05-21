@@ -337,7 +337,8 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                     Padding(
                         padding: const EdgeInsets.all(20),
                         child: Image.asset(
-                          "assets/logo1.png",
+                          "assets/Search4Maid2-01.png",
+                          fit: BoxFit.cover,
                           height: 300,
                           width: 300,
                         )),
@@ -565,11 +566,11 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                   AppLocalizations.of(context).translate(
                                       'Submit'),
                                   style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                                  TextStyle(color: Color(0xFFbf9b30), fontSize: 18),
                                 ),
                               )),
                           shape: RoundedRectangleBorder(),
-                          color: Colors.pink.withOpacity(0.7),
+                          color: Colors.white,
                         ),
                       ),
                     ),
