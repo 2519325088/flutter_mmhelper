@@ -229,7 +229,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
         child: questionlist.length != 0
             ? Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -241,6 +241,32 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                         fontSize: 20,
                       ),
                     ),
+                    questionIndex < questionlist.length && questionIndex != -1 && questionlist[questionIndex]["step"][0]!=""?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: questionlist[questionIndex]["step"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String step = questionlist[questionIndex]["step"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                          child: Text(step,
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),),
+                        );
+                      },
+                    ):Text(""),
                     Expanded(
                       child: questionIndex !=-1 ?(questionIndex < questionlist.length
                           ? (questionlist[questionIndex]["type"]=="mc"?buildGrid(
