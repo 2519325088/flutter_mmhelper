@@ -20,7 +20,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
-  int questionIndex = 0;
+  int questionIndex = -1;
   List questionlist = [];
   List<QuestionResultContext> resfullist = [];
   List questVlue = [];
@@ -234,7 +234,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      questionIndex < questionlist.length
+                      questionIndex < questionlist.length && questionIndex != -1
                           ? "${questionIndex + 1}. ${questionlist[questionIndex]["question"]}"
                           : "",
                       style: TextStyle(
@@ -242,7 +242,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                       ),
                     ),
                     Expanded(
-                      child: questionIndex < questionlist.length
+                      child: questionIndex !=-1 ?(questionIndex < questionlist.length
                           ? (questionlist[questionIndex]["type"]=="mc"?buildGrid(
                               questionIndex,
                               questionlist[questionIndex]["options"],
@@ -319,7 +319,32 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
-                          )),
+                          ))): Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text("Thank you for submitting your profile here. We are glad to have you in Search4maid.",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text("For the next step, we may have a short quiz for you in order to full-fill the regulation requirement in Hong Kong.",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text("It will take you less than 2 mins to complete the quiz",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),),
+                          ),
+                        ],
+                      ),
                     ),
                     questionIndex < questionlist.length?Container(
                       child: Padding(

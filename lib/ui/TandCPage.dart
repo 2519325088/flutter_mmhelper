@@ -6,11 +6,13 @@ class TCPage extends StatefulWidget {
 }
 
 class _TCPageState extends State<TCPage> {
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink,
+        backgroundColor: gradientStart,
         title: Text(
           "T&C",
           style: TextStyle(
