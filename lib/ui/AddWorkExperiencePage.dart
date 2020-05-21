@@ -1,11 +1,19 @@
+import 'package:after_init/after_init.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
+import 'package:flutter_mmhelper/services/DataListService.dart';
+import 'package:flutter_mmhelper/services/GetCountryListService.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
+import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:flutter_mmhelper/ui/widgets/CountryListPopup.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddWorkExperiencePage extends StatefulWidget {
   @override
@@ -16,7 +24,8 @@ class AddWorkExperiencePage extends StatefulWidget {
   AddWorkExperiencePage({this.onChanged, this.oldWorkExperience});
 }
 
-class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
+class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
+    with AfterInitMixin {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController countryCtr = TextEditingController();
   TextEditingController startDateCtr = TextEditingController();
@@ -32,6 +41,15 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
   List<Widget> referenceWidget = [];
   List<Widget> takenWidget = [];
   Workexperience workExperience = Workexperience();
+  List<Widget> workingSkillWidget = [];
+  List<String> workingSkillStringList = [];
+  List<DataList> listWorkSkillData = [];
+  String languageCode;
+
+  Future<String> fetchLanguage() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language_code');
+  }
 
   @override
   void initState() {
@@ -56,6 +74,25 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
       workExperience.reason = widget.oldWorkExperience.reason;
       startDate = widget.oldWorkExperience.start;
       endDate = widget.oldWorkExperience.end;
+      List<String> oldSkill = widget.oldWorkExperience.taken.split(",");
+      oldSkill.forEach((element) {
+        workingSkillStringList.add(element);
+      });
+      fetchLanguage().then((onValue) {
+        languageCode = onValue;
+        setState(() {
+          listWorkSkillData.forEach((f) {
+            workingSkillWidget.add(ChipsWidget(
+                languageCode: languageCode,
+                dataList: f,
+                typeStringList: workingSkillStringList,
+                isSelected: oldSkill.contains(f.nameId)));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+        });
+      });
     }
 
     jobtype.forEach((f) {
@@ -94,7 +131,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
         ),
       );
     });
-    takencare.forEach((f) {
+    /*takencare.forEach((f) {
       takenWidget.add(
         CupertinoActionSheetAction(
           child: Text(f),
@@ -105,7 +142,25 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
           },
         ),
       );
-    });
+    });*/
+    if (widget.oldWorkExperience == null) {
+      fetchLanguage().then((onValue) {
+        languageCode = onValue;
+        setState(() {
+          listWorkSkillData.forEach((f) {
+            print(f.nameEn);
+            workingSkillWidget.add(ChipsWidget(
+                languageCode: languageCode,
+                dataList: f,
+                typeStringList: workingSkillStringList,
+                isSelected: false));
+            workingSkillWidget.add(SizedBox(
+              width: 5,
+            ));
+          });
+        });
+      });
+    }
   }
 
   onCountryChange(String country) {
@@ -125,7 +180,9 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: widget.oldWorkExperience==null?Text("Add Work Experience"):Text("Update Work Experience"),
+        title: widget.oldWorkExperience == null
+            ? Text("Add Work Experience")
+            : Text("Update Work Experience"),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.done),
@@ -145,9 +202,9 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                 } else if (jobTypeCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select job type")));
-                } else if (takenCtr.text == "") {
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please select number of taken care")));
+                } else if (workingSkillStringList.length == 0) {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Please select working skill")));
                 } else if (reasonCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select Quit Reason")));
@@ -155,6 +212,11 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select reference")));
                 } else {
+                  String taken = "";
+                  workingSkillStringList.forEach((element) {
+                    taken += "$element,";
+                  });
+                  workExperience.taken = taken.substring(0, taken.length - 1);
                   widget.onChanged(workExperience);
                   Navigator.pop(context);
                 }
@@ -211,7 +273,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                             builder: (BuildContext context) {
                                               return StateListPopup(
                                                 onChanged: onCountryChange,
-                                                isFromProfile: true,
+                                                isFromWorkProfile: true,
                                               );
                                             });
                                       },
@@ -263,15 +325,14 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                                     profileData.birthday = birthDayDate;
                                                   },*/
                                             onConfirm: (date) {
-                                              setState(() {
-                                                startDate = date;
-                                              });
-                                              startDateCtr.text =
-                                                  DateFormat.yMMMMEEEEd()
-                                                      .format(startDate);
-                                              workExperience.start =
-                                                  startDate;
-                                            },
+                                          setState(() {
+                                            startDate = date;
+                                          });
+                                          startDateCtr.text =
+                                              DateFormat.yMMMMEEEEd()
+                                                  .format(startDate);
+                                          workExperience.start = startDate;
+                                        },
                                             currentTime: DateTime.now(),
                                             locale: LocaleType.en);
                                       },
@@ -323,15 +384,14 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                                     profileData.birthday = birthDayDate;
                                                   },*/
                                             onConfirm: (date) {
-                                              setState(() {
-                                                endDate = date;
-                                              });
-                                              endDateCtr.text =
-                                                  DateFormat.yMMMMEEEEd()
-                                                      .format(endDate);
-                                              workExperience.end =
-                                                  endDate;
-                                            },
+                                          setState(() {
+                                            endDate = date;
+                                          });
+                                          endDateCtr.text =
+                                              DateFormat.yMMMMEEEEd()
+                                                  .format(endDate);
+                                          workExperience.end = endDate;
+                                        },
                                             currentTime: DateTime.now(),
                                             locale: LocaleType.en);
                                       },
@@ -422,41 +482,10 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      "Number of taken care:",
+                                      "${AppLocalizations.of(context).translate('Working_Skill')}:",
                                       style: titleText,
                                     ),
-                                    TextFormField(
-                                      style: dataText,
-                                      controller: takenCtr,
-                                      decoration: InputDecoration(
-                                          hintText:
-                                              "Select number of taken care"),
-                                      onTap: () {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        final action = CupertinoActionSheet(
-                                          title: Text(
-                                            "Number of taken care",
-                                            style: TextStyle(fontSize: 30),
-                                          ),
-                                          message: Text(
-                                            "Select any option ",
-                                            style: TextStyle(fontSize: 15.0),
-                                          ),
-                                          actions: takenWidget,
-                                          cancelButton:
-                                              CupertinoActionSheetAction(
-                                            child: Text("Cancel"),
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        );
-                                        showCupertinoModalPopup(
-                                            context: context,
-                                            builder: (context) => action);
-                                      },
-                                    )
+                                    Wrap(children: workingSkillWidget)
                                   ],
                                 ),
                               ),
@@ -624,5 +653,12 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage> {
         workExperience.end = endDate;
       });
     }
+  }
+
+  @override
+  void didInitState() {
+    // TODO: implement didInitState
+    var appLanguage = Provider.of<DataListService>(context);
+    listWorkSkillData = appLanguage.listWorkSkillData;
   }
 }

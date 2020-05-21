@@ -30,41 +30,44 @@ class ProfileData {
   String marital;
   String nationality;
   String phone;
+  String countryCodePhone;
   String religion;
   String selfintroduction;
   String whatsapp;
+  String countryCodeWhatsapp;
   List<Workexperience> workexperiences;
   String workskill;
   String primaryImage;
 
-  ProfileData({
-    this.birthday,
-    this.children,
-    this.contract,
-    this.createdBy,
-    this.current,
-    this.education,
-    this.employment,
-    this.expectedsalary,
-    this.firstname,
-    this.fromAgency,
-    this.gender,
-    this.id,
-    this.imagelist,
-    this.jobcapacity,
-    this.jobtype,
-    this.language,
-    this.lastname,
-    this.marital,
-    this.nationality,
-    this.phone,
-    this.religion,
-    this.selfintroduction,
-    this.whatsapp,
-    this.workexperiences,
-    this.workskill,
-    this.primaryImage,
-  });
+  ProfileData(
+      {this.birthday,
+      this.children,
+      this.contract,
+      this.createdBy,
+      this.current,
+      this.education,
+      this.employment,
+      this.expectedsalary,
+      this.firstname,
+      this.fromAgency,
+      this.gender,
+      this.id,
+      this.imagelist,
+      this.jobcapacity,
+      this.jobtype,
+      this.language,
+      this.lastname,
+      this.marital,
+      this.nationality,
+      this.phone,
+      this.religion,
+      this.selfintroduction,
+      this.whatsapp,
+      this.workexperiences,
+      this.workskill,
+      this.primaryImage,
+      this.countryCodePhone,
+      this.countryCodeWhatsapp});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
         birthday: json["birthday"] == null
@@ -105,6 +108,11 @@ class ProfileData {
         workskill: json["workskill"] == null ? null : json["workskill"],
         primaryImage:
             json["primaryimage"] == null ? null : json["primaryimage"],
+        countryCodePhone:
+            json["countryCodePhone"] == null ? null : json["countryCodePhone"],
+        countryCodeWhatsapp: json["countryCodeWhatsapp"] == null
+            ? null
+            : json["countryCodeWhatsapp"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -142,6 +150,9 @@ class ProfileData {
             : List<dynamic>.from(workexperiences.map((x) => x.toMap())),
         "workskill": workskill == null ? null : workskill,
         "primaryimage": primaryImage == null ? null : primaryImage,
+        "countryCodePhone": countryCodePhone == null ? null : countryCodePhone,
+        "countryCodeWhatsapp":
+            countryCodeWhatsapp == null ? null : countryCodeWhatsapp
       };
 }
 
