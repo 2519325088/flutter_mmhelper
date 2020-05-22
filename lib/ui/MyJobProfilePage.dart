@@ -17,6 +17,7 @@ import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/AddWorkExperiencePage.dart';
 import 'package:flutter_mmhelper/ui/QuestionPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
+import 'package:flutter_mmhelper/ui/widgets/CountryListPopup.dart';
 import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -95,6 +96,22 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
+  String countryCode;
+  String countryCode2;
+
+  onChangeCode(String newCode) {
+    setState(() {
+      countryCode = newCode;
+      profileData.countryCodeWhatsapp = newCode;
+    });
+  }
+
+  onChangeCode2(String newCode) {
+    setState(() {
+      countryCode2 = newCode;
+      profileData.countryCodePhone = newCode;
+    });
+  }
 
   Future<String> fetchLanguage() async {
     var prefs = await SharedPreferences.getInstance();
@@ -119,6 +136,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
       getMyJobProfile().then((onValue) {
         if (onValue.documents.length != 0) {
+          countryCode = onValue.documents[0]["countryCodeWhatsapp"]??null;
+          countryCode2 = onValue.documents[0]["countryCodePhone"]??null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
           profileData.firstname = onValue.documents[0]["firstname"];
           lastNameCtr.text = onValue.documents[0]["lastname"];
@@ -578,10 +597,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
   onWorkingExChange(Workexperience workExperience) {
     if (isEdit == false) {
-      profileData.workexperiences.add(workExperience);
+      setState(() {
+        profileData.workexperiences.add(workExperience);
+      });
     } else {
-      profileData.workexperiences.removeAt(exIndex);
-      profileData.workexperiences.add(workExperience);
+      setState(() {
+        profileData.workexperiences.removeAt(exIndex);
+        profileData.workexperiences.add(workExperience);
+      });
     }
   }
 
@@ -678,11 +701,19 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_location'))));
-                  } else if (whatsAppCtr.text == "") {
+                  } else if (countryCode == null) {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_whatsapp_number_code'))));
+                  }else if (whatsAppCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_whatsapp_number'))));
-                  } else if (phoneCtr.text == "") {
+                  } else if (countryCode2 == null) {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_phone_code'))));
+                  }else if (phoneCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_phone'))));
@@ -1563,29 +1594,105 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             "${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
                                             style: titleText,
                                           ),
-                                          TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.whatsapp = "$newText";
-                                            },
-                                            inputFormatters: [
-                                              LengthLimitingTextInputFormatter(
-                                                  15),
-                                              WhitelistingTextInputFormatter
-                                                  .digitsOnly,
-                                              BlacklistingTextInputFormatter
-                                                  .singleLineFormatter,
+                                          Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        FocusScope.of(context)
+                                                            .unfocus();
+                                                        showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return StateListPopup(
+                                                                isFromLogin:
+                                                                    false,
+                                                                isFromWorkProfile:
+                                                                    false,
+                                                                isFromProfile:
+                                                                    true,
+                                                                onChangedCode:
+                                                                    onChangeCode,
+                                                              );
+                                                            });
+                                                      },
+                                                      child: Container(
+                                                        width: 100,
+                                                        decoration: BoxDecoration(
+                                                            border: Border(
+                                                                bottom:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            0.5)),
+                                                            color:
+                                                                Colors.white),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 12,
+                                                                  horizontal:
+                                                                      0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                child: Text(
+                                                                  countryCode ??
+                                                                      "Code",
+                                                                  style:
+                                                                      dataText,
+                                                                  maxLines: 1,
+                                                                ),
+                                                              ),
+                                                              Icon(Icons
+                                                                  .keyboard_arrow_down)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: TextFormField(
+                                                  onChanged: (newText) {
+                                                    profileData.whatsapp =
+                                                        "$newText";
+                                                  },
+                                                  inputFormatters: [
+                                                    LengthLimitingTextInputFormatter(
+                                                        15),
+                                                    WhitelistingTextInputFormatter
+                                                        .digitsOnly,
+                                                    BlacklistingTextInputFormatter
+                                                        .singleLineFormatter,
+                                                  ],
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                          signed: false,
+                                                          decimal: false),
+                                                  controller: whatsAppCtr,
+                                                  style: dataText,
+                                                  decoration: InputDecoration(
+                                                      hintText: AppLocalizations
+                                                              .of(context)
+                                                          .translate(
+                                                              'Enter_whatsapp_number')),
+                                                ),
+                                              ),
                                             ],
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
-                                            controller: whatsAppCtr,
-                                            style: dataText,
-                                            decoration: InputDecoration(
-                                                hintText: AppLocalizations.of(
-                                                        context)
-                                                    .translate(
-                                                        'Enter_whatsapp_number')),
                                           )
                                         ],
                                       ),
@@ -1615,29 +1722,107 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             "${AppLocalizations.of(context).translate('Phone_Number_verified')}:",
                                             style: titleText,
                                           ),
-                                          TextFormField(
-                                            onChanged: (newText) {
-                                              profileData.phone = "$newText";
-                                            },
-                                            inputFormatters: [
-                                              LengthLimitingTextInputFormatter(
-                                                  15),
-                                              WhitelistingTextInputFormatter
-                                                  .digitsOnly,
-                                              BlacklistingTextInputFormatter
-                                                  .singleLineFormatter,
+                                          Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        FocusScope.of(context)
+                                                            .unfocus();
+                                                        showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return StateListPopup(
+                                                                isFromLogin:
+                                                                    false,
+                                                                isFromWorkProfile:
+                                                                    false,
+                                                                isFromProfile2:
+                                                                    true,
+                                                                isFromProfile:
+                                                                    false,
+                                                                onChangedCode2:
+                                                                    onChangeCode2,
+                                                              );
+                                                            });
+                                                      },
+                                                      child: Container(
+                                                        width: 100,
+                                                        decoration: BoxDecoration(
+                                                            border: Border(
+                                                                bottom:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            0.5)),
+                                                            color:
+                                                                Colors.white),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 12,
+                                                                  horizontal:
+                                                                      0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                child: Text(
+                                                                  countryCode2 ??
+                                                                      "Code",
+                                                                  style:
+                                                                      dataText,
+                                                                  maxLines: 1,
+                                                                ),
+                                                              ),
+                                                              Icon(Icons
+                                                                  .keyboard_arrow_down)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: TextFormField(
+                                                  onChanged: (newText) {
+                                                    profileData.phone =
+                                                        "$newText";
+                                                  },
+                                                  inputFormatters: [
+                                                    LengthLimitingTextInputFormatter(
+                                                        15),
+                                                    WhitelistingTextInputFormatter
+                                                        .digitsOnly,
+                                                    BlacklistingTextInputFormatter
+                                                        .singleLineFormatter,
+                                                  ],
+                                                  keyboardType: TextInputType
+                                                      .numberWithOptions(
+                                                          signed: false,
+                                                          decimal: false),
+                                                  controller: phoneCtr,
+                                                  style: dataText,
+                                                  decoration: InputDecoration(
+                                                      hintText: AppLocalizations
+                                                              .of(context)
+                                                          .translate(
+                                                              'Enter_Phone_number')),
+                                                ),
+                                              ),
                                             ],
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
-                                            controller: phoneCtr,
-                                            style: dataText,
-                                            decoration: InputDecoration(
-                                                hintText: AppLocalizations.of(
-                                                        context)
-                                                    .translate(
-                                                        'Enter_Phone_number')),
                                           )
                                         ],
                                       ),

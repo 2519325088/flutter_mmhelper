@@ -395,7 +395,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                                       builder: (BuildContext context) {
                                         return StateListPopup(
                                           isFromLogin: true,
-                                          isFromProfile: false,
+                                          isFromWorkProfile: false,
                                         );
                                       });
                                 },
@@ -561,7 +561,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
                           child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 100, vertical: 20),
+                                    horizontal: 100, vertical: 15),
                                 child: Text(
                                   AppLocalizations.of(context).translate(
                                       'Submit'),
