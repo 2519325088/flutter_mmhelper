@@ -134,7 +134,9 @@ class _ChatUserPageState extends State<ChatUserPage> {
               ],
             );
           } else {
-            return Column(
+            return SizedBox();
+
+            /* Column(
               children: <Widget>[
                 ListTile(
                   trailing: Icon(
@@ -182,7 +184,7 @@ class _ChatUserPageState extends State<ChatUserPage> {
                   endIndent: SizeConfig.safeBlockHorizontal * 5,
                 ),
               ],
-            );
+            );*/
           }
         },
       );

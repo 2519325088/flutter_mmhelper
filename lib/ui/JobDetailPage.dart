@@ -2,16 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/ui/ChatPage.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobDetailPage extends StatefulWidget {
   @override
   _JobDetailPageState createState() => _JobDetailPageState();
   JobDetailData jobDetailData;
   FlContent userData;
+  String currentUser;
 
-  JobDetailPage(
-      { this.jobDetailData, this.userData});
+  JobDetailPage({this.jobDetailData, this.userData, this.currentUser});
 }
 
 class _JobDetailPageState extends State<JobDetailPage> {
@@ -27,12 +29,22 @@ class _JobDetailPageState extends State<JobDetailPage> {
   TextEditingController currencyTypeCtr = TextEditingController();
   TextEditingController accommodationCtr = TextEditingController();
   TextEditingController weeklyHolidayCtr = TextEditingController();
+  bool isLoginUser = true;
+  SharedPreferences prefs;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getPhoneUserId().then((value) {
+      print(widget.userData.id);
+      print(value);
+      if (widget.userData.id != value) {
+        setState(() {
+          isLoginUser = false;
+        });
+      }
+    });
     availableInCtr.text = DateFormat.yMMMMEEEEd()
         .format(widget.jobDetailData.available)
         .toString();
@@ -41,6 +53,11 @@ class _JobDetailPageState extends State<JobDetailPage> {
     workingLocationDesCtr.text = widget.jobDetailData.workingLocation;
     salaryCtr.text =
         "${widget.jobDetailData.salary} ${widget.jobDetailData.currencyType}";
+  }
+
+  Future<String> getPhoneUserId() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString("PhoneUserId");
   }
 
   @override
@@ -126,33 +143,48 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         ],
                       ),
                     ),
-                    Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(5),
-                              bottomRight: Radius.circular(5)),
-                          gradient: LinearGradient(
-                              colors: [gradientStart, gradientEnd])),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.chat,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Request to Connect",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                    widget.userData.id != widget.currentUser
+                        ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ChatPage(
+                                    peerId: widget.userData.id,
+                                    peerAvatar: widget.userData.profileImageUrl,
+                                    peerName:
+                                        "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                              }));
+                            },
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(5),
+                                      bottomRight: Radius.circular(5)),
+                                  gradient: LinearGradient(
+                                      colors: [gradientStart, gradientEnd])),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.chat,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Request to Connect",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  )
+                                ],
+                              ),
+                            ),
                           )
-                        ],
-                      ),
-                    )
+                        : SizedBox()
                   ],
                 ),
               ),
