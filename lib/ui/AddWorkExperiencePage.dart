@@ -10,6 +10,7 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/widgets/ChipsWidget.dart';
 import 'package:flutter_mmhelper/ui/widgets/CountryListPopup.dart';
+import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,10 @@ class AddWorkExperiencePage extends StatefulWidget {
   _AddWorkExperiencePageState createState() => _AddWorkExperiencePageState();
   final ValueChanged<Workexperience> onChanged;
   Workexperience oldWorkExperience;
+  String currentLoc;
 
-  AddWorkExperiencePage({this.onChanged, this.oldWorkExperience});
+  AddWorkExperiencePage(
+      {this.onChanged, this.oldWorkExperience, this.currentLoc});
 }
 
 class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
@@ -44,6 +47,9 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
   List<Widget> workingSkillWidget = [];
   List<String> workingSkillStringList = [];
   List<DataList> listWorkSkillData = [];
+  List<DataList> quitReasonData = [];
+  List<DataList> quitReasonHkData = [];
+  List<DataList> listJobTypeData = [];
   String languageCode;
 
   Future<String> fetchLanguage() async {
@@ -55,112 +61,135 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.oldWorkExperience != null) {
-      countryCtr.text = widget.oldWorkExperience.country;
-      workExperience.country = widget.oldWorkExperience.country;
-      workExperience.start = widget.oldWorkExperience.start;
-      startDateCtr.text =
-          DateFormat.yMMMMEEEEd().format(widget.oldWorkExperience.start);
-      workExperience.end = widget.oldWorkExperience.end;
-      endDateCtr.text =
-          DateFormat.yMMMMEEEEd().format(widget.oldWorkExperience.end);
-      workExperience.jobtype = widget.oldWorkExperience.jobtype;
-      jobTypeCtr.text = widget.oldWorkExperience.jobtype;
-      takenCtr.text = widget.oldWorkExperience.taken;
-      workExperience.taken = widget.oldWorkExperience.taken;
-      referenceCtr.text = widget.oldWorkExperience.reterence;
-      workExperience.reterence = widget.oldWorkExperience.reterence;
-      reasonCtr.text = widget.oldWorkExperience.reason;
-      workExperience.reason = widget.oldWorkExperience.reason;
-      startDate = widget.oldWorkExperience.start;
-      endDate = widget.oldWorkExperience.end;
-      List<String> oldSkill = widget.oldWorkExperience.taken.split(",");
-      oldSkill.forEach((element) {
-        workingSkillStringList.add(element);
-      });
-      fetchLanguage().then((onValue) {
-        languageCode = onValue;
-        setState(() {
-          listWorkSkillData.forEach((f) {
-            workingSkillWidget.add(ChipsWidget(
-                languageCode: languageCode,
-                dataList: f,
-                typeStringList: workingSkillStringList,
-                isSelected: oldSkill.contains(f.nameId)));
-            workingSkillWidget.add(SizedBox(
-              width: 5,
-            ));
-          });
+    fetchLanguage().then((nLanguageCode) {
+      languageCode = nLanguageCode;
+      if (widget.oldWorkExperience != null) {
+        countryCtr.text = widget.oldWorkExperience.country;
+        workExperience.country = widget.oldWorkExperience.country;
+        workExperience.start = widget.oldWorkExperience.start;
+        startDateCtr.text =
+            DateFormat.yMMMMEEEEd().format(widget.oldWorkExperience.start);
+        workExperience.end = widget.oldWorkExperience.end;
+        endDateCtr.text =
+            DateFormat.yMMMMEEEEd().format(widget.oldWorkExperience.end);
+        workExperience.jobtype = widget.oldWorkExperience.jobtype;
+        jobTypeCtr.text = widget.oldWorkExperience.jobtype;
+        takenCtr.text = widget.oldWorkExperience.taken;
+        workExperience.taken = widget.oldWorkExperience.taken;
+        referenceCtr.text = widget.oldWorkExperience.reterence;
+        workExperience.reterence = widget.oldWorkExperience.reterence;
+        reasonCtr.text = widget.oldWorkExperience.reason;
+        workExperience.reason = widget.oldWorkExperience.reason;
+        startDate = widget.oldWorkExperience.start;
+        endDate = widget.oldWorkExperience.end;
+        List<String> oldSkill = widget.oldWorkExperience.taken.split(",");
+        oldSkill.forEach((element) {
+          workingSkillStringList.add(element);
         });
-      });
-    }
 
-    jobtype.forEach((f) {
-      jobTypeWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            jobTypeCtr.text = f;
-            workExperience.jobtype = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    quitreason.forEach((f) {
-      reasonWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            reasonCtr.text = f;
-            workExperience.reason = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    reference.forEach((f) {
-      referenceWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            referenceCtr.text = f;
-            workExperience.reterence = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });
-    /*takencare.forEach((f) {
-      takenWidget.add(
-        CupertinoActionSheetAction(
-          child: Text(f),
-          onPressed: () {
-            takenCtr.text = f;
-            workExperience.taken = f;
-            Navigator.pop(context);
-          },
-        ),
-      );
-    });*/
-    if (widget.oldWorkExperience == null) {
-      fetchLanguage().then((onValue) {
-        languageCode = onValue;
-        setState(() {
-          listWorkSkillData.forEach((f) {
-            print(f.nameEn);
-            workingSkillWidget.add(ChipsWidget(
-                languageCode: languageCode,
-                dataList: f,
-                typeStringList: workingSkillStringList,
-                isSelected: false));
-            workingSkillWidget.add(SizedBox(
-              width: 5,
-            ));
+        listWorkSkillData.forEach((f) {
+          workingSkillWidget.add(ChipsWidget(
+              languageCode: languageCode,
+              dataList: f,
+              typeStringList: workingSkillStringList,
+              isSelected: oldSkill.contains(f.nameId)));
+          workingSkillWidget.add(SizedBox(
+            width: 5,
+          ));
+        });
+
+        setState(() {});
+      }
+
+      widget.currentLoc != "Hong Kong"
+          ? quitReasonData.forEach((f) {
+              print(f.nameId);
+              reasonWidget.add(
+                CupertinoActionSheetActionWidget(
+                  languageCode: languageCode,
+                  dataList: f,
+                  onPressedCall: (dataList) {
+                    reasonCtr.text =
+                        dataList.getValueByLanguageCode(languageCode);
+                    workExperience.reason = dataList.nameId;
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            })
+          : quitReasonHkData.forEach((f) {
+              print(f.nameId);
+              reasonWidget.add(
+                CupertinoActionSheetActionWidget(
+                  languageCode: languageCode,
+                  dataList: f,
+                  onPressedCall: (dataList) {
+                    reasonCtr.text =
+                        dataList.getValueByLanguageCode(languageCode);
+                    workExperience.reason = dataList.nameId;
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            });
+
+      /*jobtype.forEach((f) {
+        jobTypeWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              jobTypeCtr.text = f;
+              workExperience.jobtype = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });*/
+      listJobTypeData.forEach((f) {
+        jobTypeWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              jobTypeCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              workExperience.jobtype = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      reference.forEach((f) {
+        referenceWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              referenceCtr.text = f;
+              workExperience.reterence = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+      if (widget.oldWorkExperience == null) {
+        fetchLanguage().then((onValue) {
+          languageCode = onValue;
+          setState(() {
+            listWorkSkillData.forEach((f) {
+              workingSkillWidget.add(ChipsWidget(
+                  languageCode: languageCode,
+                  dataList: f,
+                  typeStringList: workingSkillStringList,
+                  isSelected: false));
+              workingSkillWidget.add(SizedBox(
+                width: 5,
+              ));
+            });
           });
         });
-      });
-    }
+      }
+    });
   }
 
   onCountryChange(String country) {
@@ -660,5 +689,8 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
     // TODO: implement didInitState
     var appLanguage = Provider.of<DataListService>(context);
     listWorkSkillData = appLanguage.listWorkSkillData;
+    quitReasonData = appLanguage.listQuitReasonData;
+    quitReasonHkData = appLanguage.listQuitReasonHkData;
+    listJobTypeData = appLanguage.listJobTypeData;
   }
 }

@@ -23,6 +23,8 @@ class APIPath {
   static String roleList() => 'mb_role_list';
   static String accommodationList() => 'mb_accommodation_list';
   static String weekHolidayList() => 'mb_holidayno_list';
+  static String quitReasonList() => 'mb_quit_reason';
+  static String quitReasonHkList() => 'mb_quit_reason_hk';
   static String imageFirebaseData(String imageId) => 'fl_files/$imageId';
 
 }

@@ -48,14 +48,14 @@ class FirestoreDatabase with ChangeNotifier {
       );
 
   Stream<List<FlContent>> flUserStream() => _service.collectionStream(
-    path: APIPath.userList(),
-    builder: (data, documentId) => FlContent.fromMap(data,documentId),
-  );
+        path: APIPath.userList(),
+        builder: (data, documentId) => FlContent.fromMap(data, documentId),
+      );
 
   Stream<List<JobDetailData>> flJobStream() => _service.jobCollectionStream(
-    path: APIPath.jobList(),
-    builder: (data, documentId) => JobDetailData.fromMap(data),
-  );
+        path: APIPath.jobList(),
+        builder: (data, documentId) => JobDetailData.fromMap(data),
+      );
 
   Stream<List<DataList>> mbEducationStream() => _service.collectionStream(
         path: APIPath.educationList(),
@@ -124,6 +124,16 @@ class FirestoreDatabase with ChangeNotifier {
 
   Stream<List<DataList>> mbHolidayNoStream() => _service.collectionStream(
         path: APIPath.weekHolidayList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbQuitReasonStream() => _service.collectionStream(
+        path: APIPath.quitReasonList(),
+        builder: (data, documentId) => DataList.fromMap(data),
+      );
+
+  Stream<List<DataList>> mbQuitReasonHkStream() => _service.collectionStream(
+        path: APIPath.quitReasonHkList(),
         builder: (data, documentId) => DataList.fromMap(data),
       );
 
