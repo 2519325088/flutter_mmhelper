@@ -73,12 +73,12 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
         endDateCtr.text =
             DateFormat.yMMMMEEEEd().format(widget.oldWorkExperience.end);
         workExperience.jobtype = widget.oldWorkExperience.jobtype;
-        jobTypeCtr.text = widget.oldWorkExperience.jobtype;
+        //jobTypeCtr.text = widget.oldWorkExperience.jobtype;
         takenCtr.text = widget.oldWorkExperience.taken;
         workExperience.taken = widget.oldWorkExperience.taken;
         referenceCtr.text = widget.oldWorkExperience.reterence;
         workExperience.reterence = widget.oldWorkExperience.reterence;
-        reasonCtr.text = widget.oldWorkExperience.reason;
+        //reasonCtr.text = widget.oldWorkExperience.reason;
         workExperience.reason = widget.oldWorkExperience.reason;
         startDate = widget.oldWorkExperience.start;
         endDate = widget.oldWorkExperience.end;
@@ -103,7 +103,11 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
 
       widget.currentLoc != "Hong Kong"
           ? quitReasonData.forEach((f) {
-              print(f.nameId);
+              if (widget.oldWorkExperience != null) {
+                reasonCtr.text = f.getValueByLanguageCode(languageCode);
+                workExperience.reason = f.nameId;
+              }
+
               reasonWidget.add(
                 CupertinoActionSheetActionWidget(
                   languageCode: languageCode,
@@ -118,7 +122,10 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
               );
             })
           : quitReasonHkData.forEach((f) {
-              print(f.nameId);
+              if (widget.oldWorkExperience != null) {
+                reasonCtr.text = f.getValueByLanguageCode(languageCode);
+                workExperience.reason = f.nameId;
+              }
               reasonWidget.add(
                 CupertinoActionSheetActionWidget(
                   languageCode: languageCode,
@@ -146,13 +153,16 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
         );
       });*/
       listJobTypeData.forEach((f) {
+        if (widget.oldWorkExperience != null) {
+          jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
+          workExperience.jobtype = f.nameId;
+        }
         jobTypeWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
             onPressedCall: (dataList) {
-              jobTypeCtr.text =
-                  dataList.getValueByLanguageCode(languageCode);
+              jobTypeCtr.text = dataList.getValueByLanguageCode(languageCode);
               workExperience.jobtype = dataList.nameId;
               print(dataList.nameId);
               Navigator.pop(context);
