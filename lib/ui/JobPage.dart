@@ -66,7 +66,8 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
               gridListData.add(jobCard(
                   userData: user,
                   jobDetailData: jobElement,
-                  userName: user.username));
+                  userName: user.username,
+                  currentUser: widget.currentUserId));
             }
           });
           if (newGridSearchListData.length <= i) {
@@ -98,7 +99,8 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
               gridListData.add(jobCard(
                   userData: user,
                   jobDetailData: jobElement,
-                  userName: user.username));
+                  userName: user.username,
+                  currentUser: widget.currentUserId));
             }
           });
           if (contents.length < i) {
@@ -171,6 +173,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
       FlContent userData,
       String shortDes,
       String userName,
+      String currentUser,
       DocumentSnapshot jobSnapshot,
       DocumentSnapshot userSnapshot}) {
     return Card(
@@ -219,6 +222,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                   return JobDetailPage(
                     jobDetailData: jobDetailData,
                     userData: userData,
+                    currentUser: currentUser,
                   );
                 }));
               },

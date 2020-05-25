@@ -136,8 +136,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
       getMyJobProfile().then((onValue) {
         if (onValue.documents.length != 0) {
-          countryCode = onValue.documents[0]["countryCodeWhatsapp"]??null;
-          countryCode2 = onValue.documents[0]["countryCodePhone"]??null;
+          countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
+          countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
           profileData.firstname = onValue.documents[0]["firstname"];
           lastNameCtr.text = onValue.documents[0]["lastname"];
@@ -705,7 +705,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_whatsapp_number_code'))));
-                  }else if (whatsAppCtr.text == "") {
+                  } else if (whatsAppCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_whatsapp_number'))));
@@ -713,7 +713,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_phone_code'))));
-                  }else if (phoneCtr.text == "") {
+                  } else if (phoneCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_phone'))));
@@ -2272,6 +2272,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   builder: (context) {
                                             return AddWorkExperiencePage(
                                               onChanged: onWorkingExChange,
+                                              currentLoc: profileData.current,
                                             );
                                           }));
                                         },
@@ -2295,6 +2296,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                 builder: (context) {
                                           return AddWorkExperiencePage(
                                             onChanged: onWorkingExChange,
+                                            currentLoc: profileData.current,
                                             oldWorkExperience: profileData
                                                 .workexperiences[index],
                                           );

@@ -20,6 +20,8 @@ class DataListService with ChangeNotifier {
   List<DataList> listRoleData = [];
   List<DataList> listWeekHolidayData = [];
   List<DataList> listAccommodationData = [];
+  List<DataList> listQuitReasonData = [];
+  List<DataList> listQuitReasonHkData = [];
 
   LinkedHashMap listMapEducationData = LinkedHashMap<String, DataList>();
   LinkedHashMap listMapReligionData = LinkedHashMap<String, DataList>();
@@ -35,6 +37,8 @@ class DataListService with ChangeNotifier {
   LinkedHashMap listMapRoleData = LinkedHashMap<String, DataList>();
   LinkedHashMap listMapWeekHolidayData = LinkedHashMap<String, DataList>();
   LinkedHashMap listMapAccommodationData = LinkedHashMap<String, DataList>();
+  LinkedHashMap listMapQuitReasonData = LinkedHashMap<String, DataList>();
+  LinkedHashMap listMapQuitReasonHkData = LinkedHashMap<String, DataList>();
 
   callListData(context) async {
     listEducationData = [];
@@ -51,6 +55,8 @@ class DataListService with ChangeNotifier {
     listRoleData = [];
     listWeekHolidayData = [];
     listAccommodationData = [];
+    listQuitReasonData = [];
+    listQuitReasonHkData = [];
 
     listMapEducationData = LinkedHashMap<String, DataList>();
     listMapReligionData = LinkedHashMap<String, DataList>();
@@ -66,8 +72,24 @@ class DataListService with ChangeNotifier {
     listMapRoleData = LinkedHashMap<String, DataList>();
     listMapWeekHolidayData = LinkedHashMap<String, DataList>();
     listMapAccommodationData = LinkedHashMap<String, DataList>();
+    listMapQuitReasonData = LinkedHashMap<String, DataList>();
+    listMapQuitReasonHkData = LinkedHashMap<String, DataList>();
 
     final database = Provider.of<FirestoreDatabase>(context);
+    database.mbQuitReasonHkStream().first.then((contents) {
+      contents.forEach((element) async {
+        listQuitReasonHkData.add(element);
+        listMapQuitReasonHkData[element.nameId] = element;
+      });
+      notifyListeners();
+    });
+    database.mbQuitReasonStream().first.then((contents) {
+      contents.forEach((element) async {
+        listQuitReasonData.add(element);
+        listMapQuitReasonData[element.nameId] = element;
+      });
+      notifyListeners();
+    });
     database.mbAccommodationStream().first.then((contents) {
       contents.forEach((element) async {
         listAccommodationData.add(element);
@@ -166,6 +188,32 @@ class DataListService with ChangeNotifier {
       });
       notifyListeners();
     });
+  }
+
+  String getQuitReasonHkValue({String languageCode, String quitReasonHk}) {
+    if (quitReasonHk == null) {
+      return '';
+    }
+    if (listMapQuitReasonHkData != null && listMapQuitReasonHkData.length > 0) {
+      DataList dataList = listMapQuitReasonHkData[quitReasonHk];
+      if (dataList != null) {
+        return languageCode == "en" ? dataList.nameEn : dataList.nameZh;
+      }
+    }
+    return quitReasonHk;
+  }
+
+  String getQuitReasonValue({String languageCode, String quitReason}) {
+    if (quitReason == null) {
+      return '';
+    }
+    if (listMapQuitReasonData != null && listMapQuitReasonData.length > 0) {
+      DataList dataList = listMapQuitReasonData[quitReason];
+      if (dataList != null) {
+        return languageCode == "en" ? dataList.nameEn : dataList.nameZh;
+      }
+    }
+    return quitReason;
   }
 
   String getNationalityValue({String languageCode, String nationality}) {
