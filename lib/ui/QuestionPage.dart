@@ -28,9 +28,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
 
   @override
   void didInitState() {
-    print(widget.profileid);
     skilllist = widget.skill.split(";");
-    print(skilllist);
     skilllist.forEach((f) {
       getQuestions(f);
     });
@@ -82,6 +80,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Widget buildGrid(int index, Map options, String questionid) {
     List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
     Widget content; //单独一个widget组件，用于返回需要生成的内容widget
+    print(resfullist[index].answer);
     options.forEach((k, v) => tiles.add(
           new Flexible(
             child: RadioListTile<String>(
@@ -93,7 +92,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   : '',
               onChanged: (value) {
                 String datenow = DateTime.now().toIso8601String();
-                print(1111);
                 print('value:$value');
                 print('questionIndex:$questionIndex');
                 //            Firestore.instance
@@ -146,12 +144,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                       .setData(
                           path: APIPath.newQuestionResult(documentId),
                           data: questionresult.toMap());
-//                      .then((value) {
-//                    questionIndex += 1;
-//                    setState(() {});
-//                    print(2222);
-//                    print(questionlist.length);
-//                  });
                 }
               },
             ),
@@ -177,55 +169,8 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
           ),
         ),
         centerTitle: true,
-//        actions: <Widget>[
-//          IconButton(
-//            color: gradientStart,
-//            icon: Icon(
-//              Icons.check,
-//              color: Colors.black,
-//              size: 24,
-//            ),
-//            onPressed: () {},
-//          )
-//        ],
       ),
       body: Container(
-//        child: questionlist.length!=0?ListView.separated(
-//          shrinkWrap: true,
-//          physics:const ScrollPhysics(),
-//          padding: EdgeInsets.all(10),
-//          separatorBuilder: (BuildContext context, int index) {
-//            return Align(
-//              alignment: Alignment.centerRight,
-//              child: Container(
-//                height: 0.5,
-//                width: MediaQuery.of(context).size.width,
-//                child: Divider(),
-//              ),
-//            );
-//          },
-//          itemCount: questionlist.length,
-//          itemBuilder: (BuildContext context, int index) {
-//            DocumentSnapshot question = questionlist[index];
-//            return Padding(
-//              padding:const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
-//              child: Column(
-//                crossAxisAlignment: CrossAxisAlignment.start,
-//                children: <Widget>[
-//                  Text(
-//                    "${index+1}. ${question["question"]}",
-//                    style: TextStyle(
-//                      fontSize: 20,
-//                    ),
-//                  ),
-//                  buildGrid(index,question["options"]),
-//                ],
-//              )
-//            );
-//          },
-//        ):Center(
-//          child: CircularProgressIndicator(),
-//        ),
         child: questionlist.length != 0
             ? Padding(
                 padding:
@@ -382,6 +327,9 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                             onPressed:(){
                               questionIndex += 1;
                               setState(() {});
+                              print(questionIndex);
+                              print(questionlist);
+                              print(resfullist);
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10))
@@ -406,7 +354,11 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                           width: double.infinity,
                           height: 50,
                           child: FlatButton(
-                            onPressed:(){},
+                            onPressed:(){
+                              questionIndex = - 1;
+                              setState(() {});
+                              Navigator.pop(context);
+                            },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10))
                             ),
