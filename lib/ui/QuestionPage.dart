@@ -307,8 +307,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                       controller: answerController,
                                       cursorColor:
                                           Theme.of(context).accentColor,
-                                      maxLines: 5,
-                                      maxLength: 50,
+                                      maxLines: 7,
                                       textInputAction: TextInputAction.done,
                                       decoration: InputDecoration(
 //                            contentPadding: new EdgeInsets.all(0.0),

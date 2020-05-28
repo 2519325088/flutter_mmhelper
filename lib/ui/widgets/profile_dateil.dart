@@ -190,7 +190,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           size: 20,
                                         ),
                                         Text(
-                                          "${AppLocalizations.of(context).translate('FirstName')}:",
+                                          " ${AppLocalizations.of(context).translate('FirstName')}:",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color:
@@ -229,7 +229,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                           size: 20,
                                         ),
                                         Text(
-                                          "${AppLocalizations.of(context).translate('LastName')}:",
+                                          " ${AppLocalizations.of(context).translate('LastName')}:",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color:
@@ -272,7 +272,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Gender')}:",
+                                  " ${AppLocalizations.of(context).translate('Gender')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -310,7 +310,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Birthday')}:",
+                                  " ${AppLocalizations.of(context).translate('Birthday')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -351,7 +351,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Nationality')}:",
+                                  " ${AppLocalizations.of(context).translate('Nationality')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -414,7 +414,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Education')}:",
+                                  " ${AppLocalizations.of(context).translate('Education')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -456,7 +456,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Religion')}:",
+                                  " ${AppLocalizations.of(context).translate('Religion')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -498,7 +498,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Marital_Status')}:",
+                                  " ${AppLocalizations.of(context).translate('Marital_Status')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -539,7 +539,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Children')}:",
+                                  " ${AppLocalizations.of(context).translate('Children')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -582,7 +582,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Current_Location')}:",
+                                  " ${AppLocalizations.of(context).translate('Current_Location')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -625,7 +625,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
+                                  " ${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -665,7 +665,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Phone_number')}:",
+                                  " ${AppLocalizations.of(context).translate('Phone_number')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -726,7 +726,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Job_Type')}:",
+                                  " ${AppLocalizations.of(context).translate('Job_Type')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -767,7 +767,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Job_Capacity')}:",
+                                  " ${AppLocalizations.of(context).translate('Job_Capacity')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -809,7 +809,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Contract_Status')}:",
+                                  " ${AppLocalizations.of(context).translate('Contract_Status')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -851,7 +851,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Working_Skill')}:",
+                                  " ${AppLocalizations.of(context).translate('Working_Skill')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -894,7 +894,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Language')}:",
+                                  " ${AppLocalizations.of(context).translate('Language')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -937,7 +937,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Expected_Salary_HKD')}:",
+                                  " ${AppLocalizations.of(context).translate('Expected_Salary_HKD')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -976,7 +976,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   color: Colors.black.withOpacity(0.7),
                                 ),
                                 Text(
-                                  "${AppLocalizations.of(context).translate('Employement_Start_Date')}:",
+                                  " ${AppLocalizations.of(context).translate('Employement_Start_Date')}:",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.black.withOpacity(0.7),
@@ -1190,7 +1190,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                   size: 20,
                                                                 ),
                                                                 Text(
-                                                                  "${AppLocalizations.of(context).translate('Start_Date')}:",
+                                                                  " ${AppLocalizations.of(context).translate('Start_Date')}:",
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -1256,7 +1256,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                   size: 20,
                                                                 ),
                                                                 Text(
-                                                                  "${AppLocalizations.of(context).translate('End_Date')}:",
+                                                                  " ${AppLocalizations.of(context).translate('End_Date')}:",
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -1322,7 +1322,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "${AppLocalizations.of(context).translate('Type_of_Jobs')}:",
+                                                          " ${AppLocalizations.of(context).translate('Type_of_Jobs')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1377,7 +1377,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "${AppLocalizations.of(context).translate('Number_of_Taken_Care')}:",
+                                                          " ${AppLocalizations.of(context).translate('Number_of_Taken_Care')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1431,7 +1431,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "${AppLocalizations.of(context).translate('Quit_Reason')}:",
+                                                          " ${AppLocalizations.of(context).translate('Quit_Reason')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black
@@ -1485,7 +1485,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                               .withOpacity(0.7),
                                                         ),
                                                         Text(
-                                                          "${AppLocalizations.of(context).translate('Reterence_Letter')}:",
+                                                          " ${AppLocalizations.of(context).translate('Reterence_Letter')}:",
                                                           style: TextStyle(
                                                             fontSize: 18,
                                                             color: Colors.black

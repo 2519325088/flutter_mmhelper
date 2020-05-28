@@ -50,6 +50,8 @@ dependencies:
   url_launcher: ^5.4.5
   timeline_list: ^0.0.3
 
+  flutter_filereader: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
