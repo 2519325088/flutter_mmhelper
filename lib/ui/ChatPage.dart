@@ -211,6 +211,19 @@ class ChatScreenState extends State<ChatScreen> {
           .millisecondsSinceEpoch
           .toString());
 
+      var documentReference2 = Firestore.instance
+          .collection('messages')
+          .document(groupChatId);
+
+      await Firestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference2,
+          {
+            'extra': "",
+          },
+        );
+      });
+
       await Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
           documentReference,

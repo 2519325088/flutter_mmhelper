@@ -128,6 +128,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   @override
   void initState() {
     super.initState();
+
     profileData.imagelist = [];
     profileData.workexperiences = [];
 
@@ -136,6 +137,11 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
       getMyJobProfile().then((onValue) {
         if (onValue.documents.length != 0) {
+          profileData.updateTime = DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              TimeOfDay.now().hour,
+              TimeOfDay.now().minute);
           countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
           countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -393,6 +399,11 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           profileData.primaryImage = onValue.documents[0]["primaryimage"];
         } else {
           if (widget.loginUserData.documents.length != 0) {
+            profileData.createTime = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                TimeOfDay.now().hour,
+                TimeOfDay.now().minute);
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -407,7 +418,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             phoneCtr.text = widget.loginUserData.documents[0]["phone"];
             profileData.phone = widget.loginUserData.documents[0]["phone"];
           }
-
           listWorkSkillData.forEach((f) {
             workingSkillWidget.add(ChipsWidget(
               languageCode: languageCode,
