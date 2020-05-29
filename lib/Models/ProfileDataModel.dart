@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 ProfileData profileDataFromJson(String str) =>
     ProfileData.fromMap(json.decode(str));
 
@@ -85,12 +87,16 @@ class ProfileData {
         employment: json["employment"] == null
             ? null
             : DateTime.tryParse(json["employment"]),
-        /*createTime: json["create_time"] == null&&json["create_time"]==""
+        createTime: (!json.containsKey("create_time")) ||
+                (json["create_time"] == null) ||
+                (json["create_time"] == "")
             ? null
-            : DateTime.tryParse(json["create_time"]),*/
-        /*updateTime: json["update_time"] == null
+            : (json["create_time"] as Timestamp).toDate(),
+        updateTime: (!json.containsKey("update_time")) ||
+                (json["update_time"] == null) ||
+                (json["update_time"] == "")
             ? null
-            : DateTime.tryParse(json["update_time"]),*/
+            : (json["update_time"] as Timestamp).toDate(),
         expectedsalary:
             json["expectedsalary"] == null ? null : json["expectedsalary"],
         firstname: json["firstname"] == null ? null : json["firstname"],
