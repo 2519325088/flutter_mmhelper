@@ -1,4 +1,5 @@
 import 'package:after_init/after_init.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'widgets/ChipsWidget.dart';
+
 class PostJobPage extends StatefulWidget {
   @override
   _PostJobPageState createState() => _PostJobPageState();
@@ -27,10 +30,11 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   TextEditingController jobShortDesCtr = TextEditingController();
   TextEditingController workingLocationDesCtr = TextEditingController();
   TextEditingController availableInCtr = TextEditingController();
+  TextEditingController availableTimeCtr = TextEditingController();
   TextEditingController salaryCtr = TextEditingController();
   TextEditingController unitSizeCtr = TextEditingController();
   TextEditingController moreJobDesCtr = TextEditingController();
-  TextEditingController skillCtr = TextEditingController();
+  TextEditingController workingSkillCtr = TextEditingController();
   TextEditingController contractTypeCtr = TextEditingController();
   TextEditingController jobTypeCtr = TextEditingController();
   TextEditingController currencyTypeCtr = TextEditingController();
@@ -54,6 +58,10 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   List<DataList> listWeekHolidayData = [];
   List<Widget> weekHolidayWidget = [];
   String languageCode;
+  List<Widget> workingSkillWidget = [];
+  List<String> workingSkillStringList = [];
+  List<DataList> listWorkSkillData = [];
+  TimeOfDay timeOfDay;
 
   @override
   void initState() {
@@ -63,7 +71,19 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     postJob.currencyType = "HKD";
     fetchLanguage().then((onValue) {
       languageCode = onValue;
-
+      setState(() {
+        listWorkSkillData.forEach((f) {
+          workingSkillWidget.add(ChipsWidget(
+            languageCode: languageCode,
+            dataList: f,
+            typeStringList: workingSkillStringList,
+            isSelected: false,
+          ));
+          workingSkillWidget.add(SizedBox(
+            width: 5,
+          ));
+        });
+      });
       listContractData.forEach((f) {
         contractWidget.add(
           CupertinoActionSheetActionWidget(
@@ -101,7 +121,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
             languageCode: languageCode,
             dataList: f,
             onPressedCall: (dataList) {
-              accommodationCtr.text = dataList.getValueByLanguageCode(languageCode);
+              accommodationCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
               postJob.accommodation = dataList.nameId;
               print(dataList.nameId);
               Navigator.pop(context);
@@ -116,7 +137,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
             languageCode: languageCode,
             dataList: f,
             onPressedCall: (dataList) {
-              weeklyHolidayCtr.text = dataList.getValueByLanguageCode(languageCode);
+              weeklyHolidayCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
               postJob.weeklyHoliday = dataList.nameId;
               print(dataList.nameId);
               Navigator.pop(context);
@@ -142,7 +164,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     salaryCtr.dispose();
     unitSizeCtr.dispose();
     moreJobDesCtr.dispose();
-    skillCtr.dispose();
+    workingSkillCtr.dispose();
     contractTypeCtr.dispose();
     jobTypeCtr.dispose();
     currencyTypeCtr.dispose();
@@ -197,13 +219,18 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                 } else if (weeklyHolidayCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select weekly holiday")));
+                } else if (workingSkillStringList.length == 0) {
+                  scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text("Select working skill")));
                 } else if (moreJobDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter more job description")));
-                } else if (skillCtr.text == "") {
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                      content: Text("Please enter skill requirements")));
                 } else {
+                  String workingSkillString = "";
+                  workingSkillStringList.forEach((f) {
+                    workingSkillString += "$f;";
+                  });
+                  postJob.skillRequirement = workingSkillString;
                   String id = DateTime.now().toIso8601String();
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
@@ -360,8 +387,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                             ),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
                                     "${AppLocalizations.of(context).translate('Job_Type')}:",
@@ -371,34 +397,27 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     style: dataText,
                                     controller: jobTypeCtr,
                                     decoration: InputDecoration(
-                                        hintText:
-                                        AppLocalizations.of(context)
-                                            .translate(
-                                            'Select_Job_Type')),
+                                        hintText: AppLocalizations.of(context)
+                                            .translate('Select_Job_Type')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
-                                      final action =
-                                      CupertinoActionSheet(
+                                      final action = CupertinoActionSheet(
                                         title: Text(
                                           AppLocalizations.of(context)
                                               .translate('Job_Type'),
-                                          style:
-                                          TextStyle(fontSize: 30),
+                                          style: TextStyle(fontSize: 30),
                                         ),
                                         message: Text(
                                           AppLocalizations.of(context)
-                                              .translate(
-                                              'Select_any_option'),
-                                          style:
-                                          TextStyle(fontSize: 15.0),
+                                              .translate('Select_any_option'),
+                                          style: TextStyle(fontSize: 15.0),
                                         ),
                                         actions: jobTypeWidget,
                                         cancelButton:
-                                        CupertinoActionSheetAction(
+                                            CupertinoActionSheetAction(
                                           child: Text(
-                                              AppLocalizations.of(
-                                                  context)
+                                              AppLocalizations.of(context)
                                                   .translate('Cancel')),
                                           onPressed: () {
                                             Navigator.pop(context);
@@ -447,6 +466,55 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                         _selectDate(context);
                                       },
                                       controller: availableInCtr,
+                                      style: dataText,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.timer,
+                              color: Colors.black54,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Available Time:",
+                                    style: titleText,
+                                  ),
+                                  GestureDetector(
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                          hintText: "Select available time"),
+                                      onTap: () {
+                                        if (_date != null) {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          _selectTime(context);
+                                        } else {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          scaffoldKey.currentState.showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      "First select available in")));
+                                        }
+                                      },
+                                      controller: availableTimeCtr,
                                       style: dataText,
                                     ),
                                   )
@@ -655,8 +723,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     controller: accommodationCtr,
                                     decoration: InputDecoration(
                                         hintText: AppLocalizations.of(context)
-                                            .translate(
-                                            'Select_accommodation')),
+                                            .translate('Select_accommodation')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
@@ -673,7 +740,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                         ),
                                         actions: accommodationWidget,
                                         cancelButton:
-                                        CupertinoActionSheetAction(
+                                            CupertinoActionSheetAction(
                                           child: Text(
                                               AppLocalizations.of(context)
                                                   .translate('Cancel')),
@@ -720,7 +787,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     decoration: InputDecoration(
                                         hintText: AppLocalizations.of(context)
                                             .translate(
-                                            'Select_weekly_holiday')),
+                                                'Select_weekly_holiday')),
                                     onTap: () {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
@@ -737,7 +804,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                         ),
                                         actions: weekHolidayWidget,
                                         cancelButton:
-                                        CupertinoActionSheetAction(
+                                            CupertinoActionSheetAction(
                                           child: Text(
                                               AppLocalizations.of(context)
                                                   .translate('Cancel')),
@@ -751,6 +818,34 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                           builder: (context) => action);
                                     },
                                   )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.library_books,
+                              color: Colors.black54,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "${AppLocalizations.of(context).translate('Working_Skill')}:",
+                                    style: titleText,
+                                  ),
+                                  Wrap(children: workingSkillWidget)
                                 ],
                               ),
                             ),
@@ -791,41 +886,6 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              Icons.library_books,
-                              color: Colors.black54,
-                              size: 20,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "Skill Requirements:",
-                                    style: titleText,
-                                  ),
-                                  TextFormField(
-                                    onChanged: (newValue) {
-                                      postJob.skillRequirement = newValue;
-                                    },
-                                    controller: skillCtr,
-                                    style: dataText,
-                                    maxLines: 5,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -842,7 +902,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(Duration(days: 1)),
+      firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 1095)),
     );
     if (picked != null) {
@@ -850,6 +910,22 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
         _date = picked;
         availableInCtr.text = DateFormat.yMMMMEEEEd().format(_date);
         postJob.available = _date;
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        timeOfDay = picked;
+        availableTimeCtr.text = timeOfDay.format(context);
+        final dt = DateTime(_date.year, _date.month, _date.day, timeOfDay.hour,
+            timeOfDay.minute);
+        postJob.availableTime = dt;
       });
     }
   }
@@ -864,5 +940,6 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     listJobTypeData = appLanguage.listJobTypeData;
     listAccommodationData = appLanguage.listAccommodationData;
     listWeekHolidayData = appLanguage.listWeekHolidayData;
+    listWorkSkillData = appLanguage.listWorkSkillData;
   }
 }

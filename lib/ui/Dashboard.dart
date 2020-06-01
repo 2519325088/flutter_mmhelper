@@ -187,7 +187,9 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                               ),
                             ),
                             Text(
-                              " (${(DateTime.now().difference(element.birthday).inDays / 365).round()})",
+                              element.birthday != null
+                                  ? " (${(DateTime.now().difference(element.birthday).inDays / 365).round()})"
+                                  : "(0)",
                               maxLines: 1,
                               style: TextStyle(
                                   fontSize: 15,

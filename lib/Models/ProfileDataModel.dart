@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 ProfileData profileDataFromJson(String str) =>
     ProfileData.fromMap(json.decode(str));
 
@@ -17,6 +19,8 @@ class ProfileData {
   String current;
   String education;
   DateTime employment;
+  DateTime createTime;
+  DateTime updateTime;
   String expectedsalary;
   String firstname;
   String fromAgency;
@@ -47,6 +51,8 @@ class ProfileData {
       this.current,
       this.education,
       this.employment,
+      this.createTime,
+      this.updateTime,
       this.expectedsalary,
       this.firstname,
       this.fromAgency,
@@ -81,6 +87,16 @@ class ProfileData {
         employment: json["employment"] == null
             ? null
             : DateTime.tryParse(json["employment"]),
+        createTime: (!json.containsKey("create_time")) ||
+                (json["create_time"] == null) ||
+                (json["create_time"] == "")
+            ? null
+            : (json["create_time"] as Timestamp).toDate(),
+        updateTime: (!json.containsKey("update_time")) ||
+                (json["update_time"] == null) ||
+                (json["update_time"] == "")
+            ? null
+            : (json["update_time"] as Timestamp).toDate(),
         expectedsalary:
             json["expectedsalary"] == null ? null : json["expectedsalary"],
         firstname: json["firstname"] == null ? null : json["firstname"],
@@ -127,6 +143,8 @@ class ProfileData {
         "employment": employment == null
             ? null
             : "${employment.year.toString().padLeft(4, '0')}-${employment.month.toString().padLeft(2, '0')}-${employment.day.toString().padLeft(2, '0')}",
+        "create_time": createTime == null ? null : createTime,
+        "update_time": updateTime == null ? null : updateTime,
         "expectedsalary": expectedsalary == null ? null : expectedsalary,
         "firstname": firstname == null ? null : firstname,
         "from_agency": fromAgency == null ? null : fromAgency,
