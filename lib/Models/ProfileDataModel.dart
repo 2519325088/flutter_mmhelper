@@ -42,6 +42,8 @@ class ProfileData {
   List<Workexperience> workexperiences;
   String workskill;
   String primaryImage;
+  String approved;
+  String faceBookId;
 
   ProfileData(
       {this.birthday,
@@ -73,13 +75,17 @@ class ProfileData {
       this.workskill,
       this.primaryImage,
       this.countryCodePhone,
-      this.countryCodeWhatsapp});
+      this.countryCodeWhatsapp,
+      this.approved,
+      this.faceBookId});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
         birthday: json["birthday"] == null
             ? null
             : DateTime.tryParse(json["birthday"]),
         children: json["children"] == null ? null : json["children"],
+        approved: json["approved"] == null ? null : json["approved"],
+        faceBookId: json["facebook_id"] == null ? null : json["facebook_id"],
         contract: json["contract"] == null ? null : json["contract"],
         createdBy: json["created_by"] == null ? null : json["created_by"],
         current: json["current"] == null ? null : json["current"],
@@ -136,6 +142,8 @@ class ProfileData {
             ? null
             : "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
         "children": children == null ? null : children,
+        "approved": approved == null ? null : approved,
+        "facebook_id": faceBookId == null ? null : faceBookId,
         "contract": contract == null ? null : contract,
         "created_by": createdBy == null ? null : createdBy,
         "current": current == null ? null : current,
@@ -195,11 +203,11 @@ class Workexperience {
 
   factory Workexperience.fromMap(Map<String, dynamic> json) => Workexperience(
         country: json["country"] == null ? null : json["country"],
-        end: json["end"] == null ? null : DateTime.parse(json["end"]),
+        end: json["end"] == null || json["end"] == '' ? null : DateTime.parse(json["end"]),
         jobtype: json["jobtype"] == null ? null : json["jobtype"],
         reason: json["reason"] == null ? null : json["reason"],
         reterence: json["reterence"] == null ? null : json["reterence"],
-        start: json["start"] == null ? null : DateTime.parse(json["start"]),
+        start: json["start"] == null|| json["start"] == '' ? null : DateTime.parse(json["start"]),
         taken: json["taken"] == null ? null : json["taken"],
       );
 

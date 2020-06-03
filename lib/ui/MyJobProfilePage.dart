@@ -38,6 +38,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   bool isLoading = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController firstNameCtr = TextEditingController();
+  TextEditingController facebookCtr = TextEditingController();
   TextEditingController lastNameCtr = TextEditingController();
   TextEditingController genderCtr = TextEditingController();
   TextEditingController birthDayCtr = TextEditingController();
@@ -142,6 +143,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               DateTime.now().month,
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
+          profileData.approved = onValue.documents[0]["approved"];
+          profileData.createTime = onValue.documents[0]["create_time"];
+          facebookCtr.text = onValue.documents[0]["facebook_id"];
+          profileData.faceBookId = onValue.documents[0]["facebook_id"];
           countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
           countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -404,6 +409,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 DateTime.now().month,
                 TimeOfDay.now().hour,
                 TimeOfDay.now().minute);
+            profileData.approved = "No";
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -622,6 +628,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   void dispose() {
     super.dispose();
     firstNameCtr.dispose();
+    facebookCtr.dispose();
     lastNameCtr.dispose();
     genderCtr.dispose();
     birthDayCtr.dispose();
@@ -1833,6 +1840,46 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                 ),
                                               ),
                                             ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('FacebookId')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.faceBookId = newValue;
+                                            },
+                                            controller: facebookCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Enter_facebook')),
                                           )
                                         ],
                                       ),

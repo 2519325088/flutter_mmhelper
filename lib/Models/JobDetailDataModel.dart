@@ -43,7 +43,7 @@ class JobDetailData {
 
   factory JobDetailData.fromMap(Map<String, dynamic> json) => JobDetailData(
     accommodation: json["accommodation"] == null ? null : json["accommodation"],
-    available: json["available"] == null ? null : DateTime.parse(json["available"]),
+    available: json["available"] == null || json["available"] == '' ? null : DateTime.parse(json["available"]),
     contractType: json["contract_type"] == null ? null : json["contract_type"],
     currencyType: json["currencyType"] == null ? null : json["currencyType"],
     id: json["id"] == null ? null : json["id"],
