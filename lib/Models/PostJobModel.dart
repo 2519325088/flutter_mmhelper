@@ -49,12 +49,13 @@ class PostJob {
         workingLocation:
             json["working_location"] == null ? null : json["working_location"],
         jobType: json["job_type"] == null ? null : json["job_type"],
-        available: json["available"] == null || json["available"] ==''
+        available: json["available"] == null || json["available"] == ''
             ? null
             : DateTime.parse(json["available"]),
-        availableTime: json["available_time"] == null|| json["available_time"]==''
-            ? null
-            : DateTime.parse(json["available_time"]),
+        availableTime:
+            json["available_time"] == null || json["available_time"] == ''
+                ? null
+                : DateTime.parse(json["available_time"]),
         currencyType:
             json["currencyType"] == null ? null : json["currencyType"],
         salary: json["salary"] == null ? null : json["salary"],
