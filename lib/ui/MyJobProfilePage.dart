@@ -90,6 +90,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<DataList> listLangData = [];
   List<DataList> listNationalityData = [];
   List<DataList> listLocationData = [];
+  List<DataList> quitReasonData = [];
+  List<DataList> quitReasonHkData = [];
 
   List<Asset> imagesa = List<Asset>();
   final _service = FirestoreService.instance;
@@ -97,8 +99,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
-  String countryCode;
-  String countryCode2;
+  String countryCode = "+852";
+  String countryCode2 = "+852";
 
   onChangeCode(String newCode) {
     setState(() {
@@ -383,6 +385,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 languageCode: languageCode,
                 dataList: f,
                 onPressedCall: (dataList) {
+                  generateContract();
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
@@ -600,6 +603,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
                   print(dataList.nameId);
+
                   Navigator.pop(context);
                 },
               ),
@@ -609,6 +613,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         }
       });
     });
+  }
+
+  generateContract() {
+    print("call generate");
+    contractWidget = [];
+    if (profileData.current == "Hong Kong") {
+      quitReasonData.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.contract = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    } else {
+      quitReasonHkData.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.contract = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    }
   }
 
   onWorkingExChange(Workexperience workExperience) {
@@ -2360,7 +2400,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                         }));
                                       },
                                       title: Text(
-                                        "Working experience#${index+1}",
+                                        "Working experience#${index + 1}",
 //                                        profileData
 //                                            .workexperiences[index].jobtype,
                                         style: titleText,
@@ -2721,5 +2761,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     listLangData = appLanguage.listLangData;
     listNationalityData = appLanguage.listNationalityData;
     listLocationData = appLanguage.listLocationData;
+    quitReasonData = appLanguage.listQuitReasonData;
+    quitReasonHkData = appLanguage.listQuitReasonHkData;
   }
 }

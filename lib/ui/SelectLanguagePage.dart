@@ -12,7 +12,7 @@ class SelectLanguagePage extends StatefulWidget {
 class _SelectLanguagePageState extends State<SelectLanguagePage> {
   bool isSelectLanguage = false;
   bool isLoading = false;
-  bool english = false;
+  bool english = true;
   bool china = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,6 +37,9 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
     }
   }
 
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
+
   @override
   Widget build(BuildContext context) {
     var appLanguage = Provider.of<AppLanguage>(context);
@@ -46,124 +49,138 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
             body: Stack(
               children: <Widget>[
                 Container(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Select Language",
-                              style: TextStyle(fontSize: 22),
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            FlatButton(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20),
-                                shape: StadiumBorder(),
-                                color: Color(0xffbf9b30),
-                                onPressed: () {
-                                  setState(() {
-                                    china = false;
-                                    english = true;
-                                  });
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                        child: Text(
-                                      "English",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    )),
-                                    Icon(
-                                      Icons.done,
-                                      color: english == true
-                                          ? Colors.white
-                                          : Color(0xffbf9b30),
-                                    )
-                                  ],
-                                )),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            FlatButton(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20),
-                                shape: StadiumBorder(),
-                                color: Color(0xffbf9b30),
-                                onPressed: () {
-                                  setState(() {
-                                    china = true;
-                                    english = false;
-                                  });
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                        child: Text(
-                                      "中文",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    )),
-                                    Icon(
-                                      Icons.done,
-                                      color: china == true
-                                          ? Colors.white
-                                          : Color(0xffbf9b30),
-                                    )
-                                  ],
-                                ))
-                          ],
-                        ),
+                    decoration: BoxDecoration(
+                      gradient: new LinearGradient(
+                        colors: [gradientStart, gradientEnd],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp,
                       ),
-                      FlatButton(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 20),
-                          shape: StadiumBorder(),
-                          color: Colors.pink,
-                          onPressed: () {
-                            if (english == false && china == false) {
-                              scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text("Please select any language")));
-                            } else if (english == true) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              appLanguage.changeLanguage(Locale("en"));
-                              Navigator.pushAndRemoveUntil(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LoginScreen();
-                              }), (Route<dynamic> route) => false);
-                            } else if (china == true) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              appLanguage.changeLanguage(Locale("zh"));
-                              Navigator.pushAndRemoveUntil(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LoginScreen();
-                              }), (Route<dynamic> route) => false);
-                            }
-                          },
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: Text(
-                                "Confirm",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "Select Language 選擇語言",
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                FlatButton(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 20),
+                                    shape: StadiumBorder(),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      setState(() {
+                                        china = false;
+                                        english = true;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                            child: Text(
+                                          "English",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Color(0xffbf9b30)),
+                                        )),
+                                        Icon(
+                                          Icons.done,
+                                          color: english == true
+                                              ? Color(0xffbf9b30)
+                                              : Colors.white,
+                                        )
+                                      ],
+                                    )),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                FlatButton(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 20),
+                                    shape: StadiumBorder(),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      setState(() {
+                                        china = true;
+                                        english = false;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                            child: Text(
+                                          "中文",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Color(0xffbf9b30)),
+                                        )),
+                                        Icon(
+                                          Icons.done,
+                                          color: china == true
+                                              ? Color(0xffbf9b30)
+                                              : Colors.white,
+                                        )
+                                      ],
+                                    ))
+                              ],
+                            ),
+                          ),
+                          FlatButton(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                              shape: StadiumBorder(),
+                              color: Colors.white,
+                              onPressed: () {
+                                if (english == false && china == false) {
+                                  scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Please select any language")));
+                                } else if (english == true) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  appLanguage.changeLanguage(Locale("en"));
+                                  Navigator.pushAndRemoveUntil(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return LoginScreen();
+                                  }), (Route<dynamic> route) => false);
+                                } else if (china == true) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  appLanguage.changeLanguage(Locale("zh"));
+                                  Navigator.pushAndRemoveUntil(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return LoginScreen();
+                                  }), (Route<dynamic> route) => false);
+                                }
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                      child: Text(
+                                    "Confirm",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 18, color: Color(0xffbf9b30)),
+                                  )),
+                                ],
                               )),
-                            ],
-                          )),
-                    ],
-                  ),
-                )
+                        ],
+                      ),
+                    )
 
                     /*ListView(
                     children: <Widget>[
