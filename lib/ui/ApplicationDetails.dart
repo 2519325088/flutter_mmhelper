@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
+import 'package:flutter_mmhelper/ui/ContractFiles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplicationDetails extends StatefulWidget {
@@ -15,6 +16,8 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   SharedPreferences prefs;
+
+  DocumentSnapshot contartSnapshot = null;
 
   List<String> process_status = new List(applications.length);
 
@@ -31,6 +34,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               snapshot.documents.length > 0) {
 //             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
             contractId = snapshot.documents[0]['id'];
+            contartSnapshot = snapshot.documents[0];
             Firestore.instance
                 .collection('mb_contract_status')
                 .where("contract_id", isEqualTo: contractId)
@@ -60,6 +64,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
 
   @override
   void initState() {
+    print(widget.userId);
     super.initState();
     process_status = new List(applications.length);
   }
@@ -123,7 +128,13 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return ContractFiles(contartSnapshot: contartSnapshot,);
+//                                    return ContractFiles();
+                                  }));
+                            },
                             icon: Icon(
                               Icons.account_box,
                               color: Colors.grey,
