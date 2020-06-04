@@ -44,6 +44,9 @@ class ProfileData {
   String primaryImage;
   String approved;
   String faceBookId;
+  String weight;
+  String height;
+  String address;
 
   ProfileData(
       {this.birthday,
@@ -77,7 +80,10 @@ class ProfileData {
       this.countryCodePhone,
       this.countryCodeWhatsapp,
       this.approved,
-      this.faceBookId});
+      this.faceBookId,
+      this.height,
+      this.address,
+      this.weight});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
         birthday: json["birthday"] == null
@@ -106,6 +112,9 @@ class ProfileData {
         expectedsalary:
             json["expectedsalary"] == null ? null : json["expectedsalary"],
         firstname: json["firstname"] == null ? null : json["firstname"],
+        weight: json["weight"] == null ? null : json["weight"],
+        height: json["height"] == null ? null : json["height"],
+        address: json["address"] == null ? null : json["address"],
         fromAgency: json["from_agency"] == null ? null : json["from_agency"],
         gender: json["gender"] == null ? null : json["gender"],
         id: json["id"] == null ? null : json["id"],
@@ -144,6 +153,9 @@ class ProfileData {
         "children": children == null ? null : children,
         "approved": approved == null ? null : approved,
         "facebook_id": faceBookId == null ? null : faceBookId,
+        "weight": weight == null ? null : weight,
+        "height": height == null ? null : height,
+        "address": address == null ? null : address,
         "contract": contract == null ? null : contract,
         "created_by": createdBy == null ? null : createdBy,
         "current": current == null ? null : current,

@@ -58,6 +58,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   TextEditingController expectedSalaryCtr = TextEditingController();
   TextEditingController startDateCtr = TextEditingController();
   TextEditingController selfCtr = TextEditingController();
+  TextEditingController weightCtr = TextEditingController();
+  TextEditingController heightCtr = TextEditingController();
+  TextEditingController addressCtr = TextEditingController();
   DateTime startDate;
   DateTime birthDayDate;
   ProfileData profileData = ProfileData();
@@ -149,6 +152,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           profileData.createTime = onValue.documents[0]["create_time"];
           facebookCtr.text = onValue.documents[0]["facebook_id"];
           profileData.faceBookId = onValue.documents[0]["facebook_id"];
+
+          weightCtr.text = onValue.documents[0]["weight"];
+          profileData.weight = onValue.documents[0]["weight"];
+          heightCtr.text = onValue.documents[0]["height"];
+          profileData.height = onValue.documents[0]["height"];
+          addressCtr.text = onValue.documents[0]["address"];
+          profileData.address = onValue.documents[0]["address"];
+
           countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
           countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -689,6 +700,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     startDateCtr.dispose();
     selfCtr.dispose();
     scrollController.dispose();
+    weightCtr.dispose();
+    heightCtr.dispose();
+    addressCtr.dispose();
   }
 
   //  sumbit image
@@ -1105,6 +1119,92 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   context: context,
                                                   builder: (context) => action);
                                             },
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('weight')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.weight = newValue;
+                                            },
+                                            keyboardType: TextInputType
+                                                .numberWithOptions(
+                                                signed: false,
+                                                decimal: true),
+                                            controller: weightCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('weight')),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('height')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.height = newValue;
+                                            },
+                                            keyboardType: TextInputType
+                                                .numberWithOptions(
+                                                signed: false,
+                                                decimal: true),
+                                            controller: heightCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('height')),
                                           )
                                         ],
                                       ),
@@ -1880,6 +1980,45 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                 ),
                                               ),
                                             ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('address')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.address = newValue;
+                                            },
+                                            controller: addressCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('address')),
                                           )
                                         ],
                                       ),
