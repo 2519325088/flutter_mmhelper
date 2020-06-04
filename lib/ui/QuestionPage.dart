@@ -400,14 +400,56 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                             answerController.text;
                                       },
                                     ))
-                              : Center(
-                                  child: Text(
-                                  "Answer completed!",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )))
+                              : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Answer completed!",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Thank you for the registration, your profile is currently under reviewed and will be posted within 2 business days.",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Good luck!",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Gud lak sa ‘yo!",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Semoga Sukses!",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ))
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

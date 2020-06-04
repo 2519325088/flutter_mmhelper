@@ -2360,8 +2360,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                         }));
                                       },
                                       title: Text(
-                                        profileData
-                                            .workexperiences[index].jobtype,
+                                        "Working experience#${index+1}",
+//                                        profileData
+//                                            .workexperiences[index].jobtype,
                                         style: titleText,
                                       ),
                                       trailing: IconButton(
