@@ -1,26 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_filereader/flutter_filereader.dart';
+//import 'package:flutter_filereader/flutter_filereader.dart';
+import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_plugin.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FileReaderPage extends StatefulWidget {
-//  final String filePath;
-//
-//  FileReaderPage({Key: Key, this.filePath});
-
   @override
   _FileReaderPageState createState() => _FileReaderPageState();
+  String filePath;
+
+  FileReaderPage({Key: Key, this.filePath});
 }
 
 class _FileReaderPageState extends State<FileReaderPage> {
+  String pathPDF = "";
+  int indexlast;
+
+  @override
+  void initState() {
+    indexlast = widget.filePath.indexOf(".pdf?");
+    super.initState();
+    createFileOfPdfUrl().then((f) {
+      setState(() {
+        pathPDF = f.path;
+        print("this is  filepath: ${pathPDF}");
+      });
+    });
+  }
+
+  Future<File> createFileOfPdfUrl() async {
+    final url = widget.filePath;
+    final filename = url.substring(url.lastIndexOf("/") + 1);
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/$filename');
+    await file.writeAsBytes(bytes);
+    print("this is name:$filename");
+    return file;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("doc"),
       ),
-      body: FileReaderView(
-//        filePath: widget.filePath,
-      filePath: "https://firebasestorage.googleapis.com/v0/b/poetic-dreamer-254105.appspot.com/o/contract%2F2020-05-08T08%3A34%3A20.462606%2F04-%E8%81%8C%E4%B8%9A%E7%A4%BC%E4%BB%AA%E6%A6%82%E8%BF%B0.docx?alt=media&token=96f844dc-2c85-4571-8464-6efa3f0c4a6e",
+      body: indexlast != -1?Center(
+        child: RaisedButton(
+          child: Text("Open PDF"),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PDFScreen(pathPDF)),
+          ),
+        ),
+      ):Container(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            child:Image.network(
+              widget.filePath,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
       ),
     );
+  }
+}
+
+class PDFScreen extends StatelessWidget {
+  String pathPDF = "";
+  PDFScreen(this.pathPDF);
+
+  @override
+  Widget build(BuildContext context) {
+    return PDFViewerScaffold(
+        appBar: AppBar(
+          title: Text("Document"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        path: pathPDF);
   }
 }

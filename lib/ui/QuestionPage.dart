@@ -233,6 +233,19 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          color: gradientStart,
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: (){
+            if(questionIndex>-1){
+              questionIndex -=1;
+              setState(() {});
+            }
+          }
+        ),
         backgroundColor: gradientStart,
         title: Text(
           "Question",
@@ -427,7 +440,37 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 ),
                               ],
                             ),
-                    ),
+                    ),questionIndex<questionlist.length && questionIndex>-1?Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FlatButton(
+                            onPressed: () {
+                              questionIndex -= 1;
+                              setState(() {});
+                              print(questionIndex);
+                              print(questionlist);
+                              print(resfullist);
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10))),
+                            color: gradientStart,
+                            child: Text(
+                              'upper',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Text(""),
                     questionIndex < questionlist.length
                         ? Container(
                             child: Padding(
@@ -459,7 +502,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 ),
                               ),
                             ),
-                          )
+                    )
                         : Container(
                             padding: const EdgeInsets.only(top: 20),
                             child: Padding(
