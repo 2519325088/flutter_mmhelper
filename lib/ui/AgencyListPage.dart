@@ -61,28 +61,28 @@ class _AgencyListpageState extends State<AgencyListpage> {
     var aa = double.parse(agencySnapshot["score"]);
     var price = "";
     var type="";
-    if(widget.nationality=="Philippines" && (widget.contract =="Terminated" || widget.contract =="Break")){
+    if(widget.nationality=="Philippines" && widget.contract =="Terminated / Break"){
       price = agencySnapshot["pricing"]["Philipino"]["Terminated"];
       type = "Terminated";
     }else if(widget.nationality=="Philippines" && (widget.contract =="Ex-HK" || widget.contract =="Ex-Overseas" || widget.contract =="First Time Overseas")){
       price = agencySnapshot["pricing"]["Philipino"]["Overseas"];
       type = "Overseas";
-    }else if(widget.nationality=="Philippines" && widget.contract =="Finished"){
+    }else if(widget.nationality=="Philippines" && widget.contract =="Finish Contract"){
       price = agencySnapshot["pricing"]["Philipino"]["Finished"];
       type = "Finished";
-    }else if(widget.nationality=="Philippines" && widget.contract =="Employed"){
+    }else if(widget.nationality=="Philippines" && widget.contract =="Finish Contract with Special Reason"){
       price = agencySnapshot["pricing"]["Philipino"]["FCSR"];
       type = "FCSR";
-    }else if (widget.nationality=="Indonesia" && (widget.contract =="Terminated" || widget.contract =="Break")){
+    }else if (widget.nationality=="Indonesia" && widget.contract =="Terminated / Break"){
       price = agencySnapshot["pricing"]["Indonesian"]["Terminated"];
       type = "Terminated";
     }else if(widget.nationality=="Indonesia" && (widget.contract =="Ex-HK" || widget.contract =="Ex-Overseas" || widget.contract =="First Time Overseas")){
       price = agencySnapshot["pricing"]["Indonesian"]["Overseas"];
       type = "Overseas";
-    }else if(widget.nationality=="Indonesia" && widget.contract =="Finished"){
+    }else if(widget.nationality=="Indonesia" && widget.contract =="Finish Contract"){
       price = agencySnapshot["pricing"]["Indonesian"]["Finished"];
       type = "Finished";
-    }else if(widget.nationality=="Indonesia" && widget.contract =="Employed"){
+    }else if(widget.nationality=="Indonesia" && widget.contract =="Finish Contract with Special Reason"){
       price = agencySnapshot["pricing"]["Indonesian"]["FCSR"];
       type = "FCSR";
     }else{

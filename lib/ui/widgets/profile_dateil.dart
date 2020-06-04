@@ -611,86 +611,86 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         ),
                       ),
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.chat_bubble,
-                                  size: 20,
-                                  color: Colors.black.withOpacity(0.7),
-                                ),
-                                Text(
-                                  " ${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black.withOpacity(0.7),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 10),
-                                child: Text(
-                                  /*widget.proSnapshot['whatsapp'] !=
-                                                "+85263433995"
-                                            ? widget.proSnapshot['whatsapp']
-                                            : "",*/
-                                  widget.profileData.whatsapp ?? "",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.phone,
-                                  size: 20,
-                                  color: Colors.black.withOpacity(0.7),
-                                ),
-                                Text(
-                                  " ${AppLocalizations.of(context).translate('Phone_number')}:",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black.withOpacity(0.7),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 10),
-                                child: Text(
-                                  /*widget.proSnapshot['phone'] !=
-                                                "+85263433995"
-                                            ? widget.proSnapshot['phone']
-                                            : "",*/
-                                  widget.profileData.phone ?? "",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ),
+//                    Container(
+//                      child: Padding(
+//                        padding: const EdgeInsets.all(10),
+//                        child: Column(
+//                          crossAxisAlignment: CrossAxisAlignment.start,
+//                          children: <Widget>[
+//                            Row(
+//                              children: <Widget>[
+//                                Icon(
+//                                  Icons.chat_bubble,
+//                                  size: 20,
+//                                  color: Colors.black.withOpacity(0.7),
+//                                ),
+//                                Text(
+//                                  " ${AppLocalizations.of(context).translate('Whatsapp_Number')}:",
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                    color: Colors.black.withOpacity(0.7),
+//                                    fontWeight: FontWeight.bold,
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            Padding(
+//                                padding:
+//                                    const EdgeInsets.only(left: 20, top: 10),
+//                                child: Text(
+//                                  /*widget.proSnapshot['whatsapp'] !=
+//                                                "+85263433995"
+//                                            ? widget.proSnapshot['whatsapp']
+//                                            : "",*/
+//                                  widget.profileData.whatsapp ?? "",
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                  ),
+//                                ))
+//                          ],
+//                        ),
+//                      ),
+//                    ),
+//                    Container(
+//                      child: Padding(
+//                        padding: const EdgeInsets.all(10),
+//                        child: Column(
+//                          crossAxisAlignment: CrossAxisAlignment.start,
+//                          children: <Widget>[
+//                            Row(
+//                              children: <Widget>[
+//                                Icon(
+//                                  Icons.phone,
+//                                  size: 20,
+//                                  color: Colors.black.withOpacity(0.7),
+//                                ),
+//                                Text(
+//                                  " ${AppLocalizations.of(context).translate('Phone_number')}:",
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                    color: Colors.black.withOpacity(0.7),
+//                                    fontWeight: FontWeight.bold,
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            Padding(
+//                                padding:
+//                                    const EdgeInsets.only(left: 20, top: 10),
+//                                child: Text(
+//                                  /*widget.proSnapshot['phone'] !=
+//                                                "+85263433995"
+//                                            ? widget.proSnapshot['phone']
+//                                            : "",*/
+//                                  widget.profileData.phone ?? "",
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                  ),
+//                                ))
+//                          ],
+//                        ),
+//                      ),
+//                    ),
                   ],
                 ),
               ),
