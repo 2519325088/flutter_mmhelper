@@ -934,7 +934,6 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   void didInitState() {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
-
     var appLanguage = Provider.of<DataListService>(context);
     listContractData = appLanguage.listContractData;
     listJobTypeData = appLanguage.listJobTypeData;

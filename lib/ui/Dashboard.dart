@@ -116,7 +116,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   Widget GridCardWidget(ProfileData element) {
-    print('${element.firstname + " " + element.lastname}');
+    print(element.workskill);
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {

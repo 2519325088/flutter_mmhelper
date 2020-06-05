@@ -42,6 +42,11 @@ class ProfileData {
   List<Workexperience> workexperiences;
   String workskill;
   String primaryImage;
+  String approved;
+  String faceBookId;
+  String weight;
+  String height;
+  String address;
 
   ProfileData(
       {this.birthday,
@@ -73,13 +78,20 @@ class ProfileData {
       this.workskill,
       this.primaryImage,
       this.countryCodePhone,
-      this.countryCodeWhatsapp});
+      this.countryCodeWhatsapp,
+      this.approved,
+      this.faceBookId,
+      this.height,
+      this.address,
+      this.weight});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
         birthday: json["birthday"] == null
             ? null
             : DateTime.tryParse(json["birthday"]),
         children: json["children"] == null ? null : json["children"],
+        approved: json["approved"] == null ? null : json["approved"],
+        faceBookId: json["facebook_id"] == null ? null : json["facebook_id"],
         contract: json["contract"] == null ? null : json["contract"],
         createdBy: json["created_by"] == null ? null : json["created_by"],
         current: json["current"] == null ? null : json["current"],
@@ -100,6 +112,9 @@ class ProfileData {
         expectedsalary:
             json["expectedsalary"] == null ? null : json["expectedsalary"],
         firstname: json["firstname"] == null ? null : json["firstname"],
+        weight: json["weight"] == null ? null : json["weight"],
+        height: json["height"] == null ? null : json["height"],
+        address: json["address"] == null ? null : json["address"],
         fromAgency: json["from_agency"] == null ? null : json["from_agency"],
         gender: json["gender"] == null ? null : json["gender"],
         id: json["id"] == null ? null : json["id"],
@@ -136,6 +151,11 @@ class ProfileData {
             ? null
             : "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
         "children": children == null ? null : children,
+        "approved": approved == null ? null : approved,
+        "facebook_id": faceBookId == null ? null : faceBookId,
+        "weight": weight == null ? null : weight,
+        "height": height == null ? null : height,
+        "address": address == null ? null : address,
         "contract": contract == null ? null : contract,
         "created_by": createdBy == null ? null : createdBy,
         "current": current == null ? null : current,
@@ -195,11 +215,11 @@ class Workexperience {
 
   factory Workexperience.fromMap(Map<String, dynamic> json) => Workexperience(
         country: json["country"] == null ? null : json["country"],
-        end: json["end"] == null ? null : DateTime.parse(json["end"]),
+        end: json["end"] == null || json["end"] == '' ? null : DateTime.parse(json["end"]),
         jobtype: json["jobtype"] == null ? null : json["jobtype"],
         reason: json["reason"] == null ? null : json["reason"],
         reterence: json["reterence"] == null ? null : json["reterence"],
-        start: json["start"] == null ? null : DateTime.parse(json["start"]),
+        start: json["start"] == null|| json["start"] == '' ? null : DateTime.parse(json["start"]),
         taken: json["taken"] == null ? null : json["taken"],
       );
 

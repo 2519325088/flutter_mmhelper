@@ -15,6 +15,7 @@
   "Upload": "Upload",
   "LastName": "Last Name",
   "FirstName": "First Name",
+  "FacebookId": "Facebook Id",
   "UserName": "User Name",
   "Role": "Role",
   "Select_any_option": "Select any option ",
@@ -42,7 +43,7 @@
   "Language": "Language",
   "Expected_Salary_HKD": "Expected Salary(HKD)",
   "Employement_Start_Date": "Employement Start Date",
-  "Enter_first_name": "Enter first name",
+  "Enter_facebook": "Enter facebook Id",
   "Enter_last_name": "Enter last name",
   "Select_Gender": "Select Gender",
   "Select_Birthday": "Select Birthday",
@@ -135,5 +136,12 @@
   "Quit_Reason": "Quit Reason",
   "Reterence_Letter": "Reterence Letter",
   "No_Work_Experiences": "No Work Experiences",
-  "Clear_All": "ClearAll"
+  "Clear_All": "ClearAll",
+  "confirmText": "By registering I confirm I have read and accepted Search4maid",
+  "Privacy": " Privacy Policy",
+  "Terms": " Terms and Conditions",
+  "confirmError": "Please agree with Privacy Policy & Terms and Conditions.",
+  "weight": "Weight",
+  "height": "Height",
+  "address": "Address"
 }

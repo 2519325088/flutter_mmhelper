@@ -135,5 +135,12 @@
   "Quit_Reason": "Quit Reason",
   "Reterence_Letter": "Reterence Letter",
   "No_Work_Experiences": "No Work Experiences",
-  "Clear_All": "ClearAll"
+  "Clear_All": "ClearAll",
+  "confirmText": "By registering I confirm I have read and accepted Search4maid",
+  "Privacy": " Privacy Policy",
+  "Terms": " Terms and Conditions",
+  "confirmError": "Please agree with Privacy Policy & Terms and Conditions.",
+  "weight": "Weight",
+  "height": "Height",
+  "address": "Address"
 }

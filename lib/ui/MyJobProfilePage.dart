@@ -38,6 +38,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   bool isLoading = false;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController firstNameCtr = TextEditingController();
+  TextEditingController facebookCtr = TextEditingController();
   TextEditingController lastNameCtr = TextEditingController();
   TextEditingController genderCtr = TextEditingController();
   TextEditingController birthDayCtr = TextEditingController();
@@ -57,6 +58,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   TextEditingController expectedSalaryCtr = TextEditingController();
   TextEditingController startDateCtr = TextEditingController();
   TextEditingController selfCtr = TextEditingController();
+  TextEditingController weightCtr = TextEditingController();
+  TextEditingController heightCtr = TextEditingController();
+  TextEditingController addressCtr = TextEditingController();
   DateTime startDate;
   DateTime birthDayDate;
   ProfileData profileData = ProfileData();
@@ -89,6 +93,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   List<DataList> listLangData = [];
   List<DataList> listNationalityData = [];
   List<DataList> listLocationData = [];
+  List<DataList> quitReasonData = [];
+  List<DataList> quitReasonHkData = [];
 
   List<Asset> imagesa = List<Asset>();
   final _service = FirestoreService.instance;
@@ -96,8 +102,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
-  String countryCode;
-  String countryCode2;
+  String countryCode = "+852";
+  String countryCode2 = "+852";
 
   onChangeCode(String newCode) {
     setState(() {
@@ -142,6 +148,18 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               DateTime.now().month,
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
+          profileData.approved = onValue.documents[0]["approved"];
+          profileData.createTime = onValue.documents[0]["create_time"];
+          facebookCtr.text = onValue.documents[0]["facebook_id"];
+          profileData.faceBookId = onValue.documents[0]["facebook_id"];
+
+          weightCtr.text = onValue.documents[0]["weight"];
+          profileData.weight = onValue.documents[0]["weight"];
+          heightCtr.text = onValue.documents[0]["height"];
+          profileData.height = onValue.documents[0]["height"];
+          addressCtr.text = onValue.documents[0]["address"];
+          profileData.address = onValue.documents[0]["address"];
+
           countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
           countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
@@ -378,6 +396,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 languageCode: languageCode,
                 dataList: f,
                 onPressedCall: (dataList) {
+                  generateContract();
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
@@ -404,6 +423,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 DateTime.now().month,
                 TimeOfDay.now().hour,
                 TimeOfDay.now().minute);
+            profileData.approved = "No";
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -594,6 +614,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
                   print(dataList.nameId);
+
                   Navigator.pop(context);
                 },
               ),
@@ -603,6 +624,42 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         }
       });
     });
+  }
+
+  generateContract() {
+    print("call generate");
+    contractWidget = [];
+    if (profileData.current == "Hong Kong") {
+      quitReasonData.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.contract = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    } else {
+      quitReasonHkData.forEach((f) {
+        contractWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              contractCtr.text = dataList.getValueByLanguageCode(languageCode);
+              profileData.contract = dataList.nameId;
+              print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
+    }
   }
 
   onWorkingExChange(Workexperience workExperience) {
@@ -622,6 +679,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   void dispose() {
     super.dispose();
     firstNameCtr.dispose();
+    facebookCtr.dispose();
     lastNameCtr.dispose();
     genderCtr.dispose();
     birthDayCtr.dispose();
@@ -642,6 +700,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     startDateCtr.dispose();
     selfCtr.dispose();
     scrollController.dispose();
+    weightCtr.dispose();
+    heightCtr.dispose();
+    addressCtr.dispose();
   }
 
   //  sumbit image
@@ -1058,6 +1119,92 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                   context: context,
                                                   builder: (context) => action);
                                             },
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('weight')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.weight = newValue;
+                                            },
+                                            keyboardType: TextInputType
+                                                .numberWithOptions(
+                                                signed: false,
+                                                decimal: true),
+                                            controller: weightCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('weight')),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('height')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.height = newValue;
+                                            },
+                                            keyboardType: TextInputType
+                                                .numberWithOptions(
+                                                signed: false,
+                                                decimal: true),
+                                            controller: heightCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('height')),
                                           )
                                         ],
                                       ),
@@ -1842,6 +1989,85 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                 SizedBox(
                                   height: 20,
                                 ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('address')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.address = newValue;
+                                            },
+                                            controller: addressCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('address')),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('FacebookId')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.faceBookId = newValue;
+                                            },
+                                            controller: facebookCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'Enter_facebook')),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
                               ],
                             ),
                           ),
@@ -2313,7 +2539,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                         }));
                                       },
                                       title: Text(
-                                        "Working experience#${index+1}",
+                                        "Working experience#${index + 1}",
 //                                        profileData
 //                                            .workexperiences[index].jobtype,
                                         style: titleText,
@@ -2674,5 +2900,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     listLangData = appLanguage.listLangData;
     listNationalityData = appLanguage.listNationalityData;
     listLocationData = appLanguage.listLocationData;
+    quitReasonData = appLanguage.listQuitReasonData;
+    quitReasonHkData = appLanguage.listQuitReasonHkData;
   }
 }
