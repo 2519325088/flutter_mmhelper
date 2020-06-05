@@ -61,6 +61,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   TextEditingController weightCtr = TextEditingController();
   TextEditingController heightCtr = TextEditingController();
   TextEditingController addressCtr = TextEditingController();
+  TextEditingController userNameCtr = TextEditingController();
   DateTime startDate;
   DateTime birthDayDate;
   ProfileData profileData = ProfileData();
@@ -164,6 +165,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
           profileData.firstname = onValue.documents[0]["firstname"];
+
+          userNameCtr.text = onValue.documents[0]["username"];
+          profileData.userName = onValue.documents[0]["username"];
+
           lastNameCtr.text = onValue.documents[0]["lastname"];
           profileData.lastname = onValue.documents[0]["lastname"];
           genderCtr.text = onValue.documents[0]["gender"];
@@ -424,6 +429,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 TimeOfDay.now().hour,
                 TimeOfDay.now().minute);
             profileData.approved = "No";
+            userNameCtr.text =  widget.loginUserData.documents[0]["username"];
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -703,6 +709,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     weightCtr.dispose();
     heightCtr.dispose();
     addressCtr.dispose();
+    userNameCtr.dispose();
   }
 
   //  sumbit image
@@ -732,7 +739,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               icon: Icon(Icons.done),
               onPressed: () {
                 if (isLoading == false) {
-                  if (firstNameCtr.text == "") {
+                  if (userNameCtr.text == "") {
+                    scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('Please_enter_username'))));
+                  }
+                 else if (firstNameCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_firstname'))));
@@ -939,6 +951,46 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                             padding: const EdgeInsets.all(12),
                             child: Column(
                               children: <Widget>[
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.black54,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "${AppLocalizations.of(context).translate('UserName')}:",
+                                            style: titleText,
+                                          ),
+                                          TextFormField(
+                                            onChanged: (newValue) {
+                                              profileData.userName = newValue;
+                                            },
+                                            controller: userNameCtr,
+                                            style: dataText,
+                                            decoration: InputDecoration(
+                                                hintText: AppLocalizations.of(
+                                                    context)
+                                                    .translate(
+                                                    'UserName')),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[

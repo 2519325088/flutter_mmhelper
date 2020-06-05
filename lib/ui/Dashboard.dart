@@ -177,7 +177,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                           children: <Widget>[
                             Flexible(
                               child: Text(
-                                element.firstname + " " + element.lastname,
+                                element.userName ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -379,27 +379,30 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             SizedBox(
               height: 10,
             ),*/
-            FloatingActionButton(
-              heroTag: null,
-              onPressed: () {
-                if (querySnapshot != null) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MyJobProfilePage(
-                      userId: querySnapshot.documents[0]["userId"],
-                      loginUserData: querySnapshot,
-                    );
-                  }));
-                } else {
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text(
-                        AppLocalizations.of(context).translate('Please_wait')),
-                    duration: Duration(seconds: 2),
-                  ));
-                }
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
+            widget.querySnapshot.documents[0]["role"] != "Employer"
+                ? FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () {
+                      if (querySnapshot != null) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MyJobProfilePage(
+                            userId: querySnapshot.documents[0]["userId"],
+                            loginUserData: querySnapshot,
+                          );
+                        }));
+                      } else {
+                        scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .translate('Please_wait')),
+                          duration: Duration(seconds: 2),
+                        ));
+                      }
+                    },
+                    child: Icon(Icons.add),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  )
+                : SizedBox()
           ],
         ),
         /*appBar: AppBar(

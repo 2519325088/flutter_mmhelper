@@ -66,6 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
   String imageUrl;
   SharedPreferences prefs;
   String lastName;
+  String firstName;
   String languageCode;
 
   String role;
@@ -671,17 +672,22 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
-                                  controller: lastnameController,
                                   onChanged: (data) {
-                                    usernameController.text =
-                                        data.toLowerCase();
-                                    lastName = data.toLowerCase();
+                                    if (lastName == null) {
+                                      usernameController.text =
+                                          data.toLowerCase();
+                                    } else {
+                                      usernameController.text =
+                                          data.toLowerCase() + lastName;
+                                    }
+                                    firstName = data.toLowerCase();
                                   },
+                                  controller: firstnameController,
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
                                       hintText: AppLocalizations.of(context)
-                                          .translate('LastName'),
+                                          .translate('FirstName'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -705,16 +711,17 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: TextFormField(
+                                  controller: lastnameController,
                                   onChanged: (data) {
                                     usernameController.text =
-                                        lastName + data.toLowerCase();
+                                        firstName + data.toLowerCase();
+                                    lastName = data.toLowerCase();
                                   },
-                                  controller: firstnameController,
                                   cursorColor: Theme.of(context).accentColor,
                                   decoration: InputDecoration(
                                       prefixIcon: Icon(Icons.account_circle),
                                       hintText: AppLocalizations.of(context)
-                                          .translate('FirstName'),
+                                          .translate('LastName'),
                                       border: InputBorder.none),
                                 ),
                               ),
@@ -1135,7 +1142,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                               ),
                             )),
                             shape: RoundedRectangleBorder(),
-                            color: Colors.pink.withOpacity(0.7),
+                            color: Color(0xFFbf9b30),
                           ),
                         ),
                       )

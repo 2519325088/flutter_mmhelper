@@ -86,15 +86,18 @@ class _MainPageState extends State<MainPage>
 
   getCurrentUserId() async {
     /*if (widget.isFromLogin) {*/
-      isMeLoading = true;
-      querySnapshot = await Firestore.instance
-          .collection("mb_content")
-          .where("phone", isEqualTo: widget.mobileNo)
-          .getDocuments();
-      currentUserId = querySnapshot.documents[0].data["userId"];
-      prefs = await SharedPreferences.getInstance();
-      prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+    isMeLoading = true;
+    querySnapshot = await Firestore.instance
+        .collection("mb_content")
+        .where("phone", isEqualTo: widget.mobileNo)
+        .getDocuments();
+    currentUserId = querySnapshot.documents[0].data["userId"];
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString("loginUid", querySnapshot.documents[0].data["userId"]);
+    setState(() {
       isMeLoading = false;
+    });
+
     /*} else {
       prefs = await SharedPreferences.getInstance();
       currentUserId = prefs.getString('loginUid');
@@ -111,6 +114,7 @@ class _MainPageState extends State<MainPage>
       ),
       JobPage(
         currentUserId: currentUserId,
+        querySnapshot: querySnapshot,
       ),
       ChatUserPage(
         mobileNo: widget.mobileNo,
@@ -175,7 +179,13 @@ class _MainPageState extends State<MainPage>
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
       ),
-      body: widgetOptions.elementAt(selectedIndex),
+      body: isMeLoading == false
+          ? widgetOptions.elementAt(selectedIndex)
+          : Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
       /*body: IndexedStack(
         index: selectedIndex,
         children: widgetOptions,
