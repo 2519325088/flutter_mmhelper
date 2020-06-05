@@ -68,7 +68,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         .where('created_by', isEqualTo:widget.userId)
         .getDocuments()
         .then((snapshot) {
-      contartSnapshot = snapshot.documents[0];;
+      contartSnapshot = snapshot.documents[0];
     });
   }
   @override

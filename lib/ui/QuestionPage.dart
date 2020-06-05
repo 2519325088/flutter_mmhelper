@@ -339,59 +339,59 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                           border: InputBorder.none),
                                       onFieldSubmitted: (String value) {
                                         print(questionIndex);
-                                        String datenow =
-                                            DateTime.now().toIso8601String();
-                                        resfullist[questionIndex].answer =
-                                            answerController.text;
-                                        if (questionIndex <
-                                            questionlist.length) {
-                                          setState(() {
-                                            resfullist[questionIndex].answer =
-                                                value;
-                                            // questVlue[questionIndex] = value;
-                                          });
-
-                                          var questionresult;
-                                          var documentId;
-                                          if ((questionIndex <
-                                                  resfullist.length &&
-                                              resfullist[questionIndex]
-                                                      .documentId !=
-                                                  null)) {
-                                            documentId =
-                                                resfullist[questionIndex]
-                                                    .documentId;
-                                            print(
-                                                'documentID :${resfullist[questionIndex].documentId}}');
-                                            questionresult =
-                                                QuestionResultContext(
-                                              ID: resfullist[questionIndex]
-                                                  .documentId,
-                                              answer: resfullist[questionIndex]
-                                                  .answer,
-                                              profile_id: widget.profileid,
-                                              question_id:
-                                                  questionlist[questionIndex]
-                                                      ["ID"],
-                                            );
-                                          } else {
-                                            documentId = datenow;
-                                            questionresult =
-                                                QuestionResultContext(
-                                              ID: datenow,
-                                              answer: resfullist[questionIndex]
-                                                  .answer,
-                                              profile_id: widget.profileid,
-                                              question_id:
-                                                  questionlist[questionIndex]
-                                                      ["ID"],
-                                            );
-                                          }
-                                          _service.setData(
-                                              path: APIPath.newQuestionResult(
-                                                  documentId),
-                                              data: questionresult.toMap());
-                                        }
+//                                        String datenow =
+//                                            DateTime.now().toIso8601String();
+//                                        resfullist[questionIndex].answer =
+//                                            answerController.text;
+//                                        if (questionIndex <
+//                                            questionlist.length) {
+//                                          setState(() {
+//                                            resfullist[questionIndex].answer =
+//                                                value;
+//                                            // questVlue[questionIndex] = value;
+//                                          });
+//
+//                                          var questionresult;
+//                                          var documentId;
+//                                          if ((questionIndex <
+//                                                  resfullist.length &&
+//                                              resfullist[questionIndex]
+//                                                      .documentId !=
+//                                                  null)) {
+//                                            documentId =
+//                                                resfullist[questionIndex]
+//                                                    .documentId;
+//                                            print(
+//                                                'documentID :${resfullist[questionIndex].documentId}}');
+//                                            questionresult =
+//                                                QuestionResultContext(
+//                                              ID: resfullist[questionIndex]
+//                                                  .documentId,
+//                                              answer: resfullist[questionIndex]
+//                                                  .answer,
+//                                              profile_id: widget.profileid,
+//                                              question_id:
+//                                                  questionlist[questionIndex]
+//                                                      ["ID"],
+//                                            );
+//                                          } else {
+//                                            documentId = datenow;
+//                                            questionresult =
+//                                                QuestionResultContext(
+//                                              ID: datenow,
+//                                              answer: resfullist[questionIndex]
+//                                                  .answer,
+//                                              profile_id: widget.profileid,
+//                                              question_id:
+//                                                  questionlist[questionIndex]
+//                                                      ["ID"],
+//                                            );
+//                                          }
+//                                          _service.setData(
+//                                              path: APIPath.newQuestionResult(
+//                                                  documentId),
+//                                              data: questionresult.toMap());
+//                                        }
                                       },
                                       onEditingComplete: () {
                                         FocusScope.of(context)
@@ -523,11 +523,64 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 height: 50,
                                 child: FlatButton(
                                   onPressed: () {
+                                    if(questionIndex>-1 && questionlist[questionIndex]["type"] == "text"){
+                                      String datenow =
+                                            DateTime.now().toIso8601String();
+                                        resfullist[questionIndex].answer =
+                                            answerController.text;
+                                        if (questionIndex <
+                                            questionlist.length) {
+                                          setState(() {
+                                            resfullist[questionIndex].answer =
+                                                answerController.text;
+                                            // questVlue[questionIndex] = value;
+                                          });
+
+                                          var questionresult;
+                                          var documentId;
+                                          if ((questionIndex <
+                                                  resfullist.length &&
+                                              resfullist[questionIndex]
+                                                      .documentId !=
+                                                  null)) {
+                                            documentId =
+                                                resfullist[questionIndex]
+                                                    .documentId;
+                                            print(
+                                                'documentID :${resfullist[questionIndex].documentId}}');
+                                            questionresult =
+                                                QuestionResultContext(
+                                              ID: resfullist[questionIndex]
+                                                  .documentId,
+                                              answer: resfullist[questionIndex]
+                                                  .answer,
+                                              profile_id: widget.profileid,
+                                              question_id:
+                                                  questionlist[questionIndex]
+                                                      ["ID"],
+                                            );
+                                          } else {
+                                            documentId = datenow;
+                                            questionresult =
+                                                QuestionResultContext(
+                                              ID: datenow,
+                                              answer: resfullist[questionIndex]
+                                                  .answer,
+                                              profile_id: widget.profileid,
+                                              question_id:
+                                                  questionlist[questionIndex]
+                                                      ["ID"],
+                                            );
+                                          }
+                                          _service.setData(
+                                              path: APIPath.newQuestionResult(
+                                                  documentId),
+                                              data: questionresult.toMap());
+                                        }
+                                    }
                                     questionIndex += 1;
                                     setState(() {});
-                                    print(questionIndex);
-                                    print(questionlist);
-                                    print(resfullist);
+
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
