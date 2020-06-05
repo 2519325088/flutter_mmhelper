@@ -45,10 +45,13 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return FileReaderPage(filePath: widget.contartSnapshot["doc_1"]);
-                    }));
+                    print(widget.contartSnapshot["doc_1"]);
+                    if(widget.contartSnapshot["doc_1"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_1"]);
+                      }));
+                    }
                   },
                   child: Text(
                     "1. Passport",
@@ -64,10 +67,13 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_2"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_2"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_2"],);
+                      }));
+                    };
+
                   },
                   child: Text(
                     "2. Employer Bank in receipt",
@@ -83,10 +89,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_3"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_3"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_3"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "3. Standard Services Agreement",
@@ -102,10 +110,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_4"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_4"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_4"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "4. Maid received of the Service Agreemnt and Job offer",
@@ -121,10 +131,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_5"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_5"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_5"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "5. Employer received of SA",
@@ -140,10 +152,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_6"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_6"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_6"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "6. Employer - Hong Kong Identity Card (HKID)",
@@ -159,10 +173,13 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_7"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_7"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_7"],);
+                      }));
+                    }
+
                   },
                   child: Text(
                     "7. the latest 3 months address (Utility bills)",
@@ -178,10 +195,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_8"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_8"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_8"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "8. the latest Tax Demand Note or last 3 months auto-payment of Salary Statement or Fixed Deposit",
@@ -197,10 +216,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_9"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_9"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_9"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "9. Complete list and information of household members. (Full name, year of birth, relationship and HKIC no.)",
@@ -216,10 +237,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_10"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_10"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_10"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "10. Other supporting documents that may need",
@@ -235,10 +258,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_11"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_11"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_11"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "11. Hong Kong Identity Card (HKID) of all previous and existing helper",
@@ -254,10 +279,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_12"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_12"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_12"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "12. Notarized Employment Contract of all previous and existing helper.",
@@ -273,10 +300,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_13"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_13"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_13"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "13. Released or Termination Letter (ID407E) of all previous helper.",
@@ -292,10 +321,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_14"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_14"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_14"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "14. Maid - Photocopy of Passport (with at least 1 year validity)",
@@ -311,10 +342,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_15"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_15"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_15"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "15. Maid - Original copy of Certificate of Employment for 2 years working as domestic helper",
@@ -330,10 +363,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_16"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_16"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_16"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "16. Maid - Photocopy of Hong Kong Identity Card (HKID)",
@@ -349,10 +384,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_17"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_17"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_17"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "17. Maid - Photocopy of previous Notarized Hong Kong Employment Contract (ID407)",
@@ -368,10 +405,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_18"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_18"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_18"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "18. Maid - Photocopy of duly signed Termination or Release Letter (ID407E)",
@@ -387,10 +426,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_19"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_19"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_19"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "19. Maid - Other supporting documents that may need",
@@ -406,10 +447,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_20"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_20"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_20"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "20. Pick up checklist",
@@ -425,10 +468,12 @@ class _ContractFilesState extends State<ContractFiles> {
               child: Container(
                 child:GestureDetector(
                   onTap:(){
-//                    Navigator.of(context)
-//                        .push(MaterialPageRoute(builder: (context) {
-//                      return FileReaderPage(filePath: widget.contartSnapshot["doc_21"],);
-//                    }));
+                    if(widget.contartSnapshot["doc_21"]!=""){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return FileReaderPage(filePath: widget.contartSnapshot["doc_21"],);
+                      }));
+                    }
                   },
                   child: Text(
                     "21. Maid - Old Passport",

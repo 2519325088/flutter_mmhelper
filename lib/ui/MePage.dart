@@ -10,6 +10,7 @@ import 'package:flutter_mmhelper/ui/LoginScreen.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
 import 'package:flutter_mmhelper/ui/ApplicationDetails.dart';
+import 'package:flutter_mmhelper/ui/SoundRecording.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -311,6 +312,7 @@ class _MePageState extends State<MePage> {
                     onTap: (){
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
+//                            return SoundRecording();
                         return ApplicationDetails(userId:widget.querySnapshot.documents[0]
                         ["userId"] ,);
                       }));

@@ -21,7 +21,9 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
 
   List<String> process_status = new List(applications.length);
 
+
   void getstatus(String title, int index) {
+    print(widget.userId);
     String contractId = "";
 //    SharedPreferences.getInstance().then((prefs) {
     Firestore.instance
@@ -34,7 +36,6 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               snapshot.documents.length > 0) {
 //             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
             contractId = snapshot.documents[0]['id'];
-            contartSnapshot = snapshot.documents[0];
             Firestore.instance
                 .collection('mb_contract_status')
                 .where("contract_id", isEqualTo: contractId)
@@ -47,7 +48,6 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       snapshot.documents.length > 0) {
         //            snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
                     process_status[index] = snapshot.documents[0]["process_status"];
-                    print(process_status[index]);
                     setState(() {});
                   } else {
                     process_status[index] = 'N/A';
@@ -62,10 +62,19 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
 //    });
   }
 
+  Future  gitdocument() async{
+    await Firestore.instance
+        .collection('mb_contract')
+        .where('created_by', isEqualTo:widget.userId)
+        .getDocuments()
+        .then((snapshot) {
+      contartSnapshot = snapshot.documents[0];;
+    });
+  }
   @override
   void initState() {
-    print(widget.userId);
     super.initState();
+    gitdocument ();
     process_status = new List(applications.length);
   }
 
