@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
 
   @override
   void didInitState() {
-
     getPhoneUserId().then((phoneUserId) {
       if (phoneUserId != null) {
         getUserPhone().then((phoneNumber) {
@@ -130,6 +129,7 @@ class _LoginScreenState extends State<LoginScreen> with AfterInitMixin {
       final PhoneVerificationFailed verificationFailed =
           (AuthException authException) {
         setState(() {
+          isLoading = false;
           _message =
               'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
         });
