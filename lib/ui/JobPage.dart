@@ -152,7 +152,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                     return PostJobPage(
                       currentUserId: widget.currentUserId,
                     );
-                  }));
+                  })).then((value) => madeGridList());
                 },
                 child: Icon(Icons.add),
                 backgroundColor: Theme.of(context).primaryColor,
