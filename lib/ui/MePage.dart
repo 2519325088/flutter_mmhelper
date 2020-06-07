@@ -63,7 +63,7 @@ class _MePageState extends State<MePage> {
               final database = Provider.of<FirestoreDatabase>(context);
               database.lastUserId = null;
               prefs = await SharedPreferences.getInstance();
-              prefs.clear();
+              prefs.remove("PhoneUserId");
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
                 return LoginScreen();
