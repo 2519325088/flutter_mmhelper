@@ -47,6 +47,7 @@ class ProfileData {
   String weight;
   String height;
   String address;
+  String userName;
 
   ProfileData(
       {this.birthday,
@@ -83,7 +84,8 @@ class ProfileData {
       this.faceBookId,
       this.height,
       this.address,
-      this.weight});
+      this.weight,
+      this.userName});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
         birthday: json["birthday"] == null
@@ -115,6 +117,7 @@ class ProfileData {
         weight: json["weight"] == null ? null : json["weight"],
         height: json["height"] == null ? null : json["height"],
         address: json["address"] == null ? null : json["address"],
+        userName: json["username"] == null ? null : json["username"],
         fromAgency: json["from_agency"] == null ? null : json["from_agency"],
         gender: json["gender"] == null ? null : json["gender"],
         id: json["id"] == null ? null : json["id"],
@@ -156,6 +159,7 @@ class ProfileData {
         "weight": weight == null ? null : weight,
         "height": height == null ? null : height,
         "address": address == null ? null : address,
+        "username": userName == null ? null : userName,
         "contract": contract == null ? null : contract,
         "created_by": createdBy == null ? null : createdBy,
         "current": current == null ? null : current,
@@ -215,11 +219,15 @@ class Workexperience {
 
   factory Workexperience.fromMap(Map<String, dynamic> json) => Workexperience(
         country: json["country"] == null ? null : json["country"],
-        end: json["end"] == null || json["end"] == '' ? null : DateTime.parse(json["end"]),
+        end: json["end"] == null || json["end"] == ''
+            ? null
+            : DateTime.parse(json["end"]),
         jobtype: json["jobtype"] == null ? null : json["jobtype"],
         reason: json["reason"] == null ? null : json["reason"],
         reterence: json["reterence"] == null ? null : json["reterence"],
-        start: json["start"] == null|| json["start"] == '' ? null : DateTime.parse(json["start"]),
+        start: json["start"] == null || json["start"] == ''
+            ? null
+            : DateTime.parse(json["start"]),
         taken: json["taken"] == null ? null : json["taken"],
       );
 

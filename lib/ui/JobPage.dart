@@ -14,8 +14,9 @@ class JobPage extends StatefulWidget {
   @override
   _JobPageState createState() => _JobPageState();
   final String currentUserId;
+  QuerySnapshot querySnapshot;
 
-  JobPage({this.currentUserId});
+  JobPage({this.currentUserId, this.querySnapshot});
 }
 
 class _JobPageState extends State<JobPage> with AfterInitMixin {
@@ -142,18 +143,21 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                 }),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: null,
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return PostJobPage(
-                currentUserId: widget.currentUserId,
-              );
-            }));
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
+        floatingActionButton: widget.querySnapshot.documents[0]["role"] ==
+                "Employer"
+            ? FloatingActionButton(
+                heroTag: null,
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PostJobPage(
+                      currentUserId: widget.currentUserId,
+                    );
+                  }));
+                },
+                child: Icon(Icons.add),
+                backgroundColor: Theme.of(context).primaryColor,
+              )
+            : SizedBox(),
         body: isLoading == false
             ? gridListData.length != 0
                 ? ListView(
