@@ -1,10 +1,15 @@
 import 'package:after_init/after_init.dart';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/QuestionResultModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class QuestionPage extends StatefulWidget {
   @override
@@ -21,6 +26,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
   int questionIndex = -1;
+  File locProFileImage;
   List questionlist = [];
   List<QuestionResultContext> resfullist = [];
 
@@ -34,6 +40,124 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
       getQuestions(f);
     });*/
     getQuestionsAnswersData();
+  }
+
+  _showItemDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        titlePadding: EdgeInsets.all(0.0),
+        title: Container(
+            color: Theme.of(context).accentColor,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Upload_Image',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            )),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    getImage(1);
+                    Navigator.of(context).pop();
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.camera_alt,
+                        size: 50,
+                      ),
+                      Text('Camera'),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    getImage(2);
+                    Navigator.of(context).pop();
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.image,
+                        size: 50,
+                      ),
+                      Text('Gallery'),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future getImage(int imageSelect) async {
+    final dir = await path_provider.getTemporaryDirectory();
+    if (imageSelect == 1) {
+      var image = await ImagePicker.pickImage(source: ImageSource.camera);
+      if (image != null) {
+        File imageFile = await FlutterImageCompress.compressAndGetFile(
+          image.absolute.path,
+          "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch.toString()}.jpg",
+          quality: 50,
+        );
+        setState(() {
+          locProFileImage = imageFile;
+          uploadFile();
+        });
+      }
+    } else if (imageSelect == 2) {
+      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        File imageFile = await FlutterImageCompress.compressAndGetFile(
+          image.absolute.path,
+          "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch.toString()}.jpg",
+          quality: 50,
+        );
+        setState(() {
+          locProFileImage = imageFile;
+          uploadFile();
+        });
+      }
+    }
+  }
+
+  Future uploadFile() async {
+    if (locProFileImage != null) {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      StorageReference reference =
+      FirebaseStorage.instance.ref().child(fileName);
+      StorageUploadTask uploadTask = reference.putFile(locProFileImage);
+      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+      print(storageTaskSnapshot.totalByteCount);
+      storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+        resfullist[questionIndex].answer = downloadUrl;
+      });
+    }
   }
 
   Future<void> getQuestionsAnswersData() async {
@@ -315,7 +439,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                       questionIndex,
                                       questionlist[questionIndex]["options"],
                                       questionlist[questionIndex]["ID"])
-                                  : TextFormField(
+                                  : (questionlist[questionIndex]["type"] == "text"?TextFormField(
 //                        scrollPadding:EdgeInsets.zero,
                                       controller: answerController,
                                       cursorColor:
@@ -399,7 +523,12 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                         resfullist[questionIndex].answer =
                                             answerController.text;
                                       },
-                                    ))
+                                    ):(resfullist[questionIndex].answer!="" && resfullist[questionIndex].answer!=null?Image.network(
+                                      resfullist[questionIndex].answer,
+                                      fit: BoxFit.cover,
+                                    ):Text(""))
+                        )
+                      )
                               : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -482,7 +611,36 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 ),
                               ],
                             ),
-                    ),questionIndex<questionlist.length && questionIndex>-1?Container(
+                    ),
+                    questionIndex!=-1 && questionIndex<questionlist.length?(questionlist[questionIndex]["type"] == "img"?Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          child: FlatButton(
+                            onPressed: () {
+                              _showItemDialog();
+                              setState(() {});
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10))),
+                            color: gradientStart,
+                            child: Text(
+                              'UpImage',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Text("")):Text(""),
+                    questionIndex<questionlist.length && questionIndex>-1?Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
@@ -502,7 +660,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                     Radius.circular(10))),
                             color: gradientStart,
                             child: Text(
-                              'upper',
+                              'Upper',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 22,
@@ -577,6 +735,52 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                                   documentId),
                                               data: questionresult.toMap());
                                         }
+                                    }else if(questionIndex>-1 && questionlist[questionIndex]["type"] == "img"){
+                                      String datenow =
+                                      DateTime.now().toIso8601String();
+                                      if (questionIndex <
+                                          questionlist.length) {
+                                        var questionresult;
+                                        var documentId;
+                                        if ((questionIndex <
+                                            resfullist.length &&
+                                            resfullist[questionIndex]
+                                                .documentId !=
+                                                null)) {
+                                          documentId =
+                                              resfullist[questionIndex]
+                                                  .documentId;
+                                          print(
+                                              'documentID :${resfullist[questionIndex].documentId}}');
+                                          questionresult =
+                                              QuestionResultContext(
+                                                ID: resfullist[questionIndex]
+                                                    .documentId,
+                                                answer: resfullist[questionIndex]
+                                                    .answer,
+                                                profile_id: widget.profileid,
+                                                question_id:
+                                                questionlist[questionIndex]
+                                                ["ID"],
+                                              );
+                                        } else {
+                                          documentId = datenow;
+                                          questionresult =
+                                              QuestionResultContext(
+                                                ID: datenow,
+                                                answer: resfullist[questionIndex]
+                                                    .answer,
+                                                profile_id: widget.profileid,
+                                                question_id:
+                                                questionlist[questionIndex]
+                                                ["ID"],
+                                              );
+                                        }
+                                        _service.setData(
+                                            path: APIPath.newQuestionResult(
+                                                documentId),
+                                            data: questionresult.toMap());
+                                      }
                                     }
                                     questionIndex += 1;
                                     setState(() {});
