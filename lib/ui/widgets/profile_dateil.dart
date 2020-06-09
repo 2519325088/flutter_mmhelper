@@ -258,6 +258,49 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         ),
                       ),
                     ),
+//                    Container(
+//                      child: Padding(
+//                        padding: const EdgeInsets.all(10),
+//                        child: Column(
+//                          crossAxisAlignment: CrossAxisAlignment.start,
+//                          children: <Widget>[
+//                            Row(
+//                              children: <Widget>[
+//                                Icon(
+//                                  Icons.flag,
+//                                  size: 20,
+//                                  color: Colors.black.withOpacity(0.7),
+//                                ),
+//                                Text(
+//                                  " ${AppLocalizations.of(context).translate('UserName')}:",
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                    color: Colors.black.withOpacity(0.7),
+//                                    fontWeight: FontWeight.bold,
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            Padding(
+//                                padding:
+//                                const EdgeInsets.only(left: 20, top: 10),
+//                                child: Text(
+//                                  /*widget.proSnapshot['nationaity'] !=
+//                                      "Select"
+//                                      ? widget.proSnapshot['nationaity']
+//                                      : "",*/
+//                                  dataListService.getNationalityValue(
+//                                      languageCode: widget.languageCode,
+//                                      nationality:
+//                                      widget.profileData.username ?? ""),
+//                                  style: TextStyle(
+//                                    fontSize: 18,
+//                                  ),
+//                                ))
+//                          ],
+//                        ),
+//                      ),
+//                    ),
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -372,6 +415,92 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       languageCode: widget.languageCode,
                                       nationality:
                                           widget.profileData.nationality ?? ""),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.flag,
+                                  size: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                Text(
+                                  " ${AppLocalizations.of(context).translate('weight')}:",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, top: 10),
+                                child: Text(
+                                  /*widget.proSnapshot['nationaity'] !=
+                                      "Select"
+                                      ? widget.proSnapshot['nationaity']
+                                      : "",*/
+                                  dataListService.getNationalityValue(
+                                      languageCode: widget.languageCode,
+                                      nationality:
+                                      widget.profileData.weight ?? ""),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.flag,
+                                  size: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                Text(
+                                  " ${AppLocalizations.of(context).translate('height')}:",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, top: 10),
+                                child: Text(
+                                  /*widget.proSnapshot['nationaity'] !=
+                                      "Select"
+                                      ? widget.proSnapshot['nationaity']
+                                      : "",*/
+                                  dataListService.getNationalityValue(
+                                      languageCode: widget.languageCode,
+                                      nationality:
+                                      widget.profileData.height ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -603,6 +732,49 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                       languageCode: widget.languageCode,
                                       location:
                                           widget.profileData.current ?? ""),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.edit_location,
+                                  size: 20,
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                Text(
+                                  " ${AppLocalizations.of(context).translate('address')}:",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                                padding:
+                                const EdgeInsets.only(left: 20, top: 10),
+                                child: Text(
+                                  /* widget.proSnapshot['current'] !=
+                                                "Select"
+                                            ? widget.proSnapshot['current']
+                                            : "",*/
+                                  dataListService.getCurrentLocationValue(
+                                      languageCode: widget.languageCode,
+                                      location:
+                                      widget.profileData.address ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
