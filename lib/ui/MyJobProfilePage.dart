@@ -147,6 +147,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           profileData.updateTime = DateTime(
               DateTime.now().year,
               DateTime.now().month,
+              DateTime.now().day,
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
           profileData.approved = onValue.documents[0]["approved"];
@@ -426,8 +427,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             profileData.createTime = DateTime(
                 DateTime.now().year,
                 DateTime.now().month,
+                DateTime.now().day,
                 TimeOfDay.now().hour,
                 TimeOfDay.now().minute);
+            print(profileData.createTime);
             profileData.approved = "No";
             userNameCtr.text =  widget.loginUserData.documents[0]["username"];
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
