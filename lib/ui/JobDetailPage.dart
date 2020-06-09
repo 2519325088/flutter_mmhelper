@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/ChatPage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'widgets/CustomPopup.dart';
 
 class JobDetailPage extends StatefulWidget {
   @override
@@ -12,8 +15,15 @@ class JobDetailPage extends StatefulWidget {
   JobDetailData jobDetailData;
   FlContent userData;
   String currentUser;
+  bool isAvailable;
+  QuerySnapshot userSnapshot;
 
-  JobDetailPage({this.jobDetailData, this.userData, this.currentUser});
+  JobDetailPage(
+      {this.jobDetailData,
+      this.userData,
+      this.currentUser,
+      this.isAvailable,
+      this.userSnapshot});
 }
 
 class _JobDetailPageState extends State<JobDetailPage> {
@@ -30,6 +40,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
   TextEditingController accommodationCtr = TextEditingController();
   TextEditingController weeklyHolidayCtr = TextEditingController();
   bool isLoginUser = true;
+  bool isShowAlert = true;
   SharedPreferences prefs;
 
   @override
@@ -97,6 +108,54 @@ class _JobDetailPageState extends State<JobDetailPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              isShowAlert
+                  ? Stack(
+                      children: [
+                        Card(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Users shall not request any pre-paid money for hiring. Stay alert of online spam.",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.red),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                            alignment: Alignment.topRight,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isShowAlert = false;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    shape: BoxShape.circle),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                    size: 15,
+                                  ),
+                                ),
+                              ),
+                            ))
+                      ],
+                    )
+                  : SizedBox(),
               Card(
                 child: Column(
                   children: <Widget>[
@@ -145,15 +204,45 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     ),
                     widget.userData.id != widget.currentUser
                         ? GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ChatPage(
-                                    peerId: widget.userData.id,
-                                    peerAvatar: widget.userData.profileImageUrl,
-                                    peerName:
-                                        "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-                              }));
+                            onTap: () async {
+                              if (widget.isAvailable) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ChatPage(
+                                      peerId: widget.userData.id,
+                                      peerAvatar:
+                                          widget.userData.profileImageUrl,
+                                      peerName:
+                                          "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                                }));
+                              } else {
+                                if (widget.userSnapshot.documents[0]["role"] !=
+                                    "Employer") {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ChatPage(
+                                        peerId: widget.userData.id,
+                                        peerAvatar:
+                                            widget.userData.profileImageUrl,
+                                        peerName:
+                                            "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                                  }));
+                                } else {
+                                  await showDialog<String>(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (BuildContext context) {
+                                        return CustomPopup(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          title: "Want to contact the helper?",
+                                          message:
+                                              "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
+                                        );
+                                      });
+                                }
+                              }
                             },
                             child: Container(
                               height: 40,
@@ -196,7 +285,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       jobDataField(
                           titleText: titleText,
                           dataText: dataText,
-                          title: "Job Type",
+                          title: "Preferred Contract Status",
                           filedCtr: contractTypeCtr,
                           icons: Icons.perm_contact_calendar,
                           maxLine: 3),

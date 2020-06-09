@@ -142,5 +142,9 @@
   "confirmError": "Please agree with Privacy Policy & Terms and Conditions.",
   "weight": "Weight",
   "height": "Height",
-  "address": "Address"
+  "address": "Address",
+  "kg": "kg",
+  "cm": "cm",
+  "Preferred_Language": "Preferred Language",
+  "myJobPosts": "My Job Posts"
 }

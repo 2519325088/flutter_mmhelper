@@ -1229,7 +1229,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('weight')),
+                                                        .translate('weight'),suffixText: AppLocalizations.of(context).translate('kg')),
                                           )
                                         ],
                                       ),
@@ -1272,7 +1272,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('height')),
+                                                        .translate('height'),suffixText: AppLocalizations.of(context).translate('cm')),
                                           )
                                         ],
                                       ),

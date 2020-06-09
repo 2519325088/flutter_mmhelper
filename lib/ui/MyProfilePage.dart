@@ -21,18 +21,12 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
-  TextEditingController jobShortDesCtr = TextEditingController();
   TextEditingController firstNameCtr = TextEditingController();
-  TextEditingController availableInCtr = TextEditingController();
+  TextEditingController emailCtr = TextEditingController();
   TextEditingController mobileCtr = TextEditingController();
-  TextEditingController unitSizeCtr = TextEditingController();
-  TextEditingController moreJobDesCtr = TextEditingController();
-  TextEditingController skillCtr = TextEditingController();
   TextEditingController userNameCtr = TextEditingController();
   TextEditingController lastNameCtr = TextEditingController();
-  TextEditingController currencyTypeCtr = TextEditingController();
-  TextEditingController accommodationCtr = TextEditingController();
-  TextEditingController weeklyHolidayCtr = TextEditingController();
+
   File locProFileImage;
   String imageUrl;
   final _service = FirestoreService.instance;
@@ -49,24 +43,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
     firstNameCtr.text = widget.myProfileDocumentSnapshot["firstname"];
     lastNameCtr.text = widget.myProfileDocumentSnapshot["lastname"];
     mobileCtr.text = widget.myProfileDocumentSnapshot["phone"];
+    emailCtr.text = widget.myProfileDocumentSnapshot["email"];
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    jobShortDesCtr.dispose();
+
     firstNameCtr.dispose();
-    availableInCtr.dispose();
     mobileCtr.dispose();
-    unitSizeCtr.dispose();
-    moreJobDesCtr.dispose();
-    skillCtr.dispose();
+    emailCtr.dispose();
     userNameCtr.dispose();
     lastNameCtr.dispose();
-    currencyTypeCtr.dispose();
-    accommodationCtr.dispose();
-    weeklyHolidayCtr.dispose();
   }
 
   Future getImage(int imageSelect) async {
@@ -449,14 +438,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         children: <Widget>[
-                          jobDataField(
-                              titleText: titleText,
-                              dataText: dataText,
-                              title: AppLocalizations.of(context)
-                                  .translate('UserName'),
-                              filedCtr: userNameCtr,
-                              icons: Icons.perm_contact_calendar,
-                              maxLine: 1),
+                          IgnorePointer(
+                            ignoring: true,
+                            child: jobDataField(
+                                titleText: titleText,
+                                dataText: dataText,
+                                title: AppLocalizations.of(context)
+                                    .translate('UserName'),
+                                filedCtr: userNameCtr,
+                                icons: Icons.perm_contact_calendar,
+                                maxLine: 1),
+                          ),
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,
@@ -473,6 +465,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               filedCtr: lastNameCtr,
                               icons: Icons.perm_contact_calendar,
                               maxLine: 1),
+                          IgnorePointer(
+                            ignoring: true,
+                            child: jobDataField(
+                                titleText: titleText,
+                                dataText: dataText,
+                                title: AppLocalizations.of(context)
+                                    .translate('Email'),
+                                filedCtr: emailCtr,
+                                icons: Icons.email,
+                                maxLine: 1),
+                          ),
                           jobDataField(
                               titleText: titleText,
                               dataText: dataText,

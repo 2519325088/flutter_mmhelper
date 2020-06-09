@@ -11,16 +11,16 @@ import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
 import 'package:provider/provider.dart';
 
-class JobPage extends StatefulWidget {
+class MyJobListPage extends StatefulWidget {
   @override
-  _JobPageState createState() => _JobPageState();
+  _MyJobListPageState createState() => _MyJobListPageState();
   final String currentUserId;
   QuerySnapshot querySnapshot;
 
-  JobPage({this.currentUserId, this.querySnapshot});
+  MyJobListPage({this.currentUserId, this.querySnapshot});
 }
 
-class _JobPageState extends State<JobPage> with AfterInitMixin {
+class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
   List<Widget> gridListData = [];
   List<JobDetailData> listJobData = [];
   bool isLoading = true;
@@ -70,8 +70,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                   userData: user,
                   jobDetailData: jobElement,
                   userName: user.username,
-                  currentUser: widget.currentUserId,
-                  userSnapshot: widget.querySnapshot));
+                  currentUser: widget.currentUserId));
             }
           });
           if (newGridSearchListData.length <= i) {
@@ -99,13 +98,14 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           i++;
           userDataList.forEach((user) {
             if (jobElement.userId == user.userId) {
-              listJobData.add(jobElement);
-              gridListData.add(jobCard(
-                  userData: user,
-                  jobDetailData: jobElement,
-                  userName: user.username,
-                  currentUser: widget.currentUserId,
-                  userSnapshot: widget.querySnapshot));
+              if (jobElement.userId == widget.currentUserId) {
+                listJobData.add(jobElement);
+                gridListData.add(jobCard(
+                    userData: user,
+                    jobDetailData: jobElement,
+                    userName: user.username,
+                    currentUser: widget.currentUserId));
+              }
             }
             if (jobElement.userId == widget.currentUserId) {
               isAvailable = true;
@@ -131,7 +131,9 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('Job')),
+        title: Text(
+          AppLocalizations.of(context).translate('myJobPosts'),
+        ),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
@@ -187,7 +189,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
       String userName,
       String currentUser,
       DocumentSnapshot jobSnapshot,
-      QuerySnapshot userSnapshot}) {
+      DocumentSnapshot userSnapshot}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -236,7 +238,6 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                     userData: userData,
                     currentUser: currentUser,
                     isAvailable: isAvailable,
-                    userSnapshot: userSnapshot,
                   );
                 }));
               },

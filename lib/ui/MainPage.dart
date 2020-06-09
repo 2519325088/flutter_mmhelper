@@ -122,6 +122,7 @@ class _MainPageState extends State<MainPage>
       ),
       MePage(
         querySnapshot: querySnapshot,
+         currentUserId: currentUserId,
       ),
     ];
 
