@@ -660,7 +660,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                     Radius.circular(10))),
                             color: gradientStart,
                             child: Text(
-                              'Upper',
+                              'Previous',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 22,
