@@ -151,6 +151,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
           profileData.approved = onValue.documents[0]["approved"];
+          profileData.status = onValue.documents[0]["status"];
           profileData.createTime =
               (!onValue.documents[0].data.containsKey("create_time")) ||
                       (onValue.documents[0]["create_time"] == null) ||
@@ -444,6 +445,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 TimeOfDay.now().minute);
             print(profileData.createTime);
             profileData.approved = "No";
+            profileData.status = "pending";
             userNameCtr.text = widget.loginUserData.documents[0]["username"];
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
