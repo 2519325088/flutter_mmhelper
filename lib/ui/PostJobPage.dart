@@ -69,6 +69,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   List<DataList> listLangData = [];
   List<Widget> referenceWidget = [];
   List<String> languageStringList = [];
+  List<String> contractStringList = [];
+  List<String> weekHolidayStringList = [];
   TimeOfDay timeOfDay;
 
   @override
@@ -93,7 +95,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
         });
       });
       listContractData.forEach((f) {
-        contractWidget.add(
+        /*contractWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
@@ -105,7 +107,17 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
               Navigator.pop(context);
             },
           ),
-        );
+        );*/
+
+        contractWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: contractStringList,
+          isSelected: false,
+        ));
+        contractWidget.add(SizedBox(
+          width: 5,
+        ));
       });
 
       listJobTypeData.forEach((f) {
@@ -140,7 +152,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
       });
 
       listWeekHolidayData.forEach((f) {
-        weekHolidayWidget.add(
+        /*weekHolidayWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
@@ -152,7 +164,16 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
               Navigator.pop(context);
             },
           ),
-        );
+        );*/
+        weekHolidayWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: weekHolidayStringList,
+          isSelected: false,
+        ));
+        weekHolidayWidget.add(SizedBox(
+          width: 5,
+        ));
       });
 
       listLangData.forEach((f) {
@@ -223,7 +244,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                 if (jobShortDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter job short description")));
-                } else if (contractTypeCtr.text == "") {
+                } else if (contractStringList.length == 0) {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select contract type")));
                 } else if (languageStringList.length == 0) {
@@ -257,7 +278,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                 } else if (accommodationCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select accommodation")));
-                } else if (weeklyHolidayCtr.text == "") {
+                } else if (weekHolidayStringList.length == 0) {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select weekly holiday")));
                 } else if (workingSkillStringList.length == 0) {
@@ -269,14 +290,25 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                 } else {
                   String workingSkillString = "";
                   String preferredLangString = "";
+                  String contractString = "";
+                  String weekHolidayString = "";
                   workingSkillStringList.forEach((f) {
                     workingSkillString += "$f;";
                   });
                   languageStringList.forEach((f) {
                     preferredLangString += "$f;";
                   });
+                  contractStringList.forEach((f) {
+                    contractString += "$f;";
+                  });
+                  weekHolidayStringList.forEach((f) {
+                    weekHolidayString += "$f;";
+                  });
                   postJob.skillRequirement = workingSkillString;
                   postJob.preferredLang = preferredLangString;
+                  postJob.contractType = contractString;
+                  postJob.weeklyHoliday = weekHolidayString;
+
                   String id = DateTime.now().toIso8601String();
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
@@ -355,7 +387,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     "${AppLocalizations.of(context).translate('Contract_Status')}:",
                                     style: titleText,
                                   ),
-                                  TextFormField(
+                                  Wrap(children: contractWidget)
+                                  /*TextFormField(
                                     style: dataText,
                                     controller: contractTypeCtr,
                                     decoration: InputDecoration(
@@ -391,7 +424,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                           context: context,
                                           builder: (context) => action);
                                     },
-                                  )
+                                  )*/
                                 ],
                               ),
                             ),
@@ -927,7 +960,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     "${AppLocalizations.of(context).translate('weekly_holiday')}:",
                                     style: titleText,
                                   ),
-                                  TextFormField(
+                                  Wrap(children: weekHolidayWidget)
+                                  /*TextFormField(
                                     style: dataText,
                                     controller: weeklyHolidayCtr,
                                     decoration: InputDecoration(
@@ -963,7 +997,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                           context: context,
                                           builder: (context) => action);
                                     },
-                                  )
+                                  )*/
                                 ],
                               ),
                             ),
