@@ -58,7 +58,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
 
   Widget agenxyCard(
       {DocumentSnapshot agencySnapshot,}) {
-    var aa = double.parse(agencySnapshot["score"]);
+    var aa = double.parse((agencySnapshot["score"]!="" && agencySnapshot["score"]!=null)? agencySnapshot["score"]:"1");
     var price = "";
     var type="";
     if(widget.nationality=="Philippines" && widget.contract =="Terminated / Break"){
