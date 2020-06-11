@@ -10,6 +10,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class QuestionPage extends StatefulWidget {
   @override
@@ -28,6 +30,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   int questionIndex = -1;
   File locProFileImage;
   List questionlist = [];
+  bool isConfirm = false;
   List<QuestionResultContext> resfullist = [];
 
   //List questVlue = [];
@@ -575,6 +578,66 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                               style: TextStyle(
                                 fontSize: 18,
                               ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    value: isConfirm,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        isConfirm = newValue;
+                                      });
+                                    }),
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black87),
+                                      text: "I consent to Search4maid using my personal data to for direct marketing activities refer to",
+                                      children: [
+                                        TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                          text: " Privacy Policy",
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              if (await canLaunch(
+                                                  "https://www.search4maid.com/privacy.html")) {
+                                                await launch(
+                                                    "https://www.search4maid.com/privacy.html");
+                                              } else {
+                                                throw 'Could not launch https://www.search4maid.com/privacy.html';
+                                              }
+                                            },
+                                        ),
+                                        TextSpan(text: " &"),
+                                        TextSpan(
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                            text: " Terms and Conditions",
+                                            recognizer: new TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                if (await canLaunch(
+                                                    "https://www.search4maid.com/terms.html")) {
+                                                  await launch(
+                                                      "https://www.search4maid.com/terms.html");
+                                                } else {
+                                                  throw 'Could not launch https://www.search4maid.com/terms.html';
+                                                }
+                                              }),
+                                        TextSpan(
+                                            text:". It may include direct marketing from Serach4maid or our business partners."
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

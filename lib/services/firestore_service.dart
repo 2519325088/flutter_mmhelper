@@ -15,7 +15,7 @@ class FirestoreService {
   Future<void> addData({String path, Map<String, dynamic> data}) async {
     final reference = Firestore.instance.collection(path);
     print('$path: $data');
-    await reference.add(data); //i think this is error
+    await reference.add(data); //i think this is errorzz
   }
 
   Stream<List<T>> collectionStream<T>({

@@ -22,6 +22,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
   Color gradientEnd = Color(0xffe7d981);
   DataListService dataListService;
 
+
   @override
   Widget build(BuildContext context) {
     dataListService = Provider.of<DataListService>(context);
@@ -151,6 +152,62 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       ),
                     ),
                   ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: (){
+                          },
+                          icon: Icon(
+                            Icons.star,
+                            color: Colors.grey,
+                          ),
+                          iconSize: 30,
+                        ),
+                        GestureDetector(
+                          onTap: (){},
+                          child: Text(
+                            "Favourite",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: (){},
+                          icon: Icon(
+                            Icons.chat,
+                            color: gradientStart,
+                          ),
+                          iconSize: 30,
+                        ),
+                        GestureDetector(
+                          onTap: (){},
+                          child: Text(
+                            "Chat",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
                 ),
               ),
             ),
