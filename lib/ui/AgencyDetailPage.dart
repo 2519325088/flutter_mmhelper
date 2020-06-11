@@ -37,12 +37,29 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       created_by: prefs.getString("PhoneUserId"),
       current_status: "",
       employer_id: prefs.getString("PhoneUserId"),
-      id: datenow,
+      id: "",
       img_receipt: "",
       profile_id: widget.proId,
     );
-    _service.setData(path: APIPath.newContract(datenow),
-        data: procontext.toMap());
+    Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data){
+      print("this is ${data.documentID}");
+//      _service.setData(path: APIPath.newContract(data.documentID),
+//        data: procontext.toMap());
+//      List datalist= ["Submitted",
+//        "Paid",
+//        "Preparing",
+//        "Documents ready",
+//        "Processing of working visa",
+//        "Working Visa Active ",
+//        "Arrival in HK",];
+//      for(int i =0 ;i<7;i++){
+//        Firestore.instance.collection("mb_contract_status").add(procontext.toMap()).then((data){
+//          print("this is ${data.documentID}");
+//        });
+//        }
+    });
+//    _service.setData(path: APIPath.newContract(),
+//        data: procontext.toMap());
 //        Navigator.of(context)
 //            .push(MaterialPageRoute(builder: (context) {
 //          return LoginScreen();
