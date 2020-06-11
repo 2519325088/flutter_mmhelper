@@ -11,8 +11,11 @@ class PostJob {
   String contractType;
   String workingLocation;
   String jobType;
+  String preferredLang;
+  String workWithMaid;
   DateTime available;
-  DateTime availableTime;
+
+  //DateTime availableTime;
   String currencyType;
   String salary;
   String unitSize;
@@ -36,11 +39,17 @@ class PostJob {
       this.weeklyHoliday,
       this.moreDescription,
       this.skillRequirement,
-      this.availableTime});
+      this.preferredLang,
+      this.workWithMaid
+      //this.availableTime
+      });
 
   factory PostJob.fromMap(Map<String, dynamic> json) => PostJob(
         id: json["id"] == null ? null : json["id"],
         userId: json["user_id"] == null ? null : json["user_id"],
+        workWithMaid: json["workWithMaid"] == null ? null : json["workWithMaid"],
+        preferredLang:
+            json["preferredLang"] == null ? null : json["preferredLang"],
         jobShortDescription: json["job_short_description"] == null
             ? null
             : json["job_short_description"],
@@ -52,10 +61,10 @@ class PostJob {
         available: json["available"] == null || json["available"] == ''
             ? null
             : DateTime.parse(json["available"]),
-        availableTime:
+        /*availableTime:
             json["available_time"] == null || json["available_time"] == ''
                 ? null
-                : DateTime.parse(json["available_time"]),
+                : DateTime.parse(json["available_time"]),*/
         currencyType:
             json["currencyType"] == null ? null : json["currencyType"],
         salary: json["salary"] == null ? null : json["salary"],
@@ -74,6 +83,7 @@ class PostJob {
   Map<String, dynamic> toMap() => {
         "id": id == null ? null : id,
         "user_id": userId == null ? null : userId,
+        "workWithMaid": workWithMaid == null ? null : workWithMaid,
         "job_short_description":
             jobShortDescription == null ? null : jobShortDescription,
         "contract_type": contractType == null ? null : contractType,
@@ -87,6 +97,7 @@ class PostJob {
         "weekly_holiday": weeklyHoliday == null ? null : weeklyHoliday,
         "more_description": moreDescription == null ? null : moreDescription,
         "skill_requirement": skillRequirement == null ? null : skillRequirement,
-        "available_time": availableTime == null ? null : availableTime,
+        "preferredLang": preferredLang == null ? null : preferredLang,
+        /*"available_time": availableTime == null ? null : availableTime,*/
       };
 }

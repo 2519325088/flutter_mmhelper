@@ -48,6 +48,7 @@ class ProfileData {
   String height;
   String address;
   String userName;
+  String status;
 
   ProfileData(
       {this.birthday,
@@ -85,6 +86,7 @@ class ProfileData {
       this.height,
       this.address,
       this.weight,
+      this.status,
       this.userName});
 
   factory ProfileData.fromMap(Map<String, dynamic> json) => ProfileData(
@@ -93,6 +95,7 @@ class ProfileData {
             : DateTime.tryParse(json["birthday"]),
         children: json["children"] == null ? null : json["children"],
         approved: json["approved"] == null ? null : json["approved"],
+        status: json["status"] == null ? null : json["status"],
         faceBookId: json["facebook_id"] == null ? null : json["facebook_id"],
         contract: json["contract"] == null ? null : json["contract"],
         createdBy: json["created_by"] == null ? null : json["created_by"],
@@ -155,6 +158,7 @@ class ProfileData {
             : "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
         "children": children == null ? null : children,
         "approved": approved == null ? null : approved,
+        "status": status == null ? null : status,
         "facebook_id": faceBookId == null ? null : faceBookId,
         "weight": weight == null ? null : weight,
         "height": height == null ? null : height,

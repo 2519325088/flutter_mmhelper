@@ -12,11 +12,13 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:flutter_mmhelper/ui/widgets/CupertinoActionSheetActionWidget.dart';
+import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets/ChipsWidget.dart';
+import 'widgets/CustomPopup.dart';
 
 class PostJobPage extends StatefulWidget {
   @override
@@ -40,6 +42,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   TextEditingController currencyTypeCtr = TextEditingController();
   TextEditingController accommodationCtr = TextEditingController();
   TextEditingController weeklyHolidayCtr = TextEditingController();
+  TextEditingController languageCtr = TextEditingController();
+  TextEditingController workWithCtr = TextEditingController();
   String contractType;
   String jobType;
   String currencyType;
@@ -61,6 +65,12 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   List<Widget> workingSkillWidget = [];
   List<String> workingSkillStringList = [];
   List<DataList> listWorkSkillData = [];
+  List<Widget> languageWidget = [];
+  List<DataList> listLangData = [];
+  List<Widget> referenceWidget = [];
+  List<String> languageStringList = [];
+  List<String> contractStringList = [];
+  List<String> weekHolidayStringList = [];
   TimeOfDay timeOfDay;
 
   @override
@@ -85,7 +95,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
         });
       });
       listContractData.forEach((f) {
-        contractWidget.add(
+        /*contractWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
@@ -97,7 +107,17 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
               Navigator.pop(context);
             },
           ),
-        );
+        );*/
+
+        contractWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: contractStringList,
+          isSelected: false,
+        ));
+        contractWidget.add(SizedBox(
+          width: 5,
+        ));
       });
 
       listJobTypeData.forEach((f) {
@@ -132,7 +152,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
       });
 
       listWeekHolidayData.forEach((f) {
-        weekHolidayWidget.add(
+        /*weekHolidayWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
             dataList: f,
@@ -141,6 +161,40 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                   dataList.getValueByLanguageCode(languageCode);
               postJob.weeklyHoliday = dataList.nameId;
               print(dataList.nameId);
+              Navigator.pop(context);
+            },
+          ),
+        );*/
+        weekHolidayWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: weekHolidayStringList,
+          isSelected: false,
+        ));
+        weekHolidayWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+
+      listLangData.forEach((f) {
+        languageWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: languageStringList,
+          isSelected: false,
+        ));
+        languageWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+
+      reference.forEach((f) {
+        referenceWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              workWithCtr.text = f;
+              postJob.workWithMaid = f;
               Navigator.pop(context);
             },
           ),
@@ -170,6 +224,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     currencyTypeCtr.dispose();
     accommodationCtr.dispose();
     weeklyHolidayCtr.dispose();
+    languageCtr.dispose();
+    workWithCtr.dispose();
   }
 
   @override
@@ -184,13 +240,16 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.done),
-              onPressed: () {
+              onPressed: () async {
                 if (jobShortDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Please enter job short description")));
-                } else if (contractTypeCtr.text == "") {
+                } else if (contractStringList.length == 0) {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select contract type")));
+                } else if (languageStringList.length == 0) {
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Text("Please select preferred language")));
                 } else if (workingLocationDesCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please enter working location")));
@@ -213,10 +272,13 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                     int.parse(unitSizeCtr.text) > 5000) {
                   scaffoldKey.currentState.showSnackBar(SnackBar(
                       content: Text("Unit should be between 100 to 5000")));
+                } else if (workWithCtr.text == "") {
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Text("Please select work with other maid?")));
                 } else if (accommodationCtr.text == "") {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select accommodation")));
-                } else if (weeklyHolidayCtr.text == "") {
+                } else if (weekHolidayStringList.length == 0) {
                   scaffoldKey.currentState.showSnackBar(
                       SnackBar(content: Text("Please select weekly holiday")));
                 } else if (workingSkillStringList.length == 0) {
@@ -227,17 +289,47 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                       content: Text("Please enter more job description")));
                 } else {
                   String workingSkillString = "";
+                  String preferredLangString = "";
+                  String contractString = "";
+                  String weekHolidayString = "";
                   workingSkillStringList.forEach((f) {
                     workingSkillString += "$f;";
                   });
+                  languageStringList.forEach((f) {
+                    preferredLangString += "$f;";
+                  });
+                  contractStringList.forEach((f) {
+                    contractString += "$f;";
+                  });
+                  weekHolidayStringList.forEach((f) {
+                    weekHolidayString += "$f;";
+                  });
                   postJob.skillRequirement = workingSkillString;
+                  postJob.preferredLang = preferredLangString;
+                  postJob.contractType = contractString;
+                  postJob.weeklyHoliday = weekHolidayString;
+
                   String id = DateTime.now().toIso8601String();
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
                   _service
                       .addData(path: APIPath.newJob(id), data: postJob.toMap())
-                      .then((onValue) {
-                    Navigator.pop(context);
+                      .then((onValue) async {
+                    //Navigator.pop(context);
+                    await showDialog<String>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return CustomPopup(
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            title: "Job created",
+                            message:
+                                "Your job is posted! Please turn on notification and Check the replies in the message box 😎",
+                          );
+                        });
                   });
                 }
               })
@@ -295,7 +387,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     "${AppLocalizations.of(context).translate('Contract_Status')}:",
                                     style: titleText,
                                   ),
-                                  TextFormField(
+                                  Wrap(children: contractWidget)
+                                  /*TextFormField(
                                     style: dataText,
                                     controller: contractTypeCtr,
                                     decoration: InputDecoration(
@@ -331,7 +424,35 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                           context: context,
                                           builder: (context) => action);
                                     },
-                                  )
+                                  )*/
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.language,
+                              color: Colors.black54,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "${AppLocalizations.of(context).translate('Preferred_Language')}:",
+                                    style: titleText,
+                                  ),
+                                  Wrap(children: languageWidget)
                                 ],
                               ),
                             ),
@@ -378,7 +499,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Icon(
-                              Icons.dashboard,
+                              Icons.category,
                               color: Colors.black54,
                               size: 20,
                             ),
@@ -453,7 +574,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Available In:",
+                                    "Expected Start Working date:",
                                     style: titleText,
                                   ),
                                   GestureDetector(
@@ -477,7 +598,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
+                        /*Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Icon(
@@ -525,7 +646,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                         ),
                         SizedBox(
                           height: 20,
-                        ),
+                        ),*/
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -715,6 +836,64 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
+                                    "Work With Other maid:",
+                                    style: titleText,
+                                  ),
+                                  TextFormField(
+                                    style: dataText,
+                                    controller: workWithCtr,
+                                    decoration: InputDecoration(
+                                        hintText: "Select Option"),
+                                    onTap: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      final action = CupertinoActionSheet(
+                                        title: Text(
+                                          "Work With Other maid",
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                        message: Text(
+                                          "Select any option ",
+                                          style: TextStyle(fontSize: 15.0),
+                                        ),
+                                        actions: referenceWidget,
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.dashboard,
+                              color: Colors.black54,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
                                     "${AppLocalizations.of(context).translate('accommodation')}:",
                                     style: titleText,
                                   ),
@@ -781,7 +960,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                     "${AppLocalizations.of(context).translate('weekly_holiday')}:",
                                     style: titleText,
                                   ),
-                                  TextFormField(
+                                  Wrap(children: weekHolidayWidget)
+                                  /*TextFormField(
                                     style: dataText,
                                     controller: weeklyHolidayCtr,
                                     decoration: InputDecoration(
@@ -817,7 +997,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                                           context: context,
                                           builder: (context) => action);
                                     },
-                                  )
+                                  )*/
                                 ],
                               ),
                             ),
@@ -925,7 +1105,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
         availableTimeCtr.text = timeOfDay.format(context);
         final dt = DateTime(_date.year, _date.month, _date.day, timeOfDay.hour,
             timeOfDay.minute);
-        postJob.availableTime = dt;
+        // postJob.availableTime = dt;
       });
     }
   }
@@ -940,5 +1120,6 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     listAccommodationData = appLanguage.listAccommodationData;
     listWeekHolidayData = appLanguage.listWeekHolidayData;
     listWorkSkillData = appLanguage.listWorkSkillData;
+    listLangData = appLanguage.listLangData;
   }
 }

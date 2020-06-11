@@ -95,6 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       contents.forEach((element) async {
         listRoleData.add(element);
       });
+
       listRoleData.forEach((f) {
         roleWidget.add(
           CupertinoActionSheetActionWidget(

@@ -103,19 +103,19 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   ScrollController scrollController = ScrollController();
   bool isEdit = false;
   int exIndex;
-  String countryCode = "+852";
-  String countryCode2 = "+852";
+  String countryCodeWhatApp = "+852";
+  String countryCodePhone = "+852";
 
-  onChangeCode(String newCode) {
+  onChangeCodeWhatsApp(String newCode) {
     setState(() {
-      countryCode = newCode;
+      countryCodeWhatApp = newCode;
       profileData.countryCodeWhatsapp = newCode;
     });
   }
 
-  onChangeCode2(String newCode) {
+  onChangeCodePhone(String newCode) {
     setState(() {
-      countryCode2 = newCode;
+      countryCodePhone = newCode;
       profileData.countryCodePhone = newCode;
     });
   }
@@ -151,7 +151,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
           profileData.approved = onValue.documents[0]["approved"];
-          profileData.createTime = onValue.documents[0]["create_time"];
+          profileData.status = onValue.documents[0]["status"];
+          profileData.createTime =
+              (!onValue.documents[0].data.containsKey("create_time")) ||
+                      (onValue.documents[0]["create_time"] == null) ||
+                      (onValue.documents[0]["create_time"] == "")
+                  ? null
+                  : (onValue.documents[0]["create_time"] as Timestamp)
+                      .toDate(); /* onValue.documents[0]["create_time"]??"";*/
           facebookCtr.text = onValue.documents[0]["facebook_id"];
           profileData.faceBookId = onValue.documents[0]["facebook_id"];
 
@@ -162,8 +169,14 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           addressCtr.text = onValue.documents[0]["address"];
           profileData.address = onValue.documents[0]["address"];
 
-          countryCode = onValue.documents[0]["countryCodeWhatsapp"] ?? null;
-          countryCode2 = onValue.documents[0]["countryCodePhone"] ?? null;
+          countryCodeWhatApp =
+              onValue.documents[0]["countryCodeWhatsapp"] ?? null;
+          profileData.countryCodeWhatsapp =
+              onValue.documents[0]["countryCodeWhatsapp"] ?? null;
+
+          countryCodePhone = onValue.documents[0]["countryCodePhone"] ?? null;
+          profileData.countryCodePhone =
+              onValue.documents[0]["countryCodePhone"] ?? null;
           firstNameCtr.text = onValue.documents[0]["firstname"];
           profileData.firstname = onValue.documents[0]["firstname"];
 
@@ -432,7 +445,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 TimeOfDay.now().minute);
             print(profileData.createTime);
             profileData.approved = "No";
-            userNameCtr.text =  widget.loginUserData.documents[0]["username"];
+            profileData.status = "pending";
+            userNameCtr.text = widget.loginUserData.documents[0]["username"];
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -446,6 +460,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
             phoneCtr.text = widget.loginUserData.documents[0]["phone"];
             profileData.phone = widget.loginUserData.documents[0]["phone"];
+
+            profileData.countryCodePhone = "+852";
+            profileData.countryCodeWhatsapp = "+852";
           }
           listWorkSkillData.forEach((f) {
             workingSkillWidget.add(ChipsWidget(
@@ -746,8 +763,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_username'))));
-                  }
-                 else if (firstNameCtr.text == "") {
+                  } else if (firstNameCtr.text == "") {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_firstname'))));
@@ -787,7 +803,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_location'))));
-                  } else if (countryCode == null) {
+                  } else if (countryCodeWhatApp == null) {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_whatsapp_number_code'))));
@@ -795,7 +811,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_whatsapp_number'))));
-                  } else if (countryCode2 == null) {
+                  } else if (countryCodePhone == null) {
                     scaffoldKey.currentState.showSnackBar(SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate('Please_enter_phone_code'))));
@@ -968,7 +984,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             "${AppLocalizations.of(context).translate('UserName')}:",
@@ -981,10 +997,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             controller: userNameCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
-                                                hintText: AppLocalizations.of(
-                                                    context)
-                                                    .translate(
-                                                    'UserName')),
+                                                hintText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('UserName')),
                                           )
                                         ],
                                       ),
@@ -1207,16 +1222,16 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             onChanged: (newValue) {
                                               profileData.weight = newValue;
                                             },
-                                            keyboardType: TextInputType
-                                                .numberWithOptions(
-                                                signed: false,
-                                                decimal: true),
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: false,
+                                                    decimal: true),
                                             controller: weightCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('weight')),
+                                                        .translate('weight'),suffixText: AppLocalizations.of(context).translate('kg')),
                                           )
                                         ],
                                       ),
@@ -1250,16 +1265,16 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             onChanged: (newValue) {
                                               profileData.height = newValue;
                                             },
-                                            keyboardType: TextInputType
-                                                .numberWithOptions(
-                                                signed: false,
-                                                decimal: true),
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    signed: false,
+                                                    decimal: true),
                                             controller: heightCtr,
                                             style: dataText,
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('height')),
+                                                        .translate('height'),suffixText: AppLocalizations.of(context).translate('cm')),
                                           )
                                         ],
                                       ),
@@ -1832,7 +1847,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                                 isFromProfile:
                                                                     true,
                                                                 onChangedCode:
-                                                                    onChangeCode,
+                                                                    onChangeCodeWhatsApp,
                                                               );
                                                             });
                                                       },
@@ -1860,7 +1875,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                             children: <Widget>[
                                                               Expanded(
                                                                 child: Text(
-                                                                  countryCode ??
+                                                                  countryCodeWhatApp ??
                                                                       "Code",
                                                                   style:
                                                                       dataText,
@@ -1962,7 +1977,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                                 isFromProfile:
                                                                     false,
                                                                 onChangedCode2:
-                                                                    onChangeCode2,
+                                                                    onChangeCodePhone,
                                                               );
                                                             });
                                                       },
@@ -1990,7 +2005,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                                             children: <Widget>[
                                                               Expanded(
                                                                 child: Text(
-                                                                  countryCode2 ??
+                                                                  countryCodePhone ??
                                                                       "Code",
                                                                   style:
                                                                       dataText,

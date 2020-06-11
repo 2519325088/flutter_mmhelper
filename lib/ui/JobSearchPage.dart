@@ -283,7 +283,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              title,
+              title??"",
               style: TextStyle(fontSize: 20),
             ),
           ),

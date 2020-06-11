@@ -7,6 +7,7 @@ import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/LoginScreen.dart';
+import 'package:flutter_mmhelper/ui/MyJobListPage.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/MyProfilePage.dart';
 import 'package:flutter_mmhelper/ui/ApplicationDetails.dart';
@@ -18,8 +19,9 @@ class MePage extends StatefulWidget {
   @override
   _MePageState createState() => _MePageState();
   QuerySnapshot querySnapshot;
+  String currentUserId;
 
-  MePage({this.querySnapshot});
+  MePage({this.querySnapshot, this.currentUserId});
 }
 
 class _MePageState extends State<MePage> {
@@ -63,7 +65,7 @@ class _MePageState extends State<MePage> {
               final database = Provider.of<FirestoreDatabase>(context);
               database.lastUserId = null;
               prefs = await SharedPreferences.getInstance();
-              prefs.clear();
+              prefs.remove("PhoneUserId");
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) {
                 return LoginScreen();
@@ -174,7 +176,13 @@ class _MePageState extends State<MePage> {
                   child: ListTile(
                     onTap: () {
                       if (userType == "1") {
-                      } else if (userType == "2") {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                              return MyJobListPage(
+                                querySnapshot: widget.querySnapshot,
+                                currentUserId: widget.currentUserId,
+                              );
+                            }));
                       } else {
                         if (widget.querySnapshot != null) {
                           Navigator.push(context,
@@ -193,9 +201,8 @@ class _MePageState extends State<MePage> {
                         }
                       }
                     },
-                    title: Text(userType == "1"
-                        ? "My Job Posts"
-                        : userType == "2" ? "My Profiles" : "My Profile"),
+                    title:
+                        Text(userType == "1" ? "My Job Posts" : "My Profile"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
@@ -296,7 +303,7 @@ class _MePageState extends State<MePage> {
                           right: borderSide,
                           bottom: borderSide)),
                   child: ListTile(
-                    onTap: (){},
+                    onTap: () {},
                     title: Text("FAQ / Tutorials"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
@@ -309,12 +316,13 @@ class _MePageState extends State<MePage> {
                           right: borderSide,
                           bottom: borderSide)),
                   child: ListTile(
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
 //                            return SoundRecording();
-                        return ApplicationDetails(userId:widget.querySnapshot.documents[0]
-                        ["userId"] ,);
+                        return ApplicationDetails(
+                          userId: widget.querySnapshot.documents[0]["userId"],
+                        );
                       }));
                     },
                     title: Text("Application Details"),
