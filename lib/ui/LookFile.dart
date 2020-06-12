@@ -53,7 +53,7 @@ class _FileReaderPageState extends State<FileReaderPage> {
       appBar: AppBar(
         title: Text("doc"),
       ),
-      body: indexlast != -1?Center(
+      body: widget.filePath!="" && widget.filePath!=null?(indexlast != -1?Center(
         child: RaisedButton(
           child: Text("Open PDF"),
           onPressed: () => Navigator.push(
@@ -72,7 +72,7 @@ class _FileReaderPageState extends State<FileReaderPage> {
             ),
           ),
         ),
-      ),
+      )):Text("File not uploaded"),
     );
   }
 }

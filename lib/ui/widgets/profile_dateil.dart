@@ -6,6 +6,8 @@ import 'package:flutter_mmhelper/ui/AgencyListPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/photpGalleryPage.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_mmhelper/Models/FlContentModel.dart';
+import 'package:flutter_mmhelper/ui/ChatPage.dart';
 
 class ProfileDateil extends StatefulWidget {
   @override
@@ -14,7 +16,8 @@ class ProfileDateil extends StatefulWidget {
   // DocumentSnapshot proSnapshot;
   ProfileData profileData;
   String languageCode;
-  ProfileDateil({/*this.proSnapshot,*/ this.profileData, this.languageCode});
+  FlContent userData;
+  ProfileDateil({/*this.proSnapshot,*/ this.profileData, this.languageCode,this.userData,});
 }
 
 class _ProfileDateilState extends State<ProfileDateil> {
@@ -187,7 +190,17 @@ class _ProfileDateilState extends State<ProfileDateil> {
                     Row(
                       children: <Widget>[
                         IconButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                                  return ChatPage(
+                                      peerId: widget.userData.id,
+                                      peerAvatar:
+                                      widget.userData.profileImageUrl,
+                                      peerName:
+                                      "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                                }));
+                          },
                           icon: Icon(
                             Icons.chat,
                             color: gradientStart,
