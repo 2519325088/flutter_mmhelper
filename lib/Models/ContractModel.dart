@@ -8,7 +8,7 @@ class ContractContext {
   final String created_by;
   final String current_status;
   final String employer_id;
-  final String id;
+  String id;
   final String img_receipt;
   final String profile_id;
 

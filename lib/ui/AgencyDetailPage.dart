@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/Models/ContractModel.dart';
+import 'package:flutter_mmhelper/Models/ContractStatus.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,29 +38,37 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       created_by: prefs.getString("PhoneUserId"),
       current_status: "",
       employer_id: prefs.getString("PhoneUserId"),
-      id: "",
       img_receipt: "",
+      id: "",
       profile_id: widget.proId,
     );
     Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data){
       print("this is ${data.documentID}");
+      procontext.id = data.documentID;
       _service.setData(path: APIPath.newContract(data.documentID),
         data: procontext.toMap());
-//      List datalist= ["Submitted",
-//        "Paid",
-//        "Preparing",
-//        "Documents ready",
-//        "Processing of working visa",
-//        "Working Visa Active ",
-//        "Arrival in HK",];
-//      for(int i =0 ;i<7;i++){
-//        Firestore.instance.collection("mb_contract_status").add(procontext.toMap()).then((data){
-//          print("this is ${data.documentID}");
-//        });
-//        }
+      List datalist= ["Submitted",
+        "Paid",
+        "Preparing",
+        "Documents ready",
+        "Processing of working visa",
+        "Working Visa Active ",
+        "Arrival in HK",];
+      for(int i =0 ;i<7;i++){
+        final contractstatustext = ContractStatusContext(
+          id:"" ,
+          status:datalist[i],
+          process_status: "view",
+          contract_id: data.documentID,
+          remark: "",
+        );
+        Firestore.instance.collection("mb_contract_status").add(contractstatustext.toMap()).then((datas){
+          contractstatustext.id = datas.documentID;
+          _service.setData(path: APIPath.newContractStatus(datas.documentID),
+              data: contractstatustext.toMap());
+        });
+      }
     });
-//    _service.setData(path: APIPath.newContract(),
-//        data: procontext.toMap());
 //        Navigator.of(context)
 //            .push(MaterialPageRoute(builder: (context) {
 //          return LoginScreen();
