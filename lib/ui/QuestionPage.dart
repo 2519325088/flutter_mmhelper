@@ -168,7 +168,17 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
     questionlist = [];
     resfullist = [];
     if (skilllist != null && skilllist.length > 0) {
-      print('skilllist length :${skilllist.length}');
+      for(int i=0;i<skilllist.length;i++){
+        if(skilllist[i] =="Care Kids (3-12 yr old)"){
+          skilllist[i] = "Care Kids";
+        }
+        if(skilllist[i] =="Care New-born (0-1 yr old)"){
+          skilllist[i] = "New Born";
+        }
+        if(skilllist[i] =="Care Toddlers(1-3 yr old)"){
+          skilllist[i] = "Care Toddler";
+        }
+      }
       int number = 0;
       do {
         String skilltext = skilllist[number];
@@ -216,25 +226,31 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   }
                 });
                 documentsNumber++;
-                print('documentsNumber :$documentsNumber');
               } while (documentsNumber < questionSnapshot.documents.length);
               number++;
             } else {
-              print('skilltext with no data questions:$skilltext');
               number++;
             }
           });
         } else {
-          print('skilltext with no data :$skilltext');
           number++;
         }
-        print('number :$number');
       } while (number < skilllist.length);
       setState(() {});
     }
   }
 
   Future<String> getQuestions(String skilltext) async {
+    if(skilltext =="Care Kids (3-12 yr old)"){
+      skilltext = "Care Kids";
+    }
+    if(skilltext =="Care New-born (0-1 yr old)"){
+      skilltext = "New Born";
+    }
+    if(skilltext =="Care Toddlers(1-3 yr old)"){
+      skilltext = "Care Toddler";
+    }
+    print(skilltext);
     Firestore.instance
         .collection('mb_question_master')
         .where("skill", isEqualTo: skilltext)
@@ -255,8 +271,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
               snapshot.documents.length > 0) {
             resfullist.add(QuestionResultContext.fromMap(
                 snapshot.documents[0].data, snapshot.documents[0].documentID));
-            print('data :${snapshot.documents[0].data}}');
-            print('documentID :${snapshot.documents[0].documentID}}');
             setState(() {});
           } else {
             resfullist.add(QuestionResultContext(
@@ -280,7 +294,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   Widget buildGrid(int index, Map options, String questionid) {
     List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget
     Widget content; //单独一个widget组件，用于返回需要生成的内容widget
-    print(resfullist[index].answer);
     options.forEach((k, v) => tiles.add(
           new Flexible(
             child: RadioListTile<String>(
@@ -292,8 +305,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   : '',
               onChanged: (value) {
                 String datenow = DateTime.now().toIso8601String();
-                print('value:$value');
-                print('questionIndex:$questionIndex');
                 //            Firestore.instance
 //                .collection('mb_question_result')
 //                .where("question_id", isEqualTo:questionid)
@@ -324,7 +335,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                   if ((index < resfullist.length &&
                       resfullist[index].documentId != null)) {
                     documentId = resfullist[index].documentId;
-                    print('documentID :${resfullist[index].documentId}}');
                     questionresult = QuestionResultContext(
                       ID: resfullist[index].documentId,
                       answer: resfullist[index].answer,
@@ -400,7 +410,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                     ),
                     questionIndex < questionlist.length &&
                             questionIndex != -1 &&
-                            questionlist[questionIndex]["step"][0] != ""
+                            questionlist[questionIndex]["step"].length>0
                         ? ListView.separated(
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
@@ -465,7 +475,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                           ),
                                           border: InputBorder.none),
                                       onFieldSubmitted: (String value) {
-                                        print(questionIndex);
 //                                        String datenow =
 //                                            DateTime.now().toIso8601String();
 //                                        resfullist[questionIndex].answer =
@@ -714,9 +723,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                             onPressed: () {
                               questionIndex -= 1;
                               setState(() {});
-                              print(questionIndex);
-                              print(questionlist);
-                              print(resfullist);
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
@@ -767,8 +773,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                             documentId =
                                                 resfullist[questionIndex]
                                                     .documentId;
-                                            print(
-                                                'documentID :${resfullist[questionIndex].documentId}}');
                                             questionresult =
                                                 QuestionResultContext(
                                               ID: resfullist[questionIndex]
@@ -813,8 +817,6 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                           documentId =
                                               resfullist[questionIndex]
                                                   .documentId;
-                                          print(
-                                              'documentID :${resfullist[questionIndex].documentId}}');
                                           questionresult =
                                               QuestionResultContext(
                                                 ID: resfullist[questionIndex]
