@@ -46,7 +46,7 @@ class FlContent {
     this.countryCode,
   });
 
-  factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
+  factory FlContent.fromMap(Map<String, dynamic> data) =>
       FlContent(
        // imageDeck: List<ImageDeck>.from(
        //     data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
@@ -66,7 +66,6 @@ class FlContent {
         religion: data["religion"],
         type: data["type"],
         whatsApp: data["whatsApp"],
-        id: documentId,
         userId: data["userId"],
         countryCode: data["countryCode"],
       );

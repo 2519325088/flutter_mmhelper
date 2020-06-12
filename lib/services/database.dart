@@ -49,7 +49,7 @@ class FirestoreDatabase with ChangeNotifier {
 
   Stream<List<FlContent>> flUserStream() => _service.collectionStream(
         path: APIPath.userList(),
-        builder: (data, documentId) => FlContent.fromMap(data, documentId),
+        builder: (data, documentId) => FlContent.fromMap(data),
       );
 
   Stream<List<JobDetailData>> flJobStream() => _service.jobCollectionStream(
