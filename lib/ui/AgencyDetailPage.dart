@@ -43,8 +43,8 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
     );
     Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data){
       print("this is ${data.documentID}");
-//      _service.setData(path: APIPath.newContract(data.documentID),
-//        data: procontext.toMap());
+      _service.setData(path: APIPath.newContract(data.documentID),
+        data: procontext.toMap());
 //      List datalist= ["Submitted",
 //        "Paid",
 //        "Preparing",

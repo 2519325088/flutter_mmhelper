@@ -16,7 +16,7 @@ import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/SearchPage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'widgets/profile_dateil.dart';
 
 class Dashboard extends StatefulWidget {
@@ -44,6 +44,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   String filter;
   bool isShow = false;
+  bool isLoading = true;
   String languageCode;
 
   Future<String> fetchLanguage() async {
@@ -76,13 +77,42 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }
 
   madeSearchGridList(List<ProfileData> newGridSearchListData) async {
-    gridListData = [];
-    newGridSearchListData.forEach((element) async {
-      print(element.education);
-      gridListData.add(GridCardWidget(element));
+    setState(() {
+      isLoading = true;
     });
-    setState(() {});
+    int i = 1;
+    gridListData = [];
+    if (newGridSearchListData.length != 0) {
+      final database = Provider.of<FirestoreDatabase>(context);
+      database.flUserStream().first.then((userDataList) {
+        newGridSearchListData.forEach((element) async {
+          i++;
+          userDataList.forEach((user) {
+            if (element.id == user.userId) {
+              gridListData.add(GridCardWidget(
+                  element:element,
+                  userData:user));
+            }
+          });
+          if (newGridSearchListData.length <= i) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        });
+      });
+    }else {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
+//    newGridSearchListData.forEach((element) async {
+//      print(element.education);
+//      gridListData.add(GridCardWidget(element:element));
+//    });
+//    setState(() {});
+//  }
 
   /*onSearchChange(String filter) {
     gridListData = [];
@@ -103,19 +133,41 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }*/
 
   madeGridList() async {
+    int i = 1;
     listProfileData = [];
     gridListData = [];
     final database = Provider.of<FirestoreDatabase>(context);
     database.flContentsStream().first.then((contents) {
-      contents.forEach((element) async {
-        listProfileData.add(element);
-        gridListData.add(GridCardWidget(element));
+      database.flUserStream().first.then((userDataList) {
+        contents.forEach((element) async {
+          i++;
+          userDataList.forEach((user) {
+            if (element.id == user.userId) {
+              listProfileData.add(element);
+              gridListData.add(GridCardWidget(
+                  element:element,
+                  userData: user
+              ));
+            }
+          });
+          if (contents.length < i) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        });
       });
-      setState(() {});
     });
   }
+//      contents.forEach((element) async {
+//        listProfileData.add(element);
+//        gridListData.add(GridCardWidget(element:element));
+//      });
+//      setState(() {});
+//    });
+//  }
 
-  Widget GridCardWidget(ProfileData element) {
+  Widget GridCardWidget({ProfileData element ,FlContent userData}) {
     print(element.workskill);
     return GestureDetector(
       onTap: () {
@@ -123,6 +175,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
           return ProfileDateil(
             profileData: element,
             languageCode: languageCode,
+            userData: userData,
           );
         }));
       },
@@ -439,7 +492,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 }),
           ],
         ),*/
-        body: Column(
+        body: isLoading == false?Column(
           children: <Widget>[
             /*isShow?Padding(
                 padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
@@ -478,7 +531,9 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                     ),
                   ),
           ],
-        )
+        ):Center(
+          child: CircularProgressIndicator(),
+        ),
         /*StreamBuilder(
           stream: Firestore.instance
               .collection('mb_profile')
