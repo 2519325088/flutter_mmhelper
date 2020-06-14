@@ -10,6 +10,7 @@ import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class JobPage extends StatefulWidget {
   @override
@@ -61,7 +62,10 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     gridListData = [];
     if (newGridSearchListData.length != 0) {
       final database = Provider.of<FirestoreDatabase>(context);
-      database.flUserStream().first.then((userDataList) {
+      database
+          .flUserStream()
+          .first
+          .then((userDataList) {
         newGridSearchListData.forEach((jobElement) async {
           i++;
           userDataList.forEach((user) {
@@ -93,8 +97,14 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     listJobData = [];
     gridListData = [];
     final database = Provider.of<FirestoreDatabase>(context);
-    database.flJobStream().first.then((contents) {
-      database.flUserStream().first.then((userDataList) {
+    database
+        .flJobStream()
+        .first
+        .then((contents) {
+      database
+          .flUserStream()
+          .first
+          .then((userDataList) {
         contents.forEach((jobElement) async {
           i++;
           userDataList.forEach((user) {
@@ -151,43 +161,44 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
         ],
       ),
       floatingActionButton: widget.querySnapshot.documents[0]["role"] ==
-              "Employer"
+          "Employer"
           ? FloatingActionButton(
-              heroTag: null,
-              onPressed: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return PostJobPage(
-                    currentUserId: widget.currentUserId,
-                  );
-                })).then((value) => madeGridList());
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Theme.of(context).primaryColor,
-            )
+        heroTag: null,
+        onPressed: () async {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return PostJobPage(
+              currentUserId: widget.currentUserId,
+            );
+          })).then((value) => madeGridList());
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
+      )
           : SizedBox(),
       body: isLoading == false
           ? gridListData.length != 0
-              ? ListView(
-                  children: gridListData,
-                )
-              : Center(
-                  child: Text(
-                      AppLocalizations.of(context).translate('No_any_job')),
-                )
+          ? ListView(
+        children: gridListData,
+      )
           : Center(
-              child: CircularProgressIndicator(),
-            ),
+        child: Text(
+            AppLocalizations.of(context).translate('No_any_job')),
+      )
+          : Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
-  Widget jobCard(
-      {JobDetailData jobDetailData,
-      FlContent userData,
-      String shortDes,
-      String userName,
-      String currentUser,
-      DocumentSnapshot jobSnapshot,
-      QuerySnapshot userSnapshot}) {
+  Widget jobCard({JobDetailData jobDetailData,
+    FlContent userData,
+    String shortDes,
+    String userName,
+    String currentUser,
+    DocumentSnapshot jobSnapshot,
+    QuerySnapshot userSnapshot}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -213,7 +224,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "1h ago",
+                        timeago.format(jobDetailData.createTime??DateTime.now()),
                         style: TextStyle(color: Colors.black54),
                       ),
                     ],

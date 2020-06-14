@@ -312,6 +312,12 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                   String id = DateTime.now().toIso8601String();
                   postJob.id = id;
                   postJob.userId = widget.currentUserId;
+                  postJob.createTime = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      TimeOfDay.now().hour,
+                      TimeOfDay.now().minute);
                   _service
                       .addData(path: APIPath.newJob(id), data: postJob.toMap())
                       .then((onValue) async {

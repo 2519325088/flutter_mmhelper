@@ -472,6 +472,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
             profileData.countryCodePhone = "+852";
             profileData.countryCodeWhatsapp = "+852";
+            facebookCtr.text = widget.loginUserData.documents[0]["facebookId"];
+            profileData.faceBookId = widget.loginUserData.documents[0]["facebookId"];
+
           }
           listWorkSkillData.forEach((f) {
             workingSkillWidget.add(ChipsWidget(
