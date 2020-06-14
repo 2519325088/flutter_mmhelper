@@ -740,6 +740,52 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     userNameCtr.dispose();
   }
 
+  uploadFirebaseImageData() async {
+    int number = 0;
+    do {
+      String downloadLink = await saveImage(imagesa[number]);
+      if (!profileData.imagelist.contains(downloadLink))
+        profileData.imagelist.add(downloadLink);
+      print("Upload in count $number");
+      number++;
+    } while (number < imagesa.length);
+    saveProfileData();
+    /*imagesa.forEach((upFile) async {
+      String downloadLink = await saveImage(upFile);
+      profileData.imagelist.add(downloadLink);
+      print("Upload in count $number");
+      number += 1;
+      if (number > imagesa.length) {
+        saveProfileData();
+      }
+    });*/
+  }
+
+  saveProfileData() {
+    print("Profile update call");
+    if (profileData.primaryImage == null) {
+      profileData.primaryImage = profileData.imagelist[0];
+    }
+    _service
+        .setData(
+            path: APIPath.newProfile(widget.userId), data: profileData.toMap())
+        .then((onValue) {
+      setState(() {
+        isLoading = false;
+        imagesa.clear();
+      });
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .translate('Profile_Update_Successfully'))));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return QuestionPage(
+          skill: profileData.workskill,
+          profileid: profileData.id,
+        );
+      }));
+    });
+  }
+
   //  sumbit image
   Future<String> saveImage(Asset asset) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -750,6 +796,41 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     print(storageTaskSnapshot.totalByteCount);
     return await storageTaskSnapshot.ref.getDownloadURL();
+  }
+
+  Future<List<String>> uploadImage({@required List<Asset> assets}) async {
+    List<String> uploadUrls = [];
+
+    await Future.wait(
+        assets.map((Asset asset) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          ByteData byteData = await asset.getByteData();
+          List<int> imageData = byteData.buffer.asUint8List();
+
+          StorageReference reference =
+              FirebaseStorage.instance.ref().child(fileName);
+          StorageUploadTask uploadTask = reference.putData(imageData);
+          StorageTaskSnapshot storageTaskSnapshot;
+
+          StorageTaskSnapshot snapshot = await uploadTask.onComplete;
+          if (snapshot.error == null) {
+            storageTaskSnapshot = snapshot;
+            final String downloadUrl =
+                await storageTaskSnapshot.ref.getDownloadURL();
+            uploadUrls.add(downloadUrl);
+
+            print('Upload success');
+          } else {
+            print('Error from image repo ${snapshot.error.toString()}');
+            throw ('This file is not an image');
+          }
+        }),
+        eagerError: true,
+        cleanUp: (_) {
+          print('eager cleaned up');
+        });
+
+    return uploadUrls;
   }
 
   @override
@@ -876,8 +957,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                     profileData.language = languageString;
                     profileData.id = widget.userId;
                     int i = 1;
+
                     if (imagesa.length != 0) {
-                      imagesa.forEach((upFile) async {
+                      uploadFirebaseImageData();
+                      /*imagesa.forEach((upFile) async {
                         String downloadLink = await saveImage(upFile);
                         profileData.imagelist.add(downloadLink);
                         print("Upload in count $i");
@@ -909,7 +992,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                             }));
                           });
                         }
-                      });
+                      });*/
                     } else {
                       if (profileData.imagelist.length != 0) {
                         _service
@@ -1239,7 +1322,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('weight'),suffixText: AppLocalizations.of(context).translate('kg')),
+                                                        .translate('weight'),
+                                                suffixText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('kg')),
                                           )
                                         ],
                                       ),
@@ -1282,7 +1368,10 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             decoration: InputDecoration(
                                                 hintText:
                                                     AppLocalizations.of(context)
-                                                        .translate('height'),suffixText: AppLocalizations.of(context).translate('cm')),
+                                                        .translate('height'),
+                                                suffixText:
+                                                    AppLocalizations.of(context)
+                                                        .translate('cm')),
                                           )
                                         ],
                                       ),
