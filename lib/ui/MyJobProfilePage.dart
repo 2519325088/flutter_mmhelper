@@ -370,7 +370,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               contractCtr.text = f.getValueByLanguageCode(languageCode);
               profileData.contract = f.nameId;
             }
-            contractWidget.add(
+            /*contractWidget.add(
               CupertinoActionSheetActionWidget(
                 languageCode: languageCode,
                 dataList: f,
@@ -382,7 +382,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                   Navigator.pop(context);
                 },
               ),
-            );
+            );*/
           });
 
           listNationalityData.forEach((f) {
@@ -411,6 +411,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             if (onValue.documents[0]["current"].toString().contains(f.nameId)) {
               locationCtr.text = f.getValueByLanguageCode(languageCode);
               profileData.current = f.nameId;
+              generateContract();
             }
             locationWidget.add(
               CupertinoActionSheetActionWidget(
@@ -422,6 +423,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
                   print(dataList.nameId);
+                  generateContract();
                   Navigator.pop(context);
                 },
               ),
@@ -456,6 +458,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 //            profileData.status = "pending";
             profileData.status = "Created";
             userNameCtr.text = widget.loginUserData.documents[0]["username"];
+            profileData.userName =
+                widget.loginUserData.documents[0]["username"];
             firstNameCtr.text = widget.loginUserData.documents[0]["firstname"];
             profileData.firstname =
                 widget.loginUserData.documents[0]["firstname"];
@@ -473,8 +477,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             profileData.countryCodePhone = "+852";
             profileData.countryCodeWhatsapp = "+852";
             facebookCtr.text = widget.loginUserData.documents[0]["facebookId"];
-            profileData.faceBookId = widget.loginUserData.documents[0]["facebookId"];
-
+            profileData.faceBookId =
+                widget.loginUserData.documents[0]["facebookId"];
           }
           listWorkSkillData.forEach((f) {
             workingSkillWidget.add(ChipsWidget(
@@ -602,7 +606,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
-          listContractData.forEach((f) {
+          /*listContractData.forEach((f) {
             contractWidget.add(
               CupertinoActionSheetActionWidget(
                 languageCode: languageCode,
@@ -616,11 +620,11 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 },
               ),
             );
-          });
+          });*/
 
           listNationalityData.forEach((f) {
             if (widget.loginUserData.documents.length != 0) {
-              if (widget.loginUserData.documents[0]["nationaity"]
+              if (widget.loginUserData.documents[0]["nationality"]
                   .toString()
                   .contains(f.nameId)) {
                 nationalityCtr.text = f.getValueByLanguageCode(languageCode);
@@ -648,11 +652,12 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 languageCode: languageCode,
                 dataList: f,
                 onPressedCall: (dataList) {
+
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
                   print(dataList.nameId);
-
+                  generateContract();
                   Navigator.pop(context);
                 },
               ),
@@ -660,6 +665,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
           });
           setState(() {});
         }
+        generateContract();
       });
     });
   }
@@ -667,8 +673,9 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
   generateContract() {
     print("call generate");
     contractWidget = [];
+    print("current location ------------------ ${profileData.current}");
     if (profileData.current == "Hong Kong") {
-      quitReasonData.forEach((f) {
+      listContractData.forEach((f) {
         contractWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,
@@ -683,7 +690,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         );
       });
     } else {
-      quitReasonHkData.forEach((f) {
+      quitReasonData.forEach((f) {
         contractWidget.add(
           CupertinoActionSheetActionWidget(
             languageCode: languageCode,

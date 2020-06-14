@@ -104,7 +104,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
         setState(() {});
       }
 
-      widget.currentLoc != "Hong Kong"
+      /*widget.currentLoc != "Hong Kong"
           ? quitReasonData.forEach((f) {
         if (widget.oldWorkExperience != null) {
           reasonCtr.text = f.getValueByLanguageCode(languageCode);
@@ -124,7 +124,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
           ),
         );
       })
-          : quitReasonHkData.forEach((f) {
+          :*/ quitReasonHkData.forEach((f) {
         if (widget.oldWorkExperience != null) {
           reasonCtr.text = f.getValueByLanguageCode(languageCode);
           workExperience.reason = f.nameId;
