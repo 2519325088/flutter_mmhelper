@@ -29,8 +29,9 @@ class MyJobProfilePage extends StatefulWidget {
   _MyJobProfilePageState createState() => _MyJobProfilePageState();
   final String userId;
   QuerySnapshot loginUserData;
+  ValueChanged<bool> valueChanged;
 
-  MyJobProfilePage({this.userId, this.loginUserData});
+  MyJobProfilePage({this.userId, this.loginUserData, this.valueChanged});
 }
 
 class _MyJobProfilePageState extends State<MyJobProfilePage>
@@ -151,8 +152,8 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
               TimeOfDay.now().hour,
               TimeOfDay.now().minute);
           profileData.approved = onValue.documents[0]["approved"];
-//          profileData.status = onValue.documents[0]["status"];
-          profileData.status = "Created";
+          profileData.status = onValue.documents[0]["status"];
+
           profileData.createTime =
               (!onValue.documents[0].data.containsKey("create_time")) ||
                       (onValue.documents[0]["create_time"] == null) ||
@@ -770,13 +771,19 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
         .setData(
             path: APIPath.newProfile(widget.userId), data: profileData.toMap())
         .then((onValue) {
+      widget.valueChanged(true);
       setState(() {
         isLoading = false;
         imagesa.clear();
       });
-      scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('Profile_Update_Successfully'))));
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('Profile_Update_Successfully'),
+          ),
+        ),
+      );
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return QuestionPage(
           skill: profileData.workskill,
@@ -1000,6 +1007,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                 path: APIPath.newProfile(widget.userId),
                                 data: profileData.toMap())
                             .then((onValue) {
+                          widget.valueChanged(true);
                           setState(() {
                             isLoading = false;
                             imagesa.clear();

@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
   List<ProfileData> gridSearchListData = [];
-  List<ProfileData> listProfileData = [];
+  List<ProfileData> listProfileData = List<ProfileData>();
   List<FlContent> listUserData = [];
   SharedPreferences prefs;
   String currentUserId;
@@ -137,10 +137,15 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   }*/
 
   madeGridList() async {
+    setState(() {
+      isLoading = true;
+    });
+    print("call grid list");
     int i = 1;
     int userData = 1;
-    listProfileData = [];
+    listProfileData=[];
     gridListData = [];
+    listUserData =[];
     final database = Provider.of<FirestoreDatabase>(context);
     Firestore.instance
         .collection(APIPath.userList())
@@ -156,12 +161,17 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
               i++;
               userDataList.forEach((element) {
                 if (element.id == user.userId) {
-                  print(i);
-                  listProfileData.add(element);
-                  setState(() {
-                    gridListData
-                        .add(GridCardWidget(element: element, userData: user));
-                  });
+                  print("element.status : ${element.status}");
+                  if (element.status == "Approved Manually" ||
+                      element.status == "Approved by system" ||
+                      element.status == "手動批准" ||
+                      element.status == "自動批准") {
+                    listProfileData.add(element);
+                    setState(() {
+                      gridListData.add(
+                          GridCardWidget(element: element, userData: user));
+                    });
+                  }
                 }
               });
               if (listUserData.length < i) {
@@ -452,6 +462,13 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   List<String> languageStringList = [];
   List<String> searchText = [];
 
+  onChangeFunction(bool changeValue) {
+    print("onChangeFunction $changeValue");
+    if (changeValue != null && changeValue) {
+      madeGridList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final callSearch = Provider.of<CallSearch>(context);
@@ -514,6 +531,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                         return MyJobProfilePage(
                           userId: querySnapshot.documents[0]["userId"],
                           loginUserData: querySnapshot,
+                          valueChanged: onChangeFunction,
                         );
                       }));
                     } else {
