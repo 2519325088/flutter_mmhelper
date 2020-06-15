@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_mmhelper/ui/AgencyDetailPage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:ui';
 
 class AgencyListpage extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class AgencyListpage extends StatefulWidget {
 
 class _AgencyListpageState extends State<AgencyListpage> {
 
+  final width = window.physicalSize.width;
+  final height = window.physicalSize.height;
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
 
@@ -94,6 +98,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
       child: Padding(
         padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
         child: Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
               flex: 6,
@@ -101,7 +106,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(right: 10),
-                    height: 70,
+                    height: 80,
                     width: double.infinity,
                     child: GestureDetector(
                       onTap: (){
@@ -145,27 +150,27 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
@@ -182,32 +187,32 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: width<500?16:18,
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -219,27 +224,27 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
@@ -256,27 +261,27 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
@@ -293,27 +298,27 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.white70,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
@@ -330,27 +335,27 @@ class _AgencyListpageState extends State<AgencyListpage> {
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Icon(
                                       Icons.star,
                                       color: Colors.orangeAccent,
-                                      size: 18,
+                                      size: width<500?14:18,
                                     ),
                                     Text(
                                       agencySnapshot["score"],
@@ -373,34 +378,39 @@ class _AgencyListpageState extends State<AgencyListpage> {
               ),
             ),
             Expanded(
-                flex: 3,
-                child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      price,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Text(
-                        "收費詳情",
+              flex:3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        price,
                         style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.blueAccent,
+                          fontSize: width<500?18:20,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      onTap: (){
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,);
-                        }));
-                      },
+                    ],
+                  ),
+                  GestureDetector(
+                    child: Text(
+                      "收費詳情",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blueAccent,
+                      ),
                     ),
-                  ],
-                )
+                    onTap: (){
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,);
+                      }));
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

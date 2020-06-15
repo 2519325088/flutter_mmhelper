@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,17 @@ class _ContractFilesState extends State<ContractFiles> {
   BorderSide borderSide = BorderSide(color: Colors.black.withOpacity(0.1));
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var storageRef = FirebaseStorage.instance
+      .ref().child("/contract/FmeSuFNSdUXyuGCMMiDJ/");
+    storageRef.getMetadata().then((data){
+      print("this data: ${data.name}");
+    });
+  }
 
   Future<String> getContract(String skilltext) async {
     Firestore.instance

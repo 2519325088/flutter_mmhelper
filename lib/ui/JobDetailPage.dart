@@ -60,10 +60,16 @@ class _JobDetailPageState extends State<JobDetailPage> {
         .format(widget.jobDetailData.available)
         .toString();
     jobTypeCtr.text = widget.jobDetailData.jobType;
+    jobShortDesCtr.text = widget.jobDetailData.jobShortDescription;
     contractTypeCtr.text = widget.jobDetailData.contractType;
     workingLocationDesCtr.text = widget.jobDetailData.workingLocation;
     salaryCtr.text =
         "${widget.jobDetailData.salary} ${widget.jobDetailData.currencyType}";
+    unitSizeCtr.text = widget.jobDetailData.unitSize;
+    accommodationCtr.text= widget.jobDetailData.accommodation;
+    weeklyHolidayCtr.text = widget.jobDetailData.weeklyHoliday;
+    skillCtr.text = widget.jobDetailData.skillRequirement ;
+    moreJobDesCtr.text = widget.jobDetailData.moreDescription;
   }
 
   Future<String> getPhoneUserId() async {
@@ -285,6 +291,13 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       jobDataField(
                           titleText: titleText,
                           dataText: dataText,
+                          title: "Job Description",
+                          filedCtr: jobShortDesCtr,
+                          icons: Icons.description,
+                          maxLine: 1),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
                           title: "Preferred Contract Status",
                           filedCtr: contractTypeCtr,
                           icons: Icons.perm_contact_calendar,
@@ -316,6 +329,41 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           title: "Employment Start Date",
                           filedCtr: availableInCtr,
                           icons: Icons.date_range,
+                          maxLine: 1),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
+                          title: "Unit Size",
+                          filedCtr: unitSizeCtr,
+                          icons: Icons.home,
+                          maxLine: 1),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
+                          title: "Accommodation",
+                          filedCtr: accommodationCtr,
+                          icons: Icons.dashboard,
+                          maxLine: 1),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
+                          title: "Weekly Holoday",
+                          filedCtr: weeklyHolidayCtr,
+                          icons: Icons.dashboard,
+                          maxLine: 1),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
+                          title: "Working Skill",
+                          filedCtr: skillCtr,
+                          icons: Icons.library_books,
+                          maxLine: 3),
+                      jobDataField(
+                          titleText: titleText,
+                          dataText: dataText,
+                          title: "More Job Description",
+                          filedCtr: moreJobDesCtr,
+                          icons: Icons.description,
                           maxLine: 1),
                     ],
                   ),

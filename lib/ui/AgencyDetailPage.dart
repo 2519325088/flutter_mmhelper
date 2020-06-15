@@ -19,7 +19,7 @@ class AgencyDetailPage extends StatefulWidget {
 }
 
 class _AgencyDetailPageState extends State<AgencyDetailPage> {
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   final _service = FirestoreService.instance;
@@ -29,15 +29,15 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
 
   Future<void> _submit() async {
     prefs = await SharedPreferences.getInstance();
-    print(prefs.getString("PhoneUserId"));
+    print(prefs.getString("loginUid"));
 //          final database = Provider.of<FirestoreDatabase>(context);
     final procontext = ContractContext(
       agency_id: widget.agencySnapshot["id"],
       contract_type: widget.type,
       created_at: DateTime.now(),
-      created_by: prefs.getString("PhoneUserId"),
+      created_by: prefs.getString("loginUid"),
       current_status: "",
-      employer_id: prefs.getString("PhoneUserId"),
+      employer_id:prefs.getString("loginUid") ,
       img_receipt: "",
       id: "",
       profile_id: widget.proId,
@@ -80,6 +80,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: gradientStart,
         title: Text(
@@ -191,7 +192,14 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                     width: double.infinity,
                     height: 50,
                     child: FlatButton(
-                      onPressed: _submit,
+                      onPressed: (){
+                        _submit();
+                        scaffoldKey.currentState
+                            .showSnackBar(SnackBar(
+                            content: Text(
+                              "The request has been submitted.",
+                            )));
+                      },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       color:gradientStart,

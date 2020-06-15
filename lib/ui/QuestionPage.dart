@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,6 +25,7 @@ class QuestionPage extends StatefulWidget {
 
 class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   final TextEditingController answerController = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   List skilllist = [];
@@ -369,6 +371,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
           color: gradientStart,
@@ -377,10 +380,15 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
             color: Colors.black,
           ),
           onPressed: (){
-            if(questionIndex>-1){
-              questionIndex -=1;
-              setState(() {});
+            if(questionIndex == -1){
+              Navigator.pop(context);
+            }else{
+              if(questionIndex>-1){
+                questionIndex -=1;
+                setState(() {});
+              }
             }
+
           }
         ),
         backgroundColor: gradientStart,
@@ -877,9 +885,19 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
                                 height: 50,
                                 child: FlatButton(
                                   onPressed: () {
-                                    questionIndex = -1;
-                                    setState(() {});
-                                    Navigator.pop(context);
+                                    if(isConfirm){
+                                      questionIndex = -1;
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    }else{
+                                      scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(context)
+                                              .translate('confirmError'),
+                                        )));
+                                    }
+
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
