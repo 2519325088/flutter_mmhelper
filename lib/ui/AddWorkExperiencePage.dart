@@ -36,6 +36,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
   TextEditingController jobTypeCtr = TextEditingController();
   TextEditingController reasonCtr = TextEditingController();
   TextEditingController referenceCtr = TextEditingController();
+  TextEditingController detailCtr = TextEditingController();
   TextEditingController takenCtr = TextEditingController();
   DateTime startDate;
   DateTime endDate;
@@ -64,6 +65,8 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
     fetchLanguage().then((nLanguageCode) {
       languageCode = nLanguageCode;
       if (widget.oldWorkExperience != null) {
+        detailCtr.text = widget.oldWorkExperience.details ?? "";
+        workExperience.details = widget.oldWorkExperience.details ?? "";
         countryCtr.text = widget.oldWorkExperience.country;
         workExperience.country = widget.oldWorkExperience.country;
         workExperience.start = widget.oldWorkExperience.start;
@@ -101,44 +104,44 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
         setState(() {});
       }
 
-      widget.currentLoc != "Hong Kong"
+      /*widget.currentLoc != "Hong Kong"
           ? quitReasonData.forEach((f) {
-              if (widget.oldWorkExperience != null) {
-                reasonCtr.text = f.getValueByLanguageCode(languageCode);
-                workExperience.reason = f.nameId;
-              }
+        if (widget.oldWorkExperience != null) {
+          reasonCtr.text = f.getValueByLanguageCode(languageCode);
+          workExperience.reason = f.nameId;
+        }
 
-              reasonWidget.add(
-                CupertinoActionSheetActionWidget(
-                  languageCode: languageCode,
-                  dataList: f,
-                  onPressedCall: (dataList) {
-                    reasonCtr.text =
-                        dataList.getValueByLanguageCode(languageCode);
-                    workExperience.reason = dataList.nameId;
-                    Navigator.pop(context);
-                  },
-                ),
-              );
-            })
-          : quitReasonHkData.forEach((f) {
-              if (widget.oldWorkExperience != null) {
-                reasonCtr.text = f.getValueByLanguageCode(languageCode);
-                workExperience.reason = f.nameId;
-              }
-              reasonWidget.add(
-                CupertinoActionSheetActionWidget(
-                  languageCode: languageCode,
-                  dataList: f,
-                  onPressedCall: (dataList) {
-                    reasonCtr.text =
-                        dataList.getValueByLanguageCode(languageCode);
-                    workExperience.reason = dataList.nameId;
-                    Navigator.pop(context);
-                  },
-                ),
-              );
-            });
+        reasonWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              reasonCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              workExperience.reason = dataList.nameId;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      })
+          :*/ quitReasonHkData.forEach((f) {
+        if (widget.oldWorkExperience != null) {
+          reasonCtr.text = f.getValueByLanguageCode(languageCode);
+          workExperience.reason = f.nameId;
+        }
+        reasonWidget.add(
+          CupertinoActionSheetActionWidget(
+            languageCode: languageCode,
+            dataList: f,
+            onPressedCall: (dataList) {
+              reasonCtr.text =
+                  dataList.getValueByLanguageCode(languageCode);
+              workExperience.reason = dataList.nameId;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });
 
       /*jobtype.forEach((f) {
         jobTypeWidget.add(
@@ -213,7 +216,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
   Widget build(BuildContext context) {
     TextStyle cardTitleText = TextStyle(fontSize: 20, color: Colors.black);
     TextStyle titleText =
-        TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.7));
+    TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.7));
     TextStyle dataText = TextStyle(fontSize: 20);
     SizeConfig().init(context);
     return Scaffold(
@@ -364,14 +367,14 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                                     profileData.birthday = birthDayDate;
                                                   },*/
                                             onConfirm: (date) {
-                                          setState(() {
-                                            startDate = date;
-                                          });
-                                          startDateCtr.text =
-                                              DateFormat.yMMMMEEEEd()
-                                                  .format(startDate);
-                                          workExperience.start = startDate;
-                                        },
+                                              setState(() {
+                                                startDate = date;
+                                              });
+                                              startDateCtr.text =
+                                                  DateFormat.yMMMMEEEEd()
+                                                      .format(startDate);
+                                              workExperience.start = startDate;
+                                            },
                                             currentTime: DateTime.now(),
                                             locale: LocaleType.en);
                                       },
@@ -423,14 +426,14 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                                     profileData.birthday = birthDayDate;
                                                   },*/
                                             onConfirm: (date) {
-                                          setState(() {
-                                            endDate = date;
-                                          });
-                                          endDateCtr.text =
-                                              DateFormat.yMMMMEEEEd()
-                                                  .format(endDate);
-                                          workExperience.end = endDate;
-                                        },
+                                              setState(() {
+                                                endDate = date;
+                                              });
+                                              endDateCtr.text =
+                                                  DateFormat.yMMMMEEEEd()
+                                                      .format(endDate);
+                                              workExperience.end = endDate;
+                                            },
                                             currentTime: DateTime.now(),
                                             locale: LocaleType.en);
                                       },
@@ -485,7 +488,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                           ),
                                           actions: jobTypeWidget,
                                           cancelButton:
-                                              CupertinoActionSheetAction(
+                                          CupertinoActionSheetAction(
                                             child: Text("Cancel"),
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -521,7 +524,8 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      "${AppLocalizations.of(context).translate('Working_Skill')}:",
+                                      "${AppLocalizations.of(context).translate(
+                                          'Working_Skill')}:",
                                       style: titleText,
                                     ),
                                     Wrap(children: workingSkillWidget)
@@ -571,7 +575,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                           ),
                                           actions: reasonWidget,
                                           cancelButton:
-                                              CupertinoActionSheetAction(
+                                          CupertinoActionSheetAction(
                                             child: Text("Cancel"),
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -629,7 +633,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                           ),
                                           actions: referenceWidget,
                                           cancelButton:
-                                              CupertinoActionSheetAction(
+                                          CupertinoActionSheetAction(
                                             child: Text("Cancel"),
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -640,6 +644,43 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                             context: context,
                                             builder: (context) => action);
                                       },
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(
+                                Icons.dashboard,
+                                color: Colors.black54,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Details:",
+                                      style: titleText,
+                                    ),
+                                    TextFormField(
+                                      style: dataText,
+                                      onChanged: (data) {
+                                        workExperience.details = data;
+                                      },
+                                      controller: detailCtr,
+                                      decoration: InputDecoration(
+                                          hintText: "Select Details"),
+                                      maxLines: 5,
                                     )
                                   ],
                                 ),

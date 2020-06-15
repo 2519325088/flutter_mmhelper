@@ -10,6 +10,7 @@ import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
 import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MyJobListPage extends StatefulWidget {
   @override
@@ -215,7 +216,7 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "1h ago",
+                        timeago.format(jobDetailData.createTime??DateTime.now()),
                         style: TextStyle(color: Colors.black54),
                       ),
                     ],

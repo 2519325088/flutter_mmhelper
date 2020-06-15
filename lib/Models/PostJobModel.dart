@@ -14,8 +14,7 @@ class PostJob {
   String preferredLang;
   String workWithMaid;
   DateTime available;
-
-  //DateTime availableTime;
+  DateTime createTime;
   String currencyType;
   String salary;
   String unitSize;
@@ -40,14 +39,21 @@ class PostJob {
       this.moreDescription,
       this.skillRequirement,
       this.preferredLang,
-      this.workWithMaid
+      this.workWithMaid,
+      this.createTime
       //this.availableTime
       });
 
   factory PostJob.fromMap(Map<String, dynamic> json) => PostJob(
+        createTime: (!json.containsKey("create_time")) ||
+                (json["create_time"] == null) ||
+                (json["create_time"] == "")
+            ? null
+            : (json["create_time"] as Timestamp).toDate(),
         id: json["id"] == null ? null : json["id"],
         userId: json["user_id"] == null ? null : json["user_id"],
-        workWithMaid: json["workWithMaid"] == null ? null : json["workWithMaid"],
+        workWithMaid:
+            json["workWithMaid"] == null ? null : json["workWithMaid"],
         preferredLang:
             json["preferredLang"] == null ? null : json["preferredLang"],
         jobShortDescription: json["job_short_description"] == null
@@ -98,6 +104,7 @@ class PostJob {
         "more_description": moreDescription == null ? null : moreDescription,
         "skill_requirement": skillRequirement == null ? null : skillRequirement,
         "preferredLang": preferredLang == null ? null : preferredLang,
+        "create_time": createTime == null ? null : createTime,
         /*"available_time": availableTime == null ? null : availableTime,*/
       };
 }

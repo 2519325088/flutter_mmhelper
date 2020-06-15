@@ -21,7 +21,9 @@ class FlContent {
   final String whatsApp;
   final String id;
   final String countryCode;
+  final String facebookId;
   String userId;
+  DateTime createTime;
 
   FlContent({
     //this.imageDeck,
@@ -44,13 +46,20 @@ class FlContent {
     this.id,
     this.userId,
     this.countryCode,
+    this.createTime,
+    this.facebookId,
   });
 
-  factory FlContent.fromMap(Map<String, dynamic> data, String documentId) =>
-      FlContent(
-       // imageDeck: List<ImageDeck>.from(
-       //     data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
+  factory FlContent.fromMap(Map<String, dynamic> data) => FlContent(
+        // imageDeck: List<ImageDeck>.from(
+        //     data["imageDeck"].map((x) => ImageDeck.fromMap(x))),
+        createTime: (!data.containsKey("create_time")) ||
+                (data["create_time"] == null) ||
+                (data["create_time"] == "")
+            ? null
+            : (data["create_time"] as Timestamp).toDate(),
         education: data["education"],
+        facebookId: data["facebookId"],
         email: data["email"],
         gender: data["gender"],
         profileImageUrl: data["profileImageUrl"],
@@ -66,12 +75,12 @@ class FlContent {
         religion: data["religion"],
         type: data["type"],
         whatsApp: data["whatsApp"],
-        id: documentId,
         userId: data["userId"],
         countryCode: data["countryCode"],
       );
 
   Map<String, dynamic> toMap() => {
+        "create_time": createTime == null ? null : createTime,
         "education": education,
         "email": email,
         "gender": gender,
@@ -90,6 +99,7 @@ class FlContent {
         "whatsApp": whatsApp,
         "userId": userId,
         "countryCode": countryCode,
+        "facebookId": facebookId,
       };
 }
 

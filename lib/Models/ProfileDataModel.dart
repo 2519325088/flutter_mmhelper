@@ -210,6 +210,7 @@ class Workexperience {
   String reterence;
   DateTime start;
   String taken;
+  String details;
 
   Workexperience({
     this.country,
@@ -219,6 +220,7 @@ class Workexperience {
     this.reterence,
     this.start,
     this.taken,
+    this.details
   });
 
   factory Workexperience.fromMap(Map<String, dynamic> json) => Workexperience(
@@ -233,6 +235,7 @@ class Workexperience {
             ? null
             : DateTime.parse(json["start"]),
         taken: json["taken"] == null ? null : json["taken"],
+        details: json["details"] == null ? null : json["details"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -247,5 +250,6 @@ class Workexperience {
             ? null
             : "${start.year.toString().padLeft(4, '0')}-${start.month.toString().padLeft(2, '0')}-${start.day.toString().padLeft(2, '0')}",
         "taken": taken == null ? null : taken,
+        "details": details == null ? null : details,
       };
 }

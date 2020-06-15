@@ -192,7 +192,10 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
       print("this is user id:${database.lastUserId}");
       if (imageUrl != null) {
         final flContent = FlContent(
+          createTime: DateTime(DateTime.now().year, DateTime.now().month,
+              DateTime.now().day, TimeOfDay.now().hour, TimeOfDay.now().minute),
           lastname: lastnameController.text ?? "",
+          facebookId: facebookEmailController.text??"",
           firstname: firstnameController.text ?? "",
           username: usernameController.text ?? "",
           role: role ?? "",
@@ -875,6 +878,7 @@ class _SignUpScreenState extends State<SignUpScreen> with AfterInitMixin {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8),
                                       child: TextFormField(
+
                                         controller: facebookEmailController,
                                         cursorColor:
                                             Theme.of(context).accentColor,

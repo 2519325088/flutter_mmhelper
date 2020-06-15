@@ -6,7 +6,7 @@ import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/ChatPage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 import 'widgets/CustomPopup.dart';
 
 class JobDetailPage extends StatefulWidget {
@@ -187,7 +187,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      "1h ago",
+                                      timeago.format(widget.jobDetailData.createTime??DateTime.now()),
                                       style: TextStyle(color: Colors.black54),
                                     ),
                                   ],

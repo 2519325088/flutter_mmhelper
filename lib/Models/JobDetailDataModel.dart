@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 JobDetailData jobDetailDataFromJson(String str) => JobDetailData.fromMap(json.decode(str));
 
 String jobDetailDataToJson(JobDetailData data) => json.encode(data.toMap());
@@ -23,6 +25,7 @@ class JobDetailData {
   String userId;
   String weeklyHoliday;
   String workingLocation;
+  DateTime createTime;
 
   JobDetailData({
     this.accommodation,
@@ -39,9 +42,15 @@ class JobDetailData {
     this.userId,
     this.weeklyHoliday,
     this.workingLocation,
+    this.createTime,
   });
 
   factory JobDetailData.fromMap(Map<String, dynamic> json) => JobDetailData(
+    createTime: (!json.containsKey("create_time")) ||
+        (json["create_time"] == null) ||
+        (json["create_time"] == "")
+        ? null
+        : (json["create_time"] as Timestamp).toDate(),
     accommodation: json["accommodation"] == null ? null : json["accommodation"],
     available: json["available"] == null || json["available"] == '' ? null : DateTime.parse(json["available"]),
     contractType: json["contract_type"] == null ? null : json["contract_type"],
@@ -59,6 +68,7 @@ class JobDetailData {
   );
 
   Map<String, dynamic> toMap() => {
+    "create_time": createTime == null ? null : createTime,
     "accommodation": accommodation == null ? null : accommodation,
     "available": available == null ? null : available.toIso8601String(),
     "contract_type": contractType == null ? null : contractType,
