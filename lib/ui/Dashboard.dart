@@ -136,16 +136,16 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     setState(() {});
   }*/
 
-  madeGridList() async {
+  Future<void> madeGridList() async {
     setState(() {
       isLoading = true;
     });
     print("call grid list");
     int i = 1;
     int userData = 1;
-    listProfileData=[];
+    listProfileData = [];
     gridListData = [];
-    listUserData =[];
+    listUserData = [];
     final database = Provider.of<FirestoreDatabase>(context);
     Firestore.instance
         .collection(APIPath.userList())
@@ -607,13 +607,16 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
                 )):SizedBox(),*/
                 gridListData.length != 0 && isLoading == false
                     ? Expanded(
-                        child: GridView(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio:
-                                      SizeConfig.safeBlockHorizontal / 4.7,
-                                  crossAxisCount: 2),
-                          children: gridListData,
+                        child: RefreshIndicator(
+                          onRefresh: madeGridList,
+                          child: GridView(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio:
+                                        SizeConfig.safeBlockHorizontal / 4.7,
+                                    crossAxisCount: 2),
+                            children: gridListData,
+                          ),
                         ),
                       )
                     : Expanded(
