@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
@@ -31,16 +32,6 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    /*   SharedPreferences.getInstance().then((prefs) {
-      print(prefs.getString("PhoneUserId"));
-      var contract = Firestore.instance
-          .collection('mb_contract')
-          .where('created_by', isEqualTo: prefs.getString("PhoneUserId"))
-          .getDocuments()
-          .then((snapshot) {
-        snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
-      });
-    });*/
   }
 
   @override
@@ -90,36 +81,50 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   }
 
   madeGridList() async {
-    int i = 1;
     listJobData = [];
     gridListData = [];
-    final database = Provider.of<FirestoreDatabase>(context);
-    database.flJobStream().first.then((contents) {
-      database.flUserStream().first.then((userDataList) {
-        contents.forEach((jobElement) async {
-          i++;
-          userDataList.forEach((user) {
-            if (jobElement.userId == user.userId) {
+    Firestore.instance
+        .collection(APIPath.userList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int profileCount = 0;
+        do {
+          FlContent userSignUp =
+              FlContent.fromMap(snapshot.documents[profileCount].data);
+          await Firestore.instance
+              .collection(APIPath.jobList())
+              .where("user_id", isEqualTo: userSignUp.userId)
+              .limit(1)
+              .getDocuments()
+              .then((snapshotProfile) {
+            if (snapshotProfile != null &&
+                snapshotProfile.documents != null &&
+                snapshotProfile.documents.length > 0) {
+              JobDetailData jobElement =
+                  JobDetailData.fromMap(snapshotProfile.documents[0].data);
+
               listJobData.add(jobElement);
               gridListData.add(jobCard(
-                  userData: user,
+                  userData: userSignUp,
                   jobDetailData: jobElement,
-                  userName: user.username,
+                  userName: userSignUp.username,
                   currentUser: widget.currentUserId,
                   userSnapshot: widget.querySnapshot));
             }
-            if (jobElement.userId == widget.currentUserId) {
-              isAvailable = true;
-            }
           });
-          if (contents.length < i) {
-            setState(() {
-              isLoading = false;
-            });
-          }
+          profileCount++;
+        } while (profileCount < snapshot.documents.length);
+        setState(() {
+          isLoading = false;
         });
-        print(listJobData.length);
-      });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 

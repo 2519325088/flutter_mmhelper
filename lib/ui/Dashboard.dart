@@ -116,7 +116,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     setState(() {
       isLoading = true;
     });
-    print("call grid list");
 
     listProfileData = [];
     gridListData = [];
@@ -128,13 +127,10 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       if (snapshot != null &&
           snapshot.documents != null &&
           snapshot.documents.length > 0) {
-        print(snapshot.documents.length);
         int profileCount = 0;
         do {
-          print("this is data : ${snapshot.documents[profileCount].data}");
           FlContent flContent =
               FlContent.fromMap(snapshot.documents[profileCount].data);
-          print("this is profile id: ${flContent.userId}");
           await Firestore.instance
               .collection(APIPath.candidateList())
               .where("id", isEqualTo: flContent.userId)
@@ -144,8 +140,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             if (snapshotProfile != null &&
                 snapshotProfile.documents != null &&
                 snapshotProfile.documents.length > 0) {
-              print(
-                  "this is profile data: ${snapshotProfile.documents[0].data}");
               ProfileData profileData =
                   ProfileData.fromMap(snapshotProfile.documents[0].data);
               if (profileData.status == "Approved Manually" ||
@@ -161,8 +155,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
           });
           profileCount++;
         } while (profileCount < snapshot.documents.length);
-        print("listProfileData ${listProfileData.length}");
-        print("Grid Data ${gridListData.length}");
         setState(() {
           isLoading = false;
         });
