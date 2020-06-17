@@ -37,7 +37,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   List<Widget> gridListData = [];
   List<ProfileData> gridSearchListData = [];
   List<ProfileData> listProfileData = List<ProfileData>();
-  List<FlContent> listUserData = [];
+
+  // List<FlContent> listUserData = [];
   SharedPreferences prefs;
   String currentUserId;
   QuerySnapshot querySnapshot;
@@ -111,102 +112,45 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     }
   }
 
-//    newGridSearchListData.forEach((element) async {
-//      print(element.education);
-//      gridListData.add(GridCardWidget(element:element));
-//    });
-//    setState(() {});
-//  }
-
-  /*onSearchChange(String filter) {
-    gridListData = [];
-    if (gridSearchListData.length == 0) {
-      makeSearch(filter: filter, searchListProfileData: listProfileData);
-    } else {
-      makeSearch(filter: filter, searchListProfileData: gridSearchListData);
-    }
-  }
-
-  void makeSearch({String filter, List<ProfileData> searchListProfileData}) {
-    searchListProfileData.forEach((f) {
-      if (f.firstname.toLowerCase().contains(filter.toLowerCase()) ||
-          f.selfintroduction.toLowerCase().contains(filter.toLowerCase()))
-        gridListData.add(GridCardWidget(f));
-    });
-    setState(() {});
-  }*/
-
-  madeGridList() async {
+  Future<void> madeGridList() async {
     setState(() {
       isLoading = true;
     });
-    print("call grid list");
-    int i = 1;
-    int userData = 1;
-    listProfileData=[];
+
+    listProfileData = [];
     gridListData = [];
-    listUserData =[];
-    final database = Provider.of<FirestoreDatabase>(context);
+
     Firestore.instance
         .collection(APIPath.userList())
         .getDocuments()
-        .then((snapshot) {
-      snapshot.documents.forEach((element) {
-        FlContent flContent = FlContent.fromMap(element.data);
-        listUserData.add(flContent);
-        userData++;
-        if (snapshot.documents.length < userData) {
-          database.flContentsStream().first.then((userDataList) {
-            listUserData.forEach((user) {
-              i++;
-              userDataList.forEach((element) {
-                if (element.id == user.userId) {
-                  print("element.status : ${element.status}");
-                  if (element.status == "Approved Manually" ||
-                      element.status == "Approved by system" ||
-                      element.status == "手動批准" ||
-                      element.status == "自動批准") {
-                    listProfileData.add(element);
-                    setState(() {
-                      gridListData.add(
-                          GridCardWidget(element: element, userData: user));
-                    });
-                  }
-                }
-              });
-              if (listUserData.length < i) {
-                setState(() {
-                  isLoading = false;
-                });
-              }
-            });
-          });
-        }
-      });
-      /*if (snapshot != null &&
+        .then((snapshot) async {
+      if (snapshot != null &&
           snapshot.documents != null &&
           snapshot.documents.length > 0) {
         int profileCount = 0;
         do {
-          ProfileData profileData =
-              ProfileData.fromMap(snapshot.documents[profileCount].data);
-          Firestore.instance
-              .collection(APIPath.userList())
-              .where("userId", isEqualTo: profileData.id)
+          FlContent flContent =
+              FlContent.fromMap(snapshot.documents[profileCount].data);
+          await Firestore.instance
+              .collection(APIPath.candidateList())
+              .where("id", isEqualTo: flContent.userId)
               .limit(1)
               .getDocuments()
-              .then((snapshot) {
-            if (snapshot != null &&
-                snapshot.documents != null &&
-                snapshot.documents.length > 0) {
-              FlContent flContent =
-                  FlContent.fromMap(snapshot.documents[0].data);
-              listProfileData.add(profileData);
-              setState(() {
+              .then((snapshotProfile) {
+            if (snapshotProfile != null &&
+                snapshotProfile.documents != null &&
+                snapshotProfile.documents.length > 0) {
+              ProfileData profileData =
+                  ProfileData.fromMap(snapshotProfile.documents[0].data);
+              if (profileData.status == "Approved Manually" ||
+                  profileData.status == "Approved by system" ||
+                  profileData.status == "手動批准" ||
+                  profileData.status == "自動批准") {
+                listProfileData.add(profileData);
+
                 gridListData.add(
                     GridCardWidget(element: profileData, userData: flContent));
-              });
-              print("listProfileData ${listProfileData.length}");
+              }
             }
           });
           profileCount++;
@@ -214,40 +158,13 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
         setState(() {
           isLoading = false;
         });
-      }*/
-    });
-
-    /*database.flUserStream().first.then((contents) {
-      database.flContentsStream().first.then((userDataList) {
-        contents.forEach((user) {
-          i++;
-          userDataList.forEach((element) {
-            if (element.id == user.userId) {
-              print(i);
-              listProfileData.add(element);
-              setState(() {
-                gridListData
-                    .add(GridCardWidget(element: element, userData: user));
-              });
-            }
-          });
-          if (contents.length < i) {
-            setState(() {
-              isLoading = false;
-            });
-          }
+      } else {
+        setState(() {
+          isLoading = false;
         });
-      });
-    });*/
+      }
+    });
   }
-
-//      contents.forEach((element) async {
-//        listProfileData.add(element);
-//        gridListData.add(GridCardWidget(element:element));
-//      });
-//      setState(() {});
-//    });
-//  }
 
   Widget GridCardWidget({ProfileData element, FlContent userData}) {
     print(element.workskill);
@@ -436,19 +353,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     print("this is i got:$currentUserId");
   }
 
-  /*Future<String> getImageUrl(DocumentReference imageReference) {
-    var completer = Completer<String>();
-    imageReference.get().then((onVlaue) {
-      FirebaseStorage.instance
-          .ref()
-          .child("/flamelink/media/${onVlaue.data["file"]}")
-          .getDownloadURL()
-          .then((onValue) {
-        completer.complete(onValue);
-      });
-    });
-    return completer.future;
-  }*/
 
   List<String> eduStringList = [];
   List<String> religionStringList = [];
@@ -506,21 +410,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          /*FloatingActionButton(
-              heroTag: null,
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchPage(
-                    onChanged: onChangeSearchList,
-                    listProfileData: listProfileData,
-                  );
-                }));
-              },
-              child: Icon(Icons.search),
-            ),
-            SizedBox(
-              height: 10,
-            ),*/
           widget.querySnapshot.documents[0]["role"] != "Employer"
               ? FloatingActionButton(
                   heroTag: null,
@@ -548,72 +437,21 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
               : SizedBox()
         ],
       ),
-      /*appBar: AppBar(
-          title: Text("Dashboard"),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.video_call),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return IndexPage();
-                  }));
-                }),
-            IconButton(
-                icon: Icon(Icons.chat),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ChatUserPage(
-                      currentUserId: currentUserId,
-                    );
-                  }));
-                }),
-            IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () async{
-                  database.lastUserId = null;
-                  _firebaseAuth.signOut();
-                  facebookLogin.logOut();
-                  prefs = await SharedPreferences.getInstance();
-                  prefs.clear();
-                  Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (context) {
-                    return LoginScreen();
-                  }), (Route<dynamic> route) => false);
-                }),
-          ],
-        ),*/
       body: isLoading == false
           ? Column(
               children: <Widget>[
-                /*isShow?Padding(
-                padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
-                child: TextField(
-                  onChanged: onSearchChange,
-                  style: TextStyle(fontSize: 18.0, color: Colors.black),
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        gridSearchListData = [];
-                        madeGridList();
-                        searchController.clear();
-                        FocusScope.of(context).requestFocus(FocusNode());
-                      },
-                    ),
-                    hintText: "Search",
-                  ),
-                  controller: searchController,
-                )):SizedBox(),*/
                 gridListData.length != 0 && isLoading == false
                     ? Expanded(
-                        child: GridView(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio:
-                                      SizeConfig.safeBlockHorizontal / 4.7,
-                                  crossAxisCount: 2),
-                          children: gridListData,
+                        child: RefreshIndicator(
+                          onRefresh: madeGridList,
+                          child: GridView(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio:
+                                        SizeConfig.safeBlockHorizontal / 4.7,
+                                    crossAxisCount: 2),
+                            children: gridListData,
+                          ),
                         ),
                       )
                     : Expanded(
@@ -627,28 +465,6 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
           : Center(
               child: CircularProgressIndicator(),
             ),
-      /*StreamBuilder(
-          stream: Firestore.instance
-              .collection('mb_profile')
-              .where("education", whereIn: ["Elementary"])
-              .where("religion", whereIn: ["Moslem"])
-              .snapshots(),
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: SizeConfig.safeBlockHorizontal / 4.9,
-                        crossAxisCount: 2),
-                    itemBuilder: (context, index) {
-                      return buildCard(context, snapshot, index);
-                    },
-                    itemCount: snapshot.data.documents.length,
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
-        )*/
     );
   }
 
