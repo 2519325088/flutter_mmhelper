@@ -194,7 +194,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                                   return ChatPage(
-                                      peerId: widget.userData.id,
+                                      peerId: widget.userData.userId,
                                       peerAvatar:
                                       widget.userData.profileImageUrl,
                                       peerName:

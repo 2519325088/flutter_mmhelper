@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:after_init/after_init.dart';
 
 class FileReaderPage extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class FileReaderPage extends StatefulWidget {
   FileReaderPage({Key: Key, this.filePath});
 }
 
-class _FileReaderPageState extends State<FileReaderPage> {
+class _FileReaderPageState extends State<FileReaderPage> with AfterInitMixin{
   String pathPDF = "";
   int indexlast;
 
@@ -31,6 +32,26 @@ class _FileReaderPageState extends State<FileReaderPage> {
         pathPDF = f.path;
         print("this is  filepath: ${pathPDF}");
       });
+    });
+  }
+
+  @override
+  void didInitState() {
+    createFileOfPdfUrl().then((f) {
+      pathPDF = f.path;
+      if(pathPDF!="" && indexlast != -1){
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PDFScreen(pathPDF)),
+          );
+      }
+//      setState(() {
+//        pathPDF = f.path;
+//        if(pathPDF!=""){
+//          PDFScreen(pathPDF);
+//        }
+//        print("this is  filepath: ${pathPDF}");
+//      });
     });
   }
 
@@ -53,14 +74,8 @@ class _FileReaderPageState extends State<FileReaderPage> {
       appBar: AppBar(
         title: Text("doc"),
       ),
-      body: widget.filePath!="" && widget.filePath!=null?(indexlast != -1?Center(
-        child: RaisedButton(
-          child: Text("Open PDF"),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PDFScreen(pathPDF)),
-          ),
-        ),
+      body:widget.filePath!="" && widget.filePath!=null?(indexlast !=-1?Center(
+        child: CircularProgressIndicator(),
       ):Container(
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -72,7 +87,27 @@ class _FileReaderPageState extends State<FileReaderPage> {
             ),
           ),
         ),
-      )):Text("File not uploaded"),
+      )):Text("File not uploaded") ,
+//      body: widget.filePath!="" && widget.filePath!=null?(indexlast != -1?Center(
+//        child: RaisedButton(
+//          child: Text("Open PDF"),
+//          onPressed: () => Navigator.push(
+//            context,
+//            MaterialPageRoute(builder: (context) => PDFScreen(pathPDF)),
+//          ),
+//        ),
+//      ):Container(
+//        child: Padding(
+//          padding: const EdgeInsets.all(10),
+//          child: Container(
+//            width: double.infinity,
+//            child:Image.network(
+//              widget.filePath,
+//              fit: BoxFit.cover,
+//            ),
+//          ),
+//        ),
+//      )):Text("File not uploaded"),
     );
   }
 }
@@ -80,12 +115,25 @@ class _FileReaderPageState extends State<FileReaderPage> {
 class PDFScreen extends StatelessWidget {
   String pathPDF = "";
   PDFScreen(this.pathPDF);
+  Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
+  Color gradientEnd = Color(0xffe7d981);
 
   @override
   Widget build(BuildContext context) {
     return PDFViewerScaffold(
         appBar: AppBar(
           title: Text("Document"),
+          leading: IconButton(
+              color: gradientStart,
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onPressed: (){
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.share),
