@@ -47,7 +47,8 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       procontext.id = data.documentID;
       _service.setData(path: APIPath.newContract(data.documentID),
         data: procontext.toMap());
-      List datalist= ["Submitted",
+      List datalist= [
+        "Submitted",
         "Paid",
         "Preparing",
         "Documents ready",
