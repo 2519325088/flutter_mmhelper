@@ -117,7 +117,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
               padding: const EdgeInsets.all(10),
               alignment: FractionalOffset.centerRight,
               child: Text(
-                "Ret.No.01000024",
+                contartSnapshot!=null?"Contract No:${contartSnapshot["contract_id"]}":"",
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
@@ -168,7 +168,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                           Text(
                             "Contract info",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.grey,
                             ),
                             textAlign:TextAlign.center,
@@ -202,7 +202,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                           Text(
                             "Employer info",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.grey,
                             ),
                             textAlign:TextAlign.center,
@@ -228,7 +228,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                           Text(
                             "Helper info",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.grey,
                             ),
                             textAlign:TextAlign.center,
