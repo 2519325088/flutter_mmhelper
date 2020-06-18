@@ -810,49 +810,6 @@ class _ProfileDateilState extends State<ProfileDateil> {
                         ),
                       ),
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.edit_location,
-                                  size: 20,
-                                  color: Colors.black.withOpacity(0.7),
-                                ),
-                                Text(
-                                  " ${AppLocalizations.of(context).translate('address')}:",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black.withOpacity(0.7),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                                padding:
-                                const EdgeInsets.only(left: 20, top: 10),
-                                child: Text(
-                                  /* widget.proSnapshot['current'] !=
-                                                "Select"
-                                            ? widget.proSnapshot['current']
-                                            : "",*/
-                                  dataListService.getCurrentLocationValue(
-                                      languageCode: widget.languageCode,
-                                      location:
-                                      widget.profileData.address ?? ""),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ),
 //                    Container(
 //                      child: Padding(
 //                        padding: const EdgeInsets.all(10),
@@ -1755,6 +1712,61 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                                                 .workexperiences[
                                                                     index]
                                                                 .reterence ??
+                                                            "",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Padding(
+                                                padding:
+                                                const EdgeInsets.all(10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(
+                                                          Icons.assignment,
+                                                          size: 20,
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
+                                                        ),
+                                                        Text(
+                                                          " ${AppLocalizations.of(context).translate('Detail_Information')}:",
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                0.7),
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20,
+                                                          top: 10),
+                                                      child: Text(
+                                                        /*workinfo["reterence"] !=
+                                                                "Select"
+                                                            ? workinfo[
+                                                                "reterence"]
+                                                            : "",*/
+                                                        widget
+                                                            .profileData
+                                                            .workexperiences[
+                                                        index]
+                                                            .details ??
                                                             "",
                                                         style: TextStyle(
                                                           fontSize: 18,
