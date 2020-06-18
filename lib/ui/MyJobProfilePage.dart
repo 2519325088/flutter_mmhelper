@@ -430,6 +430,26 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
             );
           });
 
+          if (profileData.current == "Hong Kong") {
+            listContractData.forEach((f) {
+              if (onValue.documents[0]["contract"]
+                  .toString()
+                  .contains(f.nameId)) {
+                contractCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.contract = f.nameId;
+              }
+            });
+          } else {
+            quitReasonData.forEach((f) {
+              if (onValue.documents[0]["contract"]
+                  .toString()
+                  .contains(f.nameId)) {
+                contractCtr.text = f.getValueByLanguageCode(languageCode);
+                profileData.contract = f.nameId;
+              }
+            });
+          }
+
           setState(() {});
 
           onValue.documents[0]["workexperiences"].forEach((f) {
@@ -652,7 +672,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                 languageCode: languageCode,
                 dataList: f,
                 onPressedCall: (dataList) {
-
                   locationCtr.text =
                       dataList.getValueByLanguageCode(languageCode);
                   profileData.current = dataList.nameId;
