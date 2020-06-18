@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/utils/data.dart';
 import 'package:flutter_mmhelper/ui/ContractFiles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/ui/LookRemark.dart';
 
 class ApplicationDetails extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class ApplicationDetails extends StatefulWidget {
 }
 
 class _ApplicationDetailsState extends State<ApplicationDetails> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   SharedPreferences prefs;
@@ -20,10 +22,10 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
   DocumentSnapshot contartSnapshot = null;
 
   List<String> process_status = new List(applications.length);
+  List<String> remark = new List(applications.length);
 
 
   void getstatus(String title, int index) {
-    print(widget.userId);
     String contractId = "";
 //    SharedPreferences.getInstance().then((prefs) {
     Firestore.instance
@@ -34,7 +36,6 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
           if (snapshot != null &&
               snapshot.documents != null &&
               snapshot.documents.length > 0) {
-//             snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
             contractId = snapshot.documents[0]['id'];
             Firestore.instance
                 .collection('mb_contract_status')
@@ -48,14 +49,17 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                       snapshot.documents.length > 0) {
         //            snapshot.documents.forEach((f) => print('snapshot :${f.data}}'));
                     process_status[index] = snapshot.documents[0]["process_status"];
+                    remark[index] = snapshot.documents[0]["remark"];
                     setState(() {});
                   } else {
                     process_status[index] = 'N/A';
+                    remark[index] ="";
                     setState(() {});
                   }
                 });
           } else {
             process_status[index] = 'N/A';
+            remark[index] ="";
             setState(() {});
           }
       });
@@ -68,7 +72,9 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
         .where('created_by', isEqualTo:widget.userId)
         .getDocuments()
         .then((snapshot) {
-      contartSnapshot = snapshot.documents[0];
+          if(snapshot.documents.length>0) {
+            contartSnapshot = snapshot.documents[0];
+          }
     });
   }
   @override
@@ -81,6 +87,7 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: gradientStart,
         title: Text(
@@ -138,11 +145,19 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                         children: <Widget>[
                           IconButton(
                             onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return ContractFiles(contartSnapshot: contartSnapshot,);
+                              if(contartSnapshot!= null){
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return ContractFiles(contartSnapshot: contartSnapshot,);
 //                                    return ContractFiles();
-                                  }));
+                                }));
+                              }else{
+                                scaffoldKey.currentState
+                                    .showSnackBar(SnackBar(
+                                    content: Text(
+                                      "Please add the contract first",
+                                    )));
+                              }
                             },
                             icon: Icon(
                               Icons.account_box,
@@ -370,13 +385,20 @@ class _ApplicationDetailsState extends State<ApplicationDetails> {
                                         ),
                                         GestureDetector(
                                           child: Text(
-                                            "View more",
+                                            remark[index]!=""?"View more":"",
                                             style: TextStyle(
                                               fontSize: 18,
                                               color: Colors.grey,
                                             ),
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            if(remark[index]!=""){
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(builder: (context) {
+                                                return RemarkPage(remarkText: remark[index]);
+                                              }));
+                                            }
+                                          },
                                         )
                                       ],
                                     ),

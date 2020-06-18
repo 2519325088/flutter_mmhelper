@@ -61,7 +61,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_1"]!=""){
+                  if(widget.contartSnapshot["doc_1"]!="" && widget.contartSnapshot["doc_1"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_1"]);
@@ -69,7 +69,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("1. Passport"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_1"]!="" && widget.contartSnapshot["doc_1"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -81,7 +81,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_2"]!=""){
+                  if(widget.contartSnapshot["doc_2"]!="" && widget.contartSnapshot["doc_2"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_2"],);
@@ -89,7 +89,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("2. Employer Bank in receipt"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_2"]!="" && widget.contartSnapshot["doc_2"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -101,7 +101,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_3"]!=""){
+                  if(widget.contartSnapshot["doc_3"]!="" && widget.contartSnapshot["doc_3"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_3"],);
@@ -109,7 +109,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("3. Standard Services Agreement"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_3"]!="" && widget.contartSnapshot["doc_3"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -121,7 +121,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_4"]!=""){
+                  if(widget.contartSnapshot["doc_4"]!="" && widget.contartSnapshot["doc_4"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_4"],);
@@ -129,7 +129,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("4. Maid received of the Service Agreemnt and Job offer"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_4"]!="" && widget.contartSnapshot["doc_4"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -141,7 +141,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_5"]!=""){
+                  if(widget.contartSnapshot["doc_5"]!="" && widget.contartSnapshot["doc_5"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_5"],);
@@ -149,7 +149,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("5. Employer received of SA"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_5"]!="" && widget.contartSnapshot["doc_5"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -161,7 +161,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_6"]!=""){
+                  if(widget.contartSnapshot["doc_6"]!="" && widget.contartSnapshot["doc_6"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_6"],);
@@ -169,7 +169,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("6. Employer - Hong Kong Identity Card (HKID)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_6"]!="" && widget.contartSnapshot["doc_6"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -181,7 +181,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_7"]!=""){
+                  if(widget.contartSnapshot["doc_7"]!="" && widget.contartSnapshot["doc_7"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_7"],);
@@ -189,7 +189,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("7. the latest 3 months address (Utility bills)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_7"]!="" && widget.contartSnapshot["doc_7"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -201,7 +201,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_8"]!=""){
+                  if(widget.contartSnapshot["doc_8"]!="" && widget.contartSnapshot["doc_8"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_8"],);
@@ -209,7 +209,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("8. the latest Tax Demand Note or last 3 months auto-payment of Salary Statement or Fixed Deposit",),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_8"]!="" && widget.contartSnapshot["doc_8"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -221,7 +221,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_9"]!=""){
+                  if(widget.contartSnapshot["doc_9"]!="" && widget.contartSnapshot["doc_9"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_9"],);
@@ -229,7 +229,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("9. Complete list and information of household members. (Full name, year of birth, relationship and HKIC no.)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_9"]!="" && widget.contartSnapshot["doc_9"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -241,7 +241,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_10"]!=""){
+                  if(widget.contartSnapshot["doc_10"]!="" && widget.contartSnapshot["doc_10 "]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_10"],);
@@ -249,7 +249,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("10. Other supporting documents that may need"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_10"]!="" && widget.contartSnapshot["doc_10"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -261,7 +261,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_11"]!=""){
+                  if(widget.contartSnapshot["doc_11"]!="" && widget.contartSnapshot["doc_11"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_11"],);
@@ -269,7 +269,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("11. Hong Kong Identity Card (HKID) of all previous and existing helper"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_11"]!="" && widget.contartSnapshot["doc_11"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -281,7 +281,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_12"]!=""){
+                  if(widget.contartSnapshot["doc_12"]!="" && widget.contartSnapshot["doc_12"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_12"],);
@@ -289,7 +289,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("12. Notarized Employment Contract of all previous and existing helper."),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_12"]!="" && widget.contartSnapshot["doc_12"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -301,7 +301,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_13"]!=""){
+                  if(widget.contartSnapshot["doc_13"]!="" && widget.contartSnapshot["doc_13"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_13"],);
@@ -309,7 +309,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("13. Released or Termination Letter (ID407E) of all previous helper."),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_13"]!="" && widget.contartSnapshot["doc_13"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -321,7 +321,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_14"]!=""){
+                  if(widget.contartSnapshot["doc_14"]!="" && widget.contartSnapshot["doc_14"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_14"],);
@@ -329,7 +329,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("14. Maid - Photocopy of Passport (with at least 1 year validity)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_14"]!="" && widget.contartSnapshot["doc_14"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -341,7 +341,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_15"]!=""){
+                  if(widget.contartSnapshot["doc_15"]!="" && widget.contartSnapshot["doc_15"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_15"],);
@@ -349,7 +349,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("15. Maid - Original copy of Certificate of Employment for 2 years working as domestic helper"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_15"]!="" && widget.contartSnapshot["doc_15"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -361,7 +361,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_16"]!=""){
+                  if(widget.contartSnapshot["doc_16"]!="" && widget.contartSnapshot["doc_16"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_16"],);
@@ -369,7 +369,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("16. Maid - Photocopy of Hong Kong Identity Card (HKID)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_16"]!="" && widget.contartSnapshot["doc_16"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -381,7 +381,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_17"]!=""){
+                  if(widget.contartSnapshot["doc_17"]!="" && widget.contartSnapshot["doc_17"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_17"],);
@@ -389,7 +389,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("17. Maid - Photocopy of previous Notarized Hong Kong Employment Contract (ID407)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_17"]!="" && widget.contartSnapshot["doc_17"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -401,7 +401,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_18"]!=""){
+                  if(widget.contartSnapshot["doc_18"]!="" && widget.contartSnapshot["doc_18"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_18"],);
@@ -409,7 +409,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("18. Maid - Photocopy of duly signed Termination or Release Letter (ID407E)"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_18"]!="" && widget.contartSnapshot["doc_18"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -421,7 +421,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_19"]!=""){
+                  if(widget.contartSnapshot["doc_19"]!="" && widget.contartSnapshot["doc_19"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_19"],);
@@ -429,7 +429,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("19. Maid - Other supporting documents that may need"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_19"]!="" && widget.contartSnapshot["doc_19"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -441,7 +441,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_20"]!=""){
+                  if(widget.contartSnapshot["doc_20"]!="" && widget.contartSnapshot["doc_20"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_20"],);
@@ -449,7 +449,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("20. Pick up checklist"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_20"]!="" && widget.contartSnapshot["doc_20"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
             Container(
@@ -461,7 +461,7 @@ class _ContractFilesState extends State<ContractFiles> {
                       bottom: borderSide)),
               child: ListTile(
                 onTap: () {
-                  if(widget.contartSnapshot["doc_21"]!=""){
+                  if(widget.contartSnapshot["doc_21"]!="" && widget.contartSnapshot["doc_21"]!=null){
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return FileReaderPage(filePath: widget.contartSnapshot["doc_21"],);
@@ -469,7 +469,7 @@ class _ContractFilesState extends State<ContractFiles> {
                   }
                 },
                 title: Text("21. Maid - Old Passport"),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: widget.contartSnapshot["doc_21"]!="" && widget.contartSnapshot["doc_21"]!=null?Icon(Icons.arrow_forward_ios):Text(""),
               ),
             ),
           ],
