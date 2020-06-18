@@ -48,9 +48,9 @@ class _JobDetailPageState extends State<JobDetailPage> {
     // TODO: implement initState
     super.initState();
     getPhoneUserId().then((value) {
-      print(widget.userData.id);
+      print(widget.userData.userId);
       print(value);
-      if (widget.userData.id != value) {
+      if (widget.userData.userId!= value) {
         setState(() {
           isLoginUser = false;
         });
@@ -208,14 +208,14 @@ class _JobDetailPageState extends State<JobDetailPage> {
                         ],
                       ),
                     ),
-                    widget.userData.id != widget.currentUser
+                    widget.userData.userId != widget.currentUser
                         ? GestureDetector(
                             onTap: () async {
                               if (widget.isAvailable) {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return ChatPage(
-                                      peerId: widget.userData.id,
+                                      peerId: widget.userData.userId,
                                       peerAvatar:
                                           widget.userData.profileImageUrl,
                                       peerName:
@@ -227,7 +227,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ChatPage(
-                                        peerId: widget.userData.id,
+                                        peerId: widget.userData.userId,
                                         peerAvatar:
                                             widget.userData.profileImageUrl,
                                         peerName:
@@ -364,7 +364,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                           title: "More Job Description",
                           filedCtr: moreJobDesCtr,
                           icons: Icons.description,
-                          maxLine: 1),
+                          maxLine: 3),
                     ],
                   ),
                 ),
