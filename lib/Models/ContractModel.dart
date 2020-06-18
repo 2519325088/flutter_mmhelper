@@ -11,6 +11,7 @@ class ContractContext {
   String id;
   final String img_receipt;
   final String profile_id;
+  final String contract_id;
 
 
   ContractContext({
@@ -23,6 +24,7 @@ class ContractContext {
     this.id,
     this.img_receipt,
     this.profile_id,
+    this.contract_id,
   });
 
   factory ContractContext.fromMap(Map<String, dynamic> data,
@@ -37,6 +39,7 @@ class ContractContext {
         id: data["id"],
         img_receipt: data["img_receipt"],
         profile_id: data["profile_id"],
+        contract_id: data["contract_id"],
       );
 
   Map<String, dynamic> toMap() =>
@@ -50,6 +53,7 @@ class ContractContext {
         "id": id,
         "img_receipt": img_receipt,
         "profile_id": profile_id,
+        "contract_id": contract_id,
       };
 
 }

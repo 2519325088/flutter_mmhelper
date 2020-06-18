@@ -167,6 +167,7 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
 
   Future<void> getQuestionsAnswersData() async {
     skilllist = widget.skill.split(";");
+    skilllist.add("Passport");
     questionlist = [];
     resfullist = [];
     if (skilllist != null && skilllist.length > 0) {
@@ -242,56 +243,56 @@ class _QuestionPageState extends State<QuestionPage> with AfterInitMixin {
     }
   }
 
-  Future<String> getQuestions(String skilltext) async {
-    if(skilltext =="Care Kids (3-12 yr old)"){
-      skilltext = "Care Kids";
-    }
-    if(skilltext =="Care New-born (0-1 yr old)"){
-      skilltext = "New Born";
-    }
-    if(skilltext =="Care Toddlers(1-3 yr old)"){
-      skilltext = "Care Toddler";
-    }
-    print(skilltext);
-    Firestore.instance
-        .collection('mb_question_master')
-        .where("skill", isEqualTo: skilltext)
-        .getDocuments()
-        .then((snapshot) {
-      snapshot.documents.forEach((f) async {
-        questionlist.add(f);
-        //questVlue.add("1");
-        // setState(() {});
-        Firestore.instance
-            .collection('mb_question_result')
-            .where("question_id", isEqualTo: f["ID"])
-            .where("profile_id", isEqualTo: widget.profileid)
-            .getDocuments()
-            .then((snapshot) {
-          if (snapshot != null &&
-              snapshot.documents != null &&
-              snapshot.documents.length > 0) {
-            resfullist.add(QuestionResultContext.fromMap(
-                snapshot.documents[0].data, snapshot.documents[0].documentID));
-            setState(() {});
-          } else {
-            resfullist.add(QuestionResultContext(
-              ID: null,
-              answer: null,
-              profile_id: null,
-              question_id: null,
-            ));
-            setState(() {});
-          }
-          /*  snapshot.documents.forEach((f) async {
-            resfullist.add(f);
-            print('snapshot :${f.data}}');
-            setState(() {});
-          });*/
-        });
-      });
-    });
-  }
+//  Future<String> getQuestions(String skilltext) async {
+//    if(skilltext =="Care Kids (3-12 yr old)"){
+//      skilltext = "Care Kids";
+//    }
+//    if(skilltext =="Care New-born (0-1 yr old)"){
+//      skilltext = "New Born";
+//    }
+//    if(skilltext =="Care Toddlers(1-3 yr old)"){
+//      skilltext = "Care Toddler";
+//    }
+//    print(skilltext);
+//    Firestore.instance
+//        .collection('mb_question_master')
+//        .where("skill", isEqualTo: skilltext)
+//        .getDocuments()
+//        .then((snapshot) {
+//      snapshot.documents.forEach((f) async {
+//        questionlist.add(f);
+//        //questVlue.add("1");
+//        // setState(() {});
+//        Firestore.instance
+//            .collection('mb_question_result')
+//            .where("question_id", isEqualTo: f["ID"])
+//            .where("profile_id", isEqualTo: widget.profileid)
+//            .getDocuments()
+//            .then((snapshot) {
+//          if (snapshot != null &&
+//              snapshot.documents != null &&
+//              snapshot.documents.length > 0) {
+//            resfullist.add(QuestionResultContext.fromMap(
+//                snapshot.documents[0].data, snapshot.documents[0].documentID));
+//            setState(() {});
+//          } else {
+//            resfullist.add(QuestionResultContext(
+//              ID: null,
+//              answer: null,
+//              profile_id: null,
+//              question_id: null,
+//            ));
+//            setState(() {});
+//          }
+//          /*  snapshot.documents.forEach((f) async {
+//            resfullist.add(f);
+//            print('snapshot :${f.data}}');
+//            setState(() {});
+//          });*/
+//        });
+//      });
+//    });
+//  }
 
   Widget buildGrid(int index, Map options, String questionid) {
     List<Widget> tiles = []; //先建一个数组用于存放循环生成的widget

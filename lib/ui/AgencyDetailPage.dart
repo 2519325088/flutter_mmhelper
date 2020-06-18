@@ -28,6 +28,11 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
   final userid = "";
 
   Future<void> _submit() async {
+    String year = DateTime.now().year.toString().substring(2);
+    String month = DateTime.now().month.toString().padLeft(2,'0');
+    String day =DateTime.now().day.toString().padLeft(2,'0');
+    String hour =TimeOfDay.now().hour.toString().padLeft(2,'0');
+    String minute =TimeOfDay.now().minute.toString().padLeft(2,'0');
     prefs = await SharedPreferences.getInstance();
     print(prefs.getString("loginUid"));
 //          final database = Provider.of<FirestoreDatabase>(context);
@@ -41,6 +46,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
       img_receipt: "",
       id: "",
       profile_id: widget.proId,
+      contract_id: widget.agencySnapshot["contract_code"]+"-"+year+month+day+hour+minute,
     );
     Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data){
       print("this is ${data.documentID}");
