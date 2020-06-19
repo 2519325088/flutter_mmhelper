@@ -8,6 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/ui/ChatPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_mmhelper/Models/FavouriteModel.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileDateil extends StatefulWidget {
   @override
@@ -24,7 +29,70 @@ class _ProfileDateilState extends State<ProfileDateil> {
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
   DataListService dataListService;
+  final _service = FirestoreService.instance;
+  SharedPreferences prefs;
+  bool isFavourite= false;
 
+
+  @override
+  void initState() {
+    getLoginId();
+  }
+
+  Future<void> getLoginId() async {
+    prefs = await SharedPreferences.getInstance();
+    await Firestore.instance .collection('mb_favourite')
+        .where('profile_id', isEqualTo:widget.profileData.id)
+        .where("employer_id",isEqualTo: prefs.getString("loginUid"))
+        .getDocuments()
+        .then((snapshot) {
+      if(snapshot.documents.length>0) {
+        isFavourite = true;
+        setState(() {});
+      }else{
+        isFavourite = false;
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> deleteFavourite () async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("loginUid"));
+    await Firestore.instance .collection('mb_favourite')
+        .where('profile_id', isEqualTo:widget.profileData.id)
+        .where("employer_id",isEqualTo: prefs.getString("loginUid"))
+        .getDocuments()
+        .then((snapshot) {
+      if(snapshot.documents.length>0) {
+         Firestore.instance .collection('mb_favourite').document("${snapshot.documents[0]["id"]}/").delete();
+        isFavourite = false;
+        setState(() {});
+      }else{
+        isFavourite = false;
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> upFavourite () async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("loginUid"));
+    if(isFavourite == false){
+      final favouritetext = FavouriteContext(
+        employer_id:prefs.getString("loginUid") ,
+        id: "",
+        profile_id: widget.profileData.id,
+      );
+      Firestore.instance.collection("mb_favourite").add(favouritetext.toMap()).then((datas){
+        favouritetext.id = datas.documentID;
+        _service.setData(path: APIPath.newFavourite(datas.documentID),
+            data: favouritetext.toMap());
+      });
+      isFavourite = true;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,10 +236,15 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       children: <Widget>[
                         IconButton(
                           onPressed: (){
+                            if(isFavourite == false){
+                              upFavourite();
+                            }else{
+                              deleteFavourite();
+                            }
                           },
                           icon: Icon(
                             Icons.star,
-                            color: Colors.grey,
+                            color: isFavourite?Colors.pink:Colors.grey,
                           ),
                           iconSize: 30,
                         ),

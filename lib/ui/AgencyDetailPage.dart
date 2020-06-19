@@ -18,7 +18,7 @@ class AgencyDetailPage extends StatefulWidget {
   _AgencyDetailPageState createState() => _AgencyDetailPageState();
 }
 
-class _AgencyDetailPageState extends State<AgencyDetailPage> {
+class _AgencyDetailPageState extends State<AgencyDetailPage>{
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);

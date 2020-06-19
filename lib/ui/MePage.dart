@@ -14,6 +14,7 @@ import 'package:flutter_mmhelper/ui/ApplicationDetails.dart';
 import 'package:flutter_mmhelper/ui/SoundRecording.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/ui/ShortlistedApplicats.dart';
 
 class MePage extends StatefulWidget {
   @override
@@ -255,6 +256,18 @@ class _MePageState extends State<MePage> {
                           right: borderSide,
                           bottom: borderSide)),
                   child: ListTile(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+//                            return SoundRecording();
+                            return Shortlisted(
+                              isFromLogin: true,
+                              mobileNo: widget.querySnapshot.documents[0]
+                              ["phone"],
+                              querySnapshot: widget.querySnapshot,
+                            );
+                          }));
+                    },
                     title: Text("Shortlisted Applicants"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
