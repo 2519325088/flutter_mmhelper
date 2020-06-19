@@ -71,11 +71,18 @@ class _ChatUserPageState extends State<ChatUserPage> {
     if (document['userId'] == widget.currentUserId) {
       return Container();
     } else {
+      String groupChatId;
+      if (widget.currentUserId.hashCode <=
+          document['userId'].toString().hashCode) {
+        groupChatId = '${widget.currentUserId}-${document['userId']}';
+      } else {
+        groupChatId = '${document['userId']}-${widget.currentUserId}';
+      }
       return StreamBuilder(
         stream: Firestore.instance
             .collection('messages')
-            .document("${widget.currentUserId}-${document['userId']}")
-            .collection("${widget.currentUserId}-${document['userId']}")
+            .document(groupChatId)
+            .collection(groupChatId)
             //.where("idTo", isEqualTo: widget.currentUserId)
             .orderBy("timestamp", descending: true)
             .limit(1)
@@ -110,11 +117,15 @@ class _ChatUserPageState extends State<ChatUserPage> {
                     );
                   },
                   leading: document['profileImageUrl'] != null
-                      ? CircleAvatar(
-                          radius: SizeConfig.safeBlockVertical * 3.5,
-                          backgroundImage:
-                              NetworkImage(document['profileImageUrl']),
-                          backgroundColor: Colors.white,
+                      ? CachedNetworkImage(
+                          imageUrl: document['profileImageUrl'],
+                          imageBuilder: (context, imageProvider) {
+                            return CircleAvatar(
+                              radius: SizeConfig.safeBlockVertical * 3.5,
+                              backgroundImage: imageProvider,
+                              backgroundColor: Colors.white,
+                            );
+                          },
                         )
                       : CircleAvatar(
                           radius: SizeConfig.safeBlockVertical * 3.5,
