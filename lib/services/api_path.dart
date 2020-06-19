@@ -3,6 +3,7 @@ class APIPath {
   static String newCandidate(String contentId) => 'mb_content/$contentId';
   static String newProfile(String contentId) => 'mb_profile/$contentId';
   static String newContract(String contentId) => 'mb_contract/$contentId';
+  static String newFavourite(String contentId) => 'mb_favourite/$contentId';
   static String newContractStatus(String contentId) => 'mb_contract_status/$contentId';
   static String updateJob(String contentId) => 'fl_job_post/$contentId';
   static String newJob(String contentId) => 'fl_job_post';

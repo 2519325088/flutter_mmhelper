@@ -45,13 +45,6 @@ class _FileReaderPageState extends State<FileReaderPage> with AfterInitMixin{
             MaterialPageRoute(builder: (context) => PDFScreen(pathPDF)),
           );
       }
-//      setState(() {
-//        pathPDF = f.path;
-//        if(pathPDF!=""){
-//          PDFScreen(pathPDF);
-//        }
-//        print("this is  filepath: ${pathPDF}");
-//      });
     });
   }
 
