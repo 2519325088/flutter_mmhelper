@@ -54,6 +54,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
   PostJob postJob = PostJob();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<DataList> listContractData = [];
+  List<DataList> listQuitReasonData = [];
   List<Widget> contractWidget = [];
   List<DataList> listJobTypeData = [];
   List<Widget> jobTypeWidget = [];
@@ -109,6 +110,18 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
           ),
         );*/
 
+        contractWidget.add(ChipsWidget(
+          languageCode: languageCode,
+          dataList: f,
+          typeStringList: contractStringList,
+          isSelected: false,
+        ));
+        contractWidget.add(SizedBox(
+          width: 5,
+        ));
+      });
+
+      listQuitReasonData.forEach((f) {
         contractWidget.add(ChipsWidget(
           languageCode: languageCode,
           dataList: f,
@@ -1121,6 +1134,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
     var getCountryList = Provider.of<GetCountryListService>(context);
     getCountryList.getCountryList();
     var appLanguage = Provider.of<DataListService>(context);
+    listQuitReasonData = appLanguage.listQuitReasonData;
     listContractData = appLanguage.listContractData;
     listJobTypeData = appLanguage.listJobTypeData;
     listAccommodationData = appLanguage.listAccommodationData;

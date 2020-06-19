@@ -40,7 +40,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
   List<JobDetailData> listOfCard = [];
   String languageCode;
   bool isLoading = true;
-
+  List<DataList> listQuitReasonData = [];
   List<DataList> listContractData = [];
   List<DataList> listJobTypeData = [];
   List<DataList> listAccommodationData = [];
@@ -81,6 +81,19 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
         width: 5,
       ));
     });
+
+    listQuitReasonData.forEach((f) {
+      contractWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.contractStringList,
+        isSelected: widget.contractStringList.contains(f.nameId),
+      ));
+      contractWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+
     listAccommodationData.forEach((f) {
       accommodationWidget.add(ChipsWidget(
         languageCode: languageCode,
@@ -254,7 +267,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
                   chipsCardWidget(
                       widgetList: accommodationWidget,
                       title: AppLocalizations.of(context)
-                          .translate('Accommodation')),
+                          .translate('accommodation')),
                 ],
               ),
             ),
@@ -307,6 +320,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
   void didInitState() {
     // TODO: implement didInitState
     var appLanguage = Provider.of<DataListService>(context);
+    listQuitReasonData = appLanguage.listQuitReasonData;
     listContractData = appLanguage.listContractData;
     listJobTypeData = appLanguage.listJobTypeData;
     listAccommodationData = appLanguage.listAccommodationData;
