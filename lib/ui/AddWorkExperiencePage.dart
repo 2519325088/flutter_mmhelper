@@ -140,9 +140,11 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
       });*/
 
       quitReasonHkData.forEach((f) {
-        if (f.nameId ==  widget.oldWorkExperience.reason) {
-          reasonCtr.text =  f.getValueByLanguageCode(languageCode);
-          workExperience.reason = widget.oldWorkExperience.reason;
+        if( widget.oldWorkExperience!=null) {
+          if (f.nameId == widget.oldWorkExperience.reason) {
+            reasonCtr.text = f.getValueByLanguageCode(languageCode);
+            workExperience.reason = widget.oldWorkExperience.reason;
+          }
         }
         reasonWidget.add(
           CupertinoActionSheetActionWidget(
@@ -160,9 +162,11 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
 
 
       listJobTypeData.forEach((f) {
-        if (f.nameId ==  widget.oldWorkExperience.jobtype) {
-          jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
-          workExperience.jobtype = widget.oldWorkExperience.jobtype;
+        if( widget.oldWorkExperience!=null) {
+          if (f.nameId == widget.oldWorkExperience.jobtype) {
+            jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
+            workExperience.jobtype = widget.oldWorkExperience.jobtype;
+          }
         }
         jobTypeWidget.add(
           CupertinoActionSheetActionWidget(
@@ -746,6 +750,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
     listWorkSkillData = appLanguage.listWorkSkillData;
     quitReasonData = appLanguage.listQuitReasonData;
     quitReasonHkData = appLanguage.listQuitReasonHkData;
+    print("this is quitReasonHkData ${quitReasonHkData.length}");
     listJobTypeData = appLanguage.listJobTypeData;
   }
 }

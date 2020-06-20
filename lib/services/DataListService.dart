@@ -1,9 +1,12 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:provider/provider.dart';
+
+import 'api_path.dart';
 
 class DataListService with ChangeNotifier {
   List<DataList> listEducationData = [];
@@ -75,119 +78,437 @@ class DataListService with ChangeNotifier {
     listMapQuitReasonData = LinkedHashMap<String, DataList>();
     listMapQuitReasonHkData = LinkedHashMap<String, DataList>();
 
-    final database = Provider.of<FirestoreDatabase>(context);
-    database.mbQuitReasonHkStream().first.then((contents) {
+    Firestore.instance
+        .collection(APIPath.quitReasonHkList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listQuitReasonHkData.add(element);
+          listMapQuitReasonHkData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
+    });
+
+    /*database.mbQuitReasonHkStream().first.then((contents) {
       contents.forEach((element) async {
         listQuitReasonHkData.add(element);
         listMapQuitReasonHkData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.quitReasonList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listQuitReasonData.add(element);
+          listMapQuitReasonData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbQuitReasonStream().first.then((contents) {
+
+    /*database.mbQuitReasonStream().first.then((contents) {
       contents.forEach((element) async {
         listQuitReasonData.add(element);
         listMapQuitReasonData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.accommodationList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listAccommodationData.add(element);
+          listMapAccommodationData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbAccommodationStream().first.then((contents) {
+
+    /*database.mbAccommodationStream().first.then((contents) {
       contents.forEach((element) async {
         listAccommodationData.add(element);
         listMapAccommodationData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.weekHolidayList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listWeekHolidayData.add(element);
+          listMapWeekHolidayData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbHolidayNoStream().first.then((contents) {
+
+    /*database.mbHolidayNoStream().first.then((contents) {
       contents.forEach((element) async {
         listWeekHolidayData.add(element);
         listMapWeekHolidayData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.educationList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listEducationData.add(element);
+          listMapEducationData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbEducationStream().first.then((contents) {
+
+    /*database.mbEducationStream().first.then((contents) {
       contents.forEach((element) async {
         listEducationData.add(element);
         listMapEducationData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.religionList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listReligionData.add(element);
+          listMapReligionData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbReligionStream().first.then((contents) {
+
+    /*database.mbReligionStream().first.then((contents) {
       contents.forEach((element) async {
         listReligionData.add(element);
         listMapReligionData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.maritalList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listMaritalData.add(element);
+          listMapMaritalData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbMaritalStream().first.then((contents) {
+
+    /*database.mbMaritalStream().first.then((contents) {
       contents.forEach((element) async {
         listMaritalData.add(element);
         listMapMaritalData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.childrenList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listChildrenData.add(element);
+          listMapChildrenData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbChildrenStream().first.then((contents) {
+
+    /*database.mbChildrenStream().first.then((contents) {
       contents.forEach((element) async {
         listChildrenData.add(element);
         listMapChildrenData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.jobTypeList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listJobTypeData.add(element);
+          listMapJobTypeData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbJobTypeStream().first.then((contents) {
+
+    /*database.mbJobTypeStream().first.then((contents) {
       contents.forEach((element) async {
         listJobTypeData.add(element);
         listMapJobTypeData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.jobCapList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listJobCapData.add(element);
+          listMapJobCapData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbJobCapStream().first.then((contents) {
+
+    /*database.mbJobCapStream().first.then((contents) {
       contents.forEach((element) async {
         listJobCapData.add(element);
         listMapJobCapData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.contractList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listContractData.add(element);
+          listMapContractData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbContractStream().first.then((contents) {
+
+    /*database.mbContractStream().first.then((contents) {
       contents.forEach((element) async {
         listContractData.add(element);
         listMapContractData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.workSkillList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listWorkSkillData.add(element);
+          listMapWorkSkillData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbWorkSkillStream().first.then((contents) {
+
+    /*database.mbWorkSkillStream().first.then((contents) {
       contents.forEach((element) async {
         listWorkSkillData.add(element);
         listMapWorkSkillData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.langList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listLangData.add(element);
+          listMapLangData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbLangStream().first.then((contents) {
+
+    /*database.mbLangStream().first.then((contents) {
       contents.forEach((element) async {
         listLangData.add(element);
         listMapLangData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.nationalityList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listNationalityData.add(element);
+          listMapNationalityData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbNationalityStream().first.then((contents) {
+
+    /*database.mbNationalityStream().first.then((contents) {
       contents.forEach((element) async {
         listNationalityData.add(element);
         listMapNationalityData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.locationList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listLocationData.add(element);
+          listMapLocationData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbLocationStream().first.then((contents) {
+
+    /*database.mbLocationStream().first.then((contents) {
       contents.forEach((element) async {
         listLocationData.add(element);
         listMapLocationData[element.nameId] = element;
       });
       notifyListeners();
+    });*/
+
+    Firestore.instance
+        .collection(APIPath.roleList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int dataCount = 0;
+        do {
+          DataList element =
+              DataList.fromMap(snapshot.documents[dataCount].data);
+          listRoleData.add(element);
+          listMapRoleData[element.nameId] = element;
+          dataCount++;
+        } while (dataCount < snapshot.documents.length);
+        notifyListeners();
+      }
     });
-    database.mbRoleStream().first.then((contents) {
+
+    /*database.mbRoleStream().first.then((contents) {
       contents.forEach((element) async {
         listRoleData.add(element);
         listMapRoleData[element.nameId] = element;
       });
       notifyListeners();
-    });
+    });*/
   }
 
   String getQuitReasonHkValue({String languageCode, String quitReasonHk}) {

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'package:flutter_mmhelper/Models/JobDetailDataModel.dart';
+import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
 import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
@@ -89,37 +90,51 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
   }
 
   madeGridList() async {
-    int i = 1;
     listJobData = [];
     gridListData = [];
-    final database = Provider.of<FirestoreDatabase>(context);
-    database.flJobStream().first.then((contents) {
-      database.flUserStream().first.then((userDataList) {
-        contents.forEach((jobElement) async {
-          i++;
-          userDataList.forEach((user) {
-            if (jobElement.userId == user.userId) {
+    Firestore.instance
+        .collection(APIPath.userList())
+        .getDocuments()
+        .then((snapshot) async {
+      if (snapshot != null &&
+          snapshot.documents != null &&
+          snapshot.documents.length > 0) {
+        int profileCount = 0;
+        do {
+          FlContent userSignUp =
+              FlContent.fromMap(snapshot.documents[profileCount].data);
+          await Firestore.instance
+              .collection(APIPath.jobList())
+              .where("user_id", isEqualTo: userSignUp.userId)
+              .limit(1)
+              .getDocuments()
+              .then((snapshotProfile) {
+            if (snapshotProfile != null &&
+                snapshotProfile.documents != null &&
+                snapshotProfile.documents.length > 0) {
+              JobDetailData jobElement =
+                  JobDetailData.fromMap(snapshotProfile.documents[0].data);
               if (jobElement.userId == widget.currentUserId) {
                 listJobData.add(jobElement);
                 gridListData.add(jobCard(
-                    userData: user,
-                    jobDetailData: jobElement,
-                    userName: user.username,
-                    currentUser: widget.currentUserId));
+                  userData: userSignUp,
+                  jobDetailData: jobElement,
+                  userName: userSignUp.username,
+                  currentUser: widget.currentUserId,
+                ));
               }
             }
-            if (jobElement.userId == widget.currentUserId) {
-              isAvailable = true;
-            }
           });
-          if (contents.length < i) {
-            setState(() {
-              isLoading = false;
-            });
-          }
+          profileCount++;
+        } while (profileCount < snapshot.documents.length);
+        setState(() {
+          isLoading = false;
         });
-        print(listJobData.length);
-      });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 
@@ -202,7 +217,9 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    child: Text(userName.substring(0, 1).toUpperCase()),
+                    child: Text(userName != ""
+                        ? userName.substring(0, 1).toUpperCase()
+                        : "U"),
                   ),
                   SizedBox(
                     width: 10,
@@ -216,7 +233,8 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        timeago.format(jobDetailData.createTime??DateTime.now()),
+                        timeago
+                            .format(jobDetailData.createTime ?? DateTime.now()),
                         style: TextStyle(color: Colors.black54),
                       ),
                     ],
