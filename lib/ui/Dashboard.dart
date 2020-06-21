@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:after_init/after_init.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/app_localizations.dart';
@@ -15,6 +19,7 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/services/size_config.dart';
 import 'package:flutter_mmhelper/ui/MyJobProfilePage.dart';
 import 'package:flutter_mmhelper/ui/SearchPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
@@ -33,6 +38,8 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with AfterInitMixin {
   final _firebaseAuth = FirebaseAuth.instance;
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final facebookLogin = FacebookLogin();
   List<Widget> gridListData = [];
   List<ProfileData> gridSearchListData = [];
@@ -58,6 +65,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   @override
   void initState() {
     super.initState();
+    registerNotification();
+    configLocalNotification();
     searchController.addListener(() {
       setState(() {
         filter = searchController.text;
@@ -67,10 +76,12 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     fetchLanguage().then((onValue) {
       languageCode = onValue;
     });
+
   }
 
   @override
   void didInitState() {
+
     madeGridList();
     getCurrentUserId();
   }
@@ -112,6 +123,69 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     }
   }
 
+  void registerNotification() {
+    firebaseMessaging.requestNotificationPermissions();
+
+    firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      print('onMessage: $message');
+      Platform.isAndroid
+          ? showNotification(message['notification'])
+          : showNotification(message['aps']['alert']);
+      return;
+    }, onResume: (Map<String, dynamic> message) {
+      print('onResume: $message');
+      return;
+    }, onLaunch: (Map<String, dynamic> message) {
+      print('onLaunch: $message');
+      return;
+    });
+
+    firebaseMessaging.getToken().then((token) {
+      print('token: $token');
+      Firestore.instance
+          .collection('mb_content')
+          .document(widget.querySnapshot.documents[0]["userId"])
+          .updateData({'pushToken': token});
+    }).catchError((err) {
+      Fluttertoast.showToast(msg: err.message.toString());
+    });
+  }
+
+  void configLocalNotification() {
+    var initializationSettingsAndroid = new AndroidInitializationSettings('ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void showNotification(message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      Platform.isAndroid ? 'com.flutter_mmhelper' : 'com.flutter_mmhelper',
+      'Search4maid',
+      'maid find quick',
+      playSound: true,
+      enableVibration: true,
+      importance: Importance.Max,
+      priority: Priority.High,
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics =
+    new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+    print(message);
+    print(message['title'].toString());
+    print(message['body'].toString());
+    print(json.encode(message));
+
+    await flutterLocalNotificationsPlugin.show(
+        0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
+        payload: json.encode(message));
+
+   /* await flutterLocalNotificationsPlugin.show(
+        0, 'plain title', 'plain body', platformChannelSpecifics,
+        payload: 'item x');*/
+  }
+
   Future<void> madeGridList() async {
     setState(() {
       isLoading = true;
@@ -129,8 +203,8 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
           snapshot.documents.length > 0) {
         int profileCount = 0;
         do {
-          FlContent flContent =
-              FlContent.fromMap(snapshot.documents[profileCount].data);
+            FlContent flContent =
+                FlContent.fromMap(snapshot.documents[profileCount].data);
           await Firestore.instance
               .collection(APIPath.candidateList())
               .where("id", isEqualTo: flContent.userId)
