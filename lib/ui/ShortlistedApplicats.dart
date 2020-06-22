@@ -126,14 +126,14 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
         .collection("mb_favourite")
         .where("employer_id",isEqualTo: prefs.getString("loginUid"))
         .getDocuments()
-        .then((snapshot) async {
-      if (snapshot != null &&
-          snapshot.documents != null &&
-          snapshot.documents.length > 0) {
-        print(snapshot.documents.length);
-        for(int i=0;i<snapshot.documents.length;i++) {
+        .then((snapshots) async {
+      if (snapshots != null &&
+          snapshots.documents != null &&
+          snapshots.documents.length > 0) {
+        int favoindex = 0;
+        do{
           FavouriteContext favouriteContext =
-          FavouriteContext.fromMap(snapshot.documents[i].data);
+          FavouriteContext.fromMap(snapshots.documents[favoindex].data);
           Firestore.instance
               .collection(APIPath.userList())
               .where("userId",isEqualTo:favouriteContext.profile_id )
@@ -182,7 +182,15 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
               });
             }
           });
-        }
+          favoindex ++;
+        } while (favoindex < snapshots.documents.length);
+        setState(() {
+          isLoading = false;
+        });
+
+//        for(int i=0;i<snapshots.documents.length;i++) {
+
+//        }
       }else {
         setState(() {
           isLoading = false;
