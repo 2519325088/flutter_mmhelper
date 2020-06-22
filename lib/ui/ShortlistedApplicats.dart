@@ -119,7 +119,6 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
     setState(() {
       isLoading = true;
     });
-
     listProfileData = [];
     gridListData = [];
     Firestore.instance
@@ -131,26 +130,24 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
           snapshots.documents != null &&
           snapshots.documents.length > 0) {
         int favoindex = 0;
-        do{
+        do {
           FavouriteContext favouriteContext =
           FavouriteContext.fromMap(snapshots.documents[favoindex].data);
-          Firestore.instance
+          await Firestore.instance
               .collection(APIPath.userList())
-              .where("userId",isEqualTo:favouriteContext.profile_id )
+              .where("userId", isEqualTo: favouriteContext.profile_id)
+              .limit(1)
               .getDocuments()
               .then((snapshot) async {
             if (snapshot != null &&
                 snapshot.documents != null &&
                 snapshot.documents.length > 0) {
-              int profileCount = 0;
-              do {
                 FlContent flContent =
-                FlContent.fromMap(snapshot.documents[profileCount].data);
+                FlContent.fromMap(snapshot.documents[0].data);
                 print("this is flcintent id :${flContent.userId}");
                 await Firestore.instance
                     .collection(APIPath.candidateList())
                     .where("id", isEqualTo: flContent.userId)
-                    .limit(1)
                     .getDocuments()
                     .then((snapshotProfile) {
                   if (snapshotProfile != null &&
@@ -162,29 +159,20 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
                         profileData.status == "Approved by system" ||
                         profileData.status == "手動批准" ||
                         profileData.status == "自動批准") {
+                      print("添加了 111  ${isLoading}");
                       listProfileData.add(profileData);
-                      gridListData.add(
-                          GridCardWidget(element: profileData,
-                              userData: flContent));
+                      gridListData.add(GridCardWidget(element: profileData,userData: flContent));
+                      print(gridListData.length);
                     }
                   }
                 });
-                profileCount++;
-              } while (profileCount < snapshot.documents.length);
-              setState(() {
-                isLoading = false;
-              });
-            } else {
-              setState(() {
-                isLoading = false;
-              });
             }
           });
           favoindex ++;
         } while (favoindex < snapshots.documents.length);
-//        setState(() {
-//          isLoading = false;
-//        });
+        setState(() {
+          isLoading = false;
+        });
       }else {
         setState(() {
           isLoading = false;
