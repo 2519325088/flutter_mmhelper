@@ -153,7 +153,6 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
                     .limit(1)
                     .getDocuments()
                     .then((snapshotProfile) {
-                  print(snapshotProfile.documents.length);
                   if (snapshotProfile != null &&
                       snapshotProfile.documents != null &&
                       snapshotProfile.documents.length > 0) {
@@ -164,7 +163,6 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
                         profileData.status == "手動批准" ||
                         profileData.status == "自動批准") {
                       listProfileData.add(profileData);
-
                       gridListData.add(
                           GridCardWidget(element: profileData,
                               userData: flContent));
@@ -184,13 +182,9 @@ class _ShortlistedState extends State<Shortlisted> with AfterInitMixin {
           });
           favoindex ++;
         } while (favoindex < snapshots.documents.length);
-        setState(() {
-          isLoading = false;
-        });
-
-//        for(int i=0;i<snapshots.documents.length;i++) {
-
-//        }
+//        setState(() {
+//          isLoading = false;
+//        });
       }else {
         setState(() {
           isLoading = false;
