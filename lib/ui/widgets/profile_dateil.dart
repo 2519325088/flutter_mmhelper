@@ -626,7 +626,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   dataListService.getNationalityValue(
                                       languageCode: widget.languageCode,
                                       nationality:
-                                      "${widget.profileData.weight} cm" ?? ""),
+                                      "${widget.profileData.weight} kg" ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
@@ -669,7 +669,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                                   dataListService.getNationalityValue(
                                       languageCode: widget.languageCode,
                                       nationality:
-                                      "${widget.profileData.height} kg" ?? ""),
+                                      "${widget.profileData.height} cm" ?? ""),
                                   style: TextStyle(
                                     fontSize: 18,
                                   ),
