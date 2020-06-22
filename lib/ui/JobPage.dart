@@ -9,9 +9,12 @@ import 'package:flutter_mmhelper/services/database.dart';
 import 'package:flutter_mmhelper/ui/JobDetailPage.dart';
 import 'package:flutter_mmhelper/ui/JobSearchPage.dart';
 import 'package:flutter_mmhelper/ui/PostJobPage.dart';
+import 'package:flutter_mmhelper/Models/TrackModel.dart';
 import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
 
 class JobPage extends StatefulWidget {
   @override
@@ -27,6 +30,8 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   List<JobDetailData> listJobData = [];
   bool isLoading = true;
   bool isAvailable = false;
+  SharedPreferences prefs;
+  final _service = FirestoreService.instance;
 
   @override
   void initState() {
@@ -125,6 +130,23 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           isLoading = false;
         });
       }
+    });
+  }
+
+  Future<void> upTrack(String jobId) async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("loginUid"));
+    final Tracktext = TrackContext(
+      id:"" ,
+      profile_id:"" ,
+      job_id:jobId ,
+      signup_id:prefs.getString("loginUid"),
+      created_time:DateTime.now(),
+    );
+    Firestore.instance.collection("mb_tracking").add(Tracktext.toMap()).then((datas){
+      Tracktext.id = datas.documentID;
+      _service.setData(path: APIPath.upTrack(datas.documentID),
+          data: Tracktext.toMap());
     });
   }
 
@@ -237,6 +259,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
             ),
             GestureDetector(
               onTap: () {
+                upTrack(jobDetailData.id);
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return JobDetailPage(
                     jobDetailData: jobDetailData,

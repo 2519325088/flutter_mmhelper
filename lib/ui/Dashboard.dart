@@ -24,6 +24,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_mmhelper/Models/FlContentModel.dart';
 import 'widgets/profile_dateil.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
+import 'package:flutter_mmhelper/Models/TrackModel.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -51,6 +53,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   QuerySnapshot querySnapshot;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController searchController = new TextEditingController();
+  final _service = FirestoreService.instance;
 
   String filter;
   bool isShow = false;
@@ -60,6 +63,23 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
   Future<String> fetchLanguage() async {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getString('language_code');
+  }
+
+  Future<void> upTrack(String profileId) async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("loginUid"));
+    final Tracktext = TrackContext(
+      id:"" ,
+      profile_id:profileId ,
+      job_id: "",
+      signup_id:prefs.getString("loginUid"),
+      created_time:DateTime.now(),
+    );
+    Firestore.instance.collection("mb_tracking").add(Tracktext.toMap()).then((datas){
+      Tracktext.id = datas.documentID;
+      _service.setData(path: APIPath.upTrack(datas.documentID),
+          data: Tracktext.toMap());
+    });
   }
 
   @override
@@ -244,6 +264,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     print(element.workskill);
     return GestureDetector(
       onTap: () {
+        upTrack(element.id);
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfileDateil(
             profileData: element,

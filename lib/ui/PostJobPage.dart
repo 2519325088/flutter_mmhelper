@@ -322,8 +322,8 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                   postJob.contractType = contractString;
                   postJob.weeklyHoliday = weekHolidayString;
 
-                  String id = DateTime.now().toIso8601String();
-                  postJob.id = id;
+//                  String id = DateTime.now().toIso8601String();
+                  postJob.id = "";
                   postJob.userId = widget.currentUserId;
                   postJob.createTime = DateTime(
                       DateTime.now().year,
@@ -331,25 +331,47 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                       DateTime.now().day,
                       TimeOfDay.now().hour,
                       TimeOfDay.now().minute);
-                  _service
-                      .addData(path: APIPath.newJob(id), data: postJob.toMap())
-                      .then((onValue) async {
-                    //Navigator.pop(context);
-                    await showDialog<String>(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return CustomPopup(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            title: "Job created",
-                            message:
-                                "Your job is posted! Please turn on notification and Check the replies in the message box 😎",
-                          );
-                        });
+                  Firestore.instance.collection("fl_job_post").add(postJob.toMap()).then((datas){
+                    postJob.id = datas.documentID;
+                    _service.addData(path: APIPath.newJob(datas.documentID),
+                        data: postJob.toMap())
+                        .then((onValue) async {
+                      //Navigator.pop(context);
+                      await showDialog<String>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return CustomPopup(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              title: "Job created",
+                              message:
+                              "Your job is posted! Please turn on notification and Check the replies in the message box 😎",
+                            );
+                          });
+                    });
                   });
+//                  _service
+//                      .addData(path: APIPath.newJob(id), data: postJob.toMap())
+//                      .then((onValue) async {
+//                    //Navigator.pop(context);
+//                    await showDialog<String>(
+//                        context: context,
+//                        barrierDismissible: false,
+//                        builder: (BuildContext context) {
+//                          return CustomPopup(
+//                            onTap: () {
+//                              Navigator.pop(context);
+//                              Navigator.pop(context);
+//                            },
+//                            title: "Job created",
+//                            message:
+//                                "Your job is posted! Please turn on notification and Check the replies in the message box 😎",
+//                          );
+//                        });
+//                  });
                 }
               })
         ],
