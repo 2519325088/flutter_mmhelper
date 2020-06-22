@@ -124,10 +124,27 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
           ),
         );
       })
-          :*/ quitReasonHkData.forEach((f) {
-        if (widget.oldWorkExperience != null) {
-          reasonCtr.text = f.getValueByLanguageCode(languageCode);
-          workExperience.reason = f.nameId;
+          :*/
+
+      /*jobtype.forEach((f) {
+        jobTypeWidget.add(
+          CupertinoActionSheetAction(
+            child: Text(f),
+            onPressed: () {
+              jobTypeCtr.text = f;
+              workExperience.jobtype = f;
+              Navigator.pop(context);
+            },
+          ),
+        );
+      });*/
+
+      quitReasonHkData.forEach((f) {
+        if( widget.oldWorkExperience!=null) {
+          if (f.nameId == widget.oldWorkExperience.reason) {
+            reasonCtr.text = f.getValueByLanguageCode(languageCode);
+            workExperience.reason = widget.oldWorkExperience.reason;
+          }
         }
         reasonWidget.add(
           CupertinoActionSheetActionWidget(
@@ -143,22 +160,13 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
         );
       });
 
-      /*jobtype.forEach((f) {
-        jobTypeWidget.add(
-          CupertinoActionSheetAction(
-            child: Text(f),
-            onPressed: () {
-              jobTypeCtr.text = f;
-              workExperience.jobtype = f;
-              Navigator.pop(context);
-            },
-          ),
-        );
-      });*/
+
       listJobTypeData.forEach((f) {
-        if (widget.oldWorkExperience != null) {
-          jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
-          workExperience.jobtype = f.nameId;
+        if( widget.oldWorkExperience!=null) {
+          if (f.nameId == widget.oldWorkExperience.jobtype) {
+            jobTypeCtr.text = f.getValueByLanguageCode(languageCode);
+            workExperience.jobtype = widget.oldWorkExperience.jobtype;
+          }
         }
         jobTypeWidget.add(
           CupertinoActionSheetActionWidget(
@@ -742,6 +750,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
     listWorkSkillData = appLanguage.listWorkSkillData;
     quitReasonData = appLanguage.listQuitReasonData;
     quitReasonHkData = appLanguage.listQuitReasonHkData;
+    print("this is quitReasonHkData ${quitReasonHkData.length}");
     listJobTypeData = appLanguage.listJobTypeData;
   }
 }

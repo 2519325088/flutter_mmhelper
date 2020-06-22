@@ -2713,6 +2713,7 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
                                             return AddWorkExperiencePage(
                                               onChanged: onWorkingExChange,
                                               currentLoc: profileData.current,
+                                              oldWorkExperience: null,
                                             );
                                           }));
                                         },
