@@ -180,7 +180,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
 
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      Platform.isAndroid ? 'com.flutter_mmhelper' : 'com.flutter_mmhelper',
+      Platform.isAndroid ? 'com.flutter_mmhelper' : 'com.flutterMmhelper',
       'Search4maid',
       'maid find quick',
       playSound: true,
