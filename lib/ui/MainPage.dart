@@ -122,7 +122,7 @@ class _MainPageState extends State<MainPage>
       ),
       MePage(
         querySnapshot: querySnapshot,
-         currentUserId: currentUserId,
+        currentUserId: currentUserId,
       ),
     ];
 
@@ -180,17 +180,23 @@ class _MainPageState extends State<MainPage>
         currentIndex: selectedIndex,
         type: BottomNavigationBarType.fixed,
       ),
-      body: isMeLoading == false
+      /*body: isMeLoading == false
           ? widgetOptions.elementAt(selectedIndex)
           : Container(
               child: Center(
                 child: CircularProgressIndicator(),
               ),
+            ),*/
+      body: isMeLoading == false
+          ? IndexedStack(
+              index: selectedIndex,
+              children: widgetOptions,
+            )
+          : Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-      /*body: IndexedStack(
-        index: selectedIndex,
-        children: widgetOptions,
-      ),*/
     );
   }
 
