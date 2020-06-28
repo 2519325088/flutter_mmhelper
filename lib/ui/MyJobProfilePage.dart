@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mmhelper/Models/DataListModel.dart';
 import 'package:flutter_mmhelper/Models/ProfileDataModel.dart';
 import 'package:flutter_mmhelper/services/DataListService.dart';
@@ -780,15 +781,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
       number++;
     } while (number < imagesa.length);
     saveProfileData();
-    /*imagesa.forEach((upFile) async {
-      String downloadLink = await saveImage(upFile);
-      profileData.imagelist.add(downloadLink);
-      print("Upload in count $number");
-      number += 1;
-      if (number > imagesa.length) {
-        saveProfileData();
-      }
-    });*/
   }
 
   saveProfileData() {
@@ -834,15 +826,23 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
     return await storageTaskSnapshot.ref.getDownloadURL();
   }
 
+  Future<List<int>> testCompressAsset(String assetName) async {
+    var list = await FlutterImageCompress.compressAssetImage(
+      assetName,
+      quality: 20,
+    );
+    return list;
+  }
+
   Future<List<String>> uploadImage({@required List<Asset> assets}) async {
     List<String> uploadUrls = [];
 
     await Future.wait(
         assets.map((Asset asset) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          ByteData byteData = await asset.getByteData();
-          List<int> imageData = byteData.buffer.asUint8List();
-
+          //ByteData byteData = await asset.getByteData();
+          List<int> imageData =await testCompressAsset(asset.name);
+          print("assets name:${asset.name}");
           StorageReference reference =
               FirebaseStorage.instance.ref().child(fileName);
           StorageUploadTask uploadTask = reference.putData(imageData);
@@ -996,39 +996,6 @@ class _MyJobProfilePageState extends State<MyJobProfilePage>
 
                     if (imagesa.length != 0) {
                       uploadFirebaseImageData();
-                      /*imagesa.forEach((upFile) async {
-                        String downloadLink = await saveImage(upFile);
-                        profileData.imagelist.add(downloadLink);
-                        print("Upload in count $i");
-                        i += 1;
-                        if (i > imagesa.length) {
-                          print("Profile update call");
-                          if (profileData.primaryImage == null) {
-                            profileData.primaryImage = profileData.imagelist[0];
-                          }
-                          _service
-                              .setData(
-                                  path: APIPath.newProfile(widget.userId),
-                                  data: profileData.toMap())
-                              .then((onValue) {
-                            setState(() {
-                              isLoading = false;
-                              imagesa.clear();
-                            });
-                            scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)
-                                    .translate(
-                                        'Profile_Update_Successfully'))));
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return QuestionPage(
-                                skill: profileData.workskill,
-                                profileid: profileData.id,
-                              );
-                            }));
-                          });
-                        }
-                      });*/
                     } else {
                       if (profileData.imagelist.length != 0) {
                         _service
