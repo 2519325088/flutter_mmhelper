@@ -271,6 +271,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             profileData: element,
             languageCode: languageCode,
             userData: userData,
+            userSnapshot: widget.querySnapshot,
           );
         }));
       },
