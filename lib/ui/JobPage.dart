@@ -85,11 +85,14 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     }
   }
 
-  madeGridList() async {
+  Future<void> madeGridList() async {
+    setState(() {
+      isLoading = true;
+    });
     listJobData = [];
     gridListData = [];
     Firestore.instance
-        .collection(APIPath.userList())
+        .collection(APIPath.jobList())
         .getDocuments()
         .then((snapshot) async {
       if (snapshot != null &&
@@ -97,19 +100,19 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           snapshot.documents.length > 0) {
         int profileCount = 0;
         do {
-          FlContent userSignUp =
-              FlContent.fromMap(snapshot.documents[profileCount].data);
+          JobDetailData jobElement =
+              JobDetailData.fromMap(snapshot.documents[profileCount].data);
           await Firestore.instance
-              .collection(APIPath.jobList())
-              .where("user_id", isEqualTo: userSignUp.userId)
+              .collection(APIPath.userList())
+              .where("userId", isEqualTo: jobElement.userId)
               .limit(1)
               .getDocuments()
               .then((snapshotProfile) {
             if (snapshotProfile != null &&
                 snapshotProfile.documents != null &&
                 snapshotProfile.documents.length > 0) {
-              JobDetailData jobElement =
-                  JobDetailData.fromMap(snapshotProfile.documents[0].data);
+              FlContent userSignUp =
+                  FlContent.fromMap(snapshotProfile.documents[0].data);
 
               listJobData.add(jobElement);
               gridListData.add(jobCard(
@@ -137,16 +140,19 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     prefs = await SharedPreferences.getInstance();
     print(prefs.getString("loginUid"));
     final Tracktext = TrackContext(
-      id:"" ,
-      profile_id:"" ,
-      job_id:jobId ,
-      signup_id:prefs.getString("loginUid"),
-      created_time:DateTime.now(),
+      id: "",
+      profile_id: "",
+      job_id: jobId,
+      signup_id: prefs.getString("loginUid"),
+      created_time: DateTime.now(),
     );
-    Firestore.instance.collection("mb_tracking").add(Tracktext.toMap()).then((datas){
+    Firestore.instance
+        .collection("mb_tracking")
+        .add(Tracktext.toMap())
+        .then((datas) {
       Tracktext.id = datas.documentID;
-      _service.setData(path: APIPath.upTrack(datas.documentID),
-          data: Tracktext.toMap());
+      _service.setData(
+          path: APIPath.upTrack(datas.documentID), data: Tracktext.toMap());
     });
   }
 
@@ -195,8 +201,11 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
           : SizedBox(),
       body: isLoading == false
           ? gridListData.length != 0
-              ? ListView(
-                  children: gridListData,
+              ? RefreshIndicator(
+                  onRefresh: madeGridList,
+                  child: ListView(
+                    children: gridListData,
+                  ),
                 )
               : Center(
                   child: Text(

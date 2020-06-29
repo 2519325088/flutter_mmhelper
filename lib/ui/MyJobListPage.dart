@@ -93,7 +93,7 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
     listJobData = [];
     gridListData = [];
     Firestore.instance
-        .collection(APIPath.userList())
+        .collection(APIPath.jobList())
         .getDocuments()
         .then((snapshot) async {
       if (snapshot != null &&
@@ -101,19 +101,19 @@ class _MyJobListPageState extends State<MyJobListPage> with AfterInitMixin {
           snapshot.documents.length > 0) {
         int profileCount = 0;
         do {
-          FlContent userSignUp =
-              FlContent.fromMap(snapshot.documents[profileCount].data);
+          JobDetailData jobElement =
+              JobDetailData.fromMap(snapshot.documents[profileCount].data);
           await Firestore.instance
-              .collection(APIPath.jobList())
-              .where("user_id", isEqualTo: userSignUp.userId)
+              .collection(APIPath.userList())
+              .where("userId", isEqualTo: jobElement.userId)
               .limit(1)
               .getDocuments()
               .then((snapshotProfile) {
             if (snapshotProfile != null &&
                 snapshotProfile.documents != null &&
                 snapshotProfile.documents.length > 0) {
-              JobDetailData jobElement =
-                  JobDetailData.fromMap(snapshotProfile.documents[0].data);
+              FlContent userSignUp =
+                  FlContent.fromMap(snapshotProfile.documents[0].data);
               if (jobElement.userId == widget.currentUserId) {
                 listJobData.add(jobElement);
                 gridListData.add(jobCard(

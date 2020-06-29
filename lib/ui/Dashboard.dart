@@ -195,6 +195,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
     print(message);
     print(message['title'].toString());
     print(message['body'].toString());
+    print(message['idToUser'].toString());
     print(json.encode(message));
 
     await flutterLocalNotificationsPlugin.show(
