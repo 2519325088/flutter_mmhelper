@@ -12,6 +12,12 @@ class FirestoreService {
     await reference.setData(data); //i think this is error
   }
 
+  Future<void> updateData({String path, Map<String, dynamic> data}) async {
+    final reference = Firestore.instance.document(path);
+    print('$path: $data');
+    await reference.updateData(data); //i think this is error
+  }
+
   Future<void> addData({String path, Map<String, dynamic> data}) async {
     final reference = Firestore.instance.collection(path);
     print('$path: $data');

@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -20,10 +21,11 @@ class ChatPage extends StatelessWidget {
   final String peerAvatar;
   final String peerName;
 
-  ChatPage({Key key,
-    @required this.peerId,
-    @required this.peerAvatar,
-    @required this.peerName})
+  ChatPage(
+      {Key key,
+      @required this.peerId,
+      @required this.peerAvatar,
+      @required this.peerName})
       : super(key: key);
 
   @override
@@ -56,9 +58,12 @@ class ChatScreen extends StatefulWidget {
   final String peerAvatar;
   final String peerName;
 
-  ChatScreen(
-      {Key key, @required this.peerId, @required this.peerAvatar, @required this.peerName,})
-      : super(key: key);
+  ChatScreen({
+    Key key,
+    @required this.peerId,
+    @required this.peerAvatar,
+    @required this.peerName,
+  }) : super(key: key);
 
   @override
   State createState() =>
@@ -87,7 +92,7 @@ class ChatScreenState extends State<ChatScreen> {
   int lastTotalMessage = -1;
 
   final TextEditingController textEditingController =
-  new TextEditingController();
+      new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
   final FocusNode focusNode = new FocusNode();
 
@@ -107,7 +112,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   _scrollListener() {
     if (listScrollController.offset >=
-        listScrollController.position.maxScrollExtent &&
+            listScrollController.position.maxScrollExtent &&
         !listScrollController.position.outOfRange) {
       if (lastTotalMessage < totalMessage) {
         lastTotalMessage = totalMessage;
@@ -176,10 +181,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future uploadFile() async {
-    String fileName = DateTime
-        .now()
-        .millisecondsSinceEpoch
-        .toString();
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putFile(imageFile);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
@@ -206,20 +208,16 @@ class ChatScreenState extends State<ChatScreen> {
           .collection('messages')
           .document(groupChatId)
           .collection(groupChatId)
-          .document(DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString());
+          .document(DateTime.now().millisecondsSinceEpoch.toString());
 
-      var documentReference2 = Firestore.instance
-          .collection('messages')
-          .document(groupChatId);
+      var documentReference2 =
+          Firestore.instance.collection('messages').document(groupChatId);
 
       await Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
           documentReference2,
           {
-            'extra': "",
+            'extra': DateTime.now().millisecondsSinceEpoch,
           },
         );
       });
@@ -230,12 +228,10 @@ class ChatScreenState extends State<ChatScreen> {
           {
             'idFrom': id,
             'idTo': peerId,
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
-            'type': type
+            'type': type,
+            'read': 0,
           },
         );
       });
@@ -247,90 +243,15 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
+    final _service = FirestoreService.instance;
     if (document['idFrom'] == id) {
       // Right (my message)
       return Row(
         children: <Widget>[
           document['type'] == 0
-          // Text
+              // Text
               ? Container(
-            child: Text(
-              document['content'],
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-            width: 200.0,
-            decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(8.0)),
-            margin: EdgeInsets.only(
-                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                right: 10.0),
-          )
-              : document['type'] == 1
-          // Image
-              ? Container(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                      return PhotoPage(document['content']);
-                    }));
-              },
-              child: Hero(
-                tag: document['content'],
-                child: Material(
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        Container(
-                          child: CircularProgressIndicator(),
-                          width: 200.0,
-                          height: 200.0,
-                          padding: EdgeInsets.all(70.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                    errorWidget: (context, url, error) =>
-                        Material(
-                          child: Image.asset(
-                            'images/img_not_available.jpeg',
-                            width: 200.0,
-                            height: 200.0,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                        ),
-                    imageUrl: document['content'],
-                    width: 200.0,
-                    height: 200.0,
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(8.0)),
-                  clipBehavior: Clip.hardEdge,
-                ),
-              ),
-            ),
-            margin: EdgeInsets.only(
-                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                right: 10.0),
-          )
-          // Sticker
-              : GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return IndexPage(channelName: document['content'],);
-              }));
-            },
-                child: Container(
-                  child: Text("You are invite to join video call "+
+                  child: Text(
                     document['content'],
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
@@ -343,74 +264,21 @@ class ChatScreenState extends State<ChatScreen> {
                       bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                       right: 10.0),
                 )
-              ),
-        ],
-        mainAxisAlignment: MainAxisAlignment.end,
-      );
-    } else {
-      // Left (peer message)
-      return Container(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                isLastMessageLeft(index)
-                    ? Material(
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) =>
-                        Container(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme
-                                    .of(context)
-                                    .primaryColor),
-                          ),
-                          width: 35.0,
-                          height: 35.0,
-                          padding: EdgeInsets.all(10.0),
-                        ),
-                    imageUrl: peerAvatar ?? "",
-                    width: 35.0,
-                    height: 35.0,
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(18.0),
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                )
-                    : Container(width: 35.0),
-                document['type'] == 0
-                    ? Container(
-                  child: Text(
-                    document['content'],
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
-                  decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(left: 10.0),
-                )
-                    : document['type'] == 1
-                    ? Container(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+              : document['type'] == 1
+                  // Image
+                  ? Container(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return PhotoPage(document['content']);
                           }));
-                    },
-                    child: Hero(
-                      tag: document['content'],
-                      child: Material(
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) =>
-                              Container(
+                        },
+                        child: Hero(
+                          tag: document['content'],
+                          child: Material(
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
                                 child: CircularProgressIndicator(),
                                 width: 200.0,
                                 height: 200.0,
@@ -422,8 +290,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   ),
                                 ),
                               ),
-                          errorWidget: (context, url, error) =>
-                              Material(
+                              errorWidget: (context, url, error) => Material(
                                 child: Image.asset(
                                   'images/img_not_available.jpeg',
                                   width: 200.0,
@@ -435,57 +302,194 @@ class ChatScreenState extends State<ChatScreen> {
                                 ),
                                 clipBehavior: Clip.hardEdge,
                               ),
-                          imageUrl: document['content'],
-                          width: 200.0,
-                          height: 200.0,
+                              imageUrl: document['content'],
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                        ),
+                      ),
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          right: 10.0),
+                    )
+                  // Sticker
+                  : GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return IndexPage(
+                            channelName: document['content'],
+                          );
+                        }));
+                      },
+                      child: Container(
+                        child: Text(
+                          "You are invite to join video call " +
+                              document['content'],
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                        width: 200.0,
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      )),
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+      );
+    } else {
+      // Left (peer message)
+      _service.updateData(
+        path: "${document.reference.path}",
+        data: {
+          'read': 1,
+        },
+      );
+      print("${document.reference.path}");
+
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                isLastMessageLeft(index)
+                    ? Material(
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 1.0,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor),
+                            ),
+                            width: 35.0,
+                            height: 35.0,
+                            padding: EdgeInsets.all(10.0),
+                          ),
+                          imageUrl: peerAvatar ?? "",
+                          width: 35.0,
+                          height: 35.0,
                           fit: BoxFit.cover,
                         ),
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(8.0)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(18.0),
+                        ),
                         clipBehavior: Clip.hardEdge,
-                      ),
-                    ),
-                  ),
-                  margin: EdgeInsets.only(left: 10.0),
-                )
-                    : GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                      return IndexPage(channelName: document['content'],);
-                    }));
-                  },
-                      child: Container(
-                  child: Text("You are invite to join video call "+
-                      document['content'],
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
-                  decoration: BoxDecoration(
-                        color: Theme
-                            .of(context)
-                            .primaryColor,
-                        borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(left: 10.0),
-                ),
-                    )
+                      )
+                    : Container(width: 35.0),
+                document['type'] == 0
+                    ? Container(
+                        child: Text(
+                          document['content'],
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                        width: 200.0,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        margin: EdgeInsets.only(left: 10.0),
+                      )
+                    : document['type'] == 1
+                        ? Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return PhotoPage(document['content']);
+                                }));
+                              },
+                              child: Hero(
+                                tag: document['content'],
+                                child: Material(
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(),
+                                      width: 200.0,
+                                      height: 200.0,
+                                      padding: EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    imageUrl: document['content'],
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.only(left: 10.0),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return IndexPage(
+                                  channelName: document['content'],
+                                );
+                              }));
+                            },
+                            child: Container(
+                              child: Text(
+                                "You are invite to join video call " +
+                                    document['content'],
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                              padding:
+                                  EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                              width: 200.0,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              margin: EdgeInsets.only(left: 10.0),
+                            ),
+                          )
               ],
             ),
 
             // Time
             isLastMessageLeft(index)
                 ? Container(
-              child: Text(
-                DateFormat('dd MMM hh:mm aaa').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document['timestamp']))),
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontStyle: FontStyle.italic),
-              ),
-              margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-            )
+                    child: Text(
+                      DateFormat('dd MMM hh:mm aaa').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document['timestamp']))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+                  )
                 : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -497,8 +501,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] == id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] == id) ||
         index == 0) {
       return true;
     } else {
@@ -508,8 +512,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] != id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] != id) ||
         index == 0) {
       return true;
     } else {
@@ -540,9 +544,11 @@ class ChatScreenState extends State<ChatScreen> {
         appBar: AppBar(
           title: Text(widget.peerName),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.video_call), onPressed: () {
-              onSendMessage(id+peerId, 2);
-            })
+            IconButton(
+                icon: Icon(Icons.video_call),
+                onPressed: () {
+                  onSendMessage(id + peerId, 2);
+                })
           ],
           centerTitle: true,
         ),
@@ -677,7 +683,7 @@ class ChatScreenState extends State<ChatScreen> {
       ),
       decoration: new BoxDecoration(
           border:
-          new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
+              new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
           color: Colors.white),
       padding: EdgeInsets.all(5.0),
       height: 180.0,
@@ -688,11 +694,11 @@ class ChatScreenState extends State<ChatScreen> {
     return Positioned(
       child: isLoading
           ? Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-        color: Colors.white.withOpacity(0.8),
-      )
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+              color: Colors.white.withOpacity(0.8),
+            )
           : Container(),
     );
   }
@@ -709,9 +715,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.image),
                 onPressed: getImage,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             color: Colors.white,
@@ -755,9 +759,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.send),
                 onPressed: () => onSendMessage(textEditingController.text, 0),
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             color: Colors.white,
@@ -769,9 +771,7 @@ class ChatScreenState extends State<ChatScreen> {
       decoration: new BoxDecoration(
           border: new Border(
               top: new BorderSide(
-                  color: Theme
-                      .of(context)
-                      .primaryColor, width: 0.5)),
+                  color: Theme.of(context).primaryColor, width: 0.5)),
           color: Colors.white),
     );
   }
@@ -781,63 +781,59 @@ class ChatScreenState extends State<ChatScreen> {
       child: groupChatId == ''
           ? Center()
           : StreamBuilder(
-        stream: Firestore.instance
-            .collection('messages')
-            .document(groupChatId)
-            .collection(groupChatId)
-            .orderBy('timestamp', descending: true)
-            .limit(limit)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            listMessage = snapshot.data.documents;
-            totalMessage = snapshot.data.documents.length;
-            if (totalMessage > lastTotalMessage) isChatLoad = false;
-            return Column(
-              children: <Widget>[
-                isChatLoad
-                    ? Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.01),
-                        spreadRadius: 10.0,
-                        blurRadius: 10.0)
-                  ], color: Colors.white),
-                  height: 50,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  child: Center(
-                    child: Text(
-                      "Loading More...",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                )
-                    : SizedBox(),
-                Expanded(
-                  child: Scrollbar(
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) =>
-                          buildItem(
-                              index, snapshot.data.documents[index]),
-                      itemCount: snapshot.data.documents.length,
-                      reverse: true,
-                      controller: listScrollController,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+              stream: Firestore.instance
+                  .collection('messages')
+                  .document(groupChatId)
+                  .collection(groupChatId)
+                  .orderBy('timestamp', descending: true)
+                  .limit(limit)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  listMessage = snapshot.data.documents;
+                  totalMessage = snapshot.data.documents.length;
+                  if (totalMessage > lastTotalMessage) isChatLoad = false;
+                  return Column(
+                    children: <Widget>[
+                      isChatLoad
+                          ? Container(
+                              decoration: BoxDecoration(boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.01),
+                                    spreadRadius: 10.0,
+                                    blurRadius: 10.0)
+                              ], color: Colors.white),
+                              height: 50,
+                              width: MediaQuery.of(context).size.width,
+                              child: Center(
+                                child: Text(
+                                  "Loading More...",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                      Expanded(
+                        child: Scrollbar(
+                          child: ListView.builder(
+                            padding: EdgeInsets.all(10.0),
+                            itemBuilder: (context, index) => buildItem(
+                                index, snapshot.data.documents[index]),
+                            itemCount: snapshot.data.documents.length,
+                            reverse: true,
+                            controller: listScrollController,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
     );
   }
 }
