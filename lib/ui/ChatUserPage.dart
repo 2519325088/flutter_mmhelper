@@ -15,6 +15,7 @@ class ChatUserPage extends StatefulWidget {
 class _ChatUserPageState extends State<ChatUserPage> {
   String name, userImage, email;
   bool isLoading = false;
+  int messageCount = 0;
 
   @override
   void initState() {
@@ -67,6 +68,8 @@ class _ChatUserPageState extends State<ChatUserPage> {
     );
   }
 
+  bool isMessageUser = false;
+
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
     if (document['userId'] == widget.currentUserId) {
       return Container();
@@ -85,20 +88,38 @@ class _ChatUserPageState extends State<ChatUserPage> {
             .collection(groupChatId)
             //.where("idTo", isEqualTo: widget.currentUserId)
             .orderBy("timestamp", descending: true)
-            .limit(1)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot != null &&
               snapshot.data != null &&
               snapshot.data.documents != null &&
               snapshot.data.documents.length != 0) {
+            messageCount = 0;
+            isMessageUser = false;
+            for (int i = 0; i < snapshot.data.documents.length; i++) {
+              if (snapshot.data.documents[i]['read'] == 0) {
+                if (snapshot.data.documents[i]['idFrom'] !=
+                    widget.currentUserId) {
+                  isMessageUser = true;
+                }
+                messageCount++;
+              }
+            }
             return Column(
               children: <Widget>[
                 ListTile(
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15,
-                  ),
+                  trailing: isMessageUser == true && messageCount != 0
+                      ? CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Text(
+                            messageCount.toString(),
+                            //"1000",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.white,fontSize: 14),
+                          ))
+                      : SizedBox(),
                   subtitle: Text(
                     snapshot.data.documents[0]["content"],
                     overflow: TextOverflow.ellipsis,
