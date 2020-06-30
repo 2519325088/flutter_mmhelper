@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -7,14 +8,17 @@ import 'package:flutter_mmhelper/Models/ContractModel.dart';
 import 'package:flutter_mmhelper/Models/ContractStatus.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 class AgencyDetailPage extends StatefulWidget {
   @override
   final String price;
   final String type;
   final String proId;
+  final String natype;
   DocumentSnapshot agencySnapshot;
-  AgencyDetailPage({this.agencySnapshot,this.price,this.type,this.proId});
+  AgencyDetailPage({this.agencySnapshot,this.price,this.type,this.proId,this.natype});
   _AgencyDetailPageState createState() => _AgencyDetailPageState();
 }
 
@@ -25,7 +29,21 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
   final _service = FirestoreService.instance;
   String datenow= DateTime.now().toIso8601String();
   SharedPreferences prefs;
-  final userid = "";
+  String userid = "";
+  bool isCheck = false;
+  bool isConfirm = false;
+
+//  @override
+//  void initState() {
+//    super.initState();
+//    _isCheck = false;
+//  }
+
+  void _changed(isCheck1) {
+    setState(() {
+      isCheck = isCheck1;
+    });
+  }
 
   Future<void> _submit() async {
     String year = DateTime.now().year.toString().substring(2);
@@ -136,13 +154,13 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                       child:Padding(
                         padding: const EdgeInsets.all(10),
                         child: Center(
-                          child: Text(
-                            widget.price,
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          )
+                            child: Text(
+                              widget.price,
+                              style: TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            )
                         ),
                       ),
                     ),
@@ -192,6 +210,374 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
             Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                  borderRadius: new BorderRadius.circular((20.0)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10,0, 0),
+                        child:Text(
+                          "Section 1 -Discription",
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ),
+                    widget.type=="Terminated"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Terminated_text"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            type_text,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="Overseas"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Overseas_text"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            type_text,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="Finished"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Finished_text"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            type_text,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="FCSR"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["FCSR_text"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            type_text,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10,0, 0),
+                        child:Text(
+                          "Section 2 -服務內容",
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ),
+                    (widget.type=="Terminated"||widget.type=="Overseas") && widget.natype=="Philipino"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["service_1"]["Philipino"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["service_1"]["Philipino"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    (widget.type=="Finished"||widget.type=="FCSR")&& widget.natype=="Philipino"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["service_2"]["Philipino"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["service_2"]["Philipino"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    (widget.type=="Terminated"||widget.type=="Overseas") && widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["service_1"]["Indonesian"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["service_1"]["Indonesian"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    (widget.type=="Finished"||widget.type=="FCSR")&& widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["service_2"]["Indonesian"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["service_2"]["Indonesian"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                  borderRadius: new BorderRadius.circular((20.0)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child:Text(
+                          "This Job offer will be sent to the helper, we will notify you once it is accepted and you may continue the payment process with the agency directly and tracking the process in the app.",
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: isCheck,
+                      onChanged: _changed,
+                      activeColor:gradientStart,
+                      activeTrackColor:gradientEnd,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.black, width: 0.5), // 边色与边宽度
+                  borderRadius: new BorderRadius.circular((20.0)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                          value: isConfirm,
+                          onChanged: (newValue) {
+                            setState(() {
+                              isConfirm = newValue;
+                            });
+                          }),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.black87),
+                            text: "I consent to Search4maid using my personal data to for direct marketing activities refer to",
+                            children: [
+                              TextSpan(
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                                text: " Privacy Policy",
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    if (await canLaunch(
+                                        "https://www.search4maid.com/privacy.html")) {
+                                      await launch(
+                                          "https://www.search4maid.com/privacy.html");
+                                    } else {
+                                      throw 'Could not launch https://www.search4maid.com/privacy.html';
+                                    }
+                                  },
+                              ),
+                              TextSpan(text: " &"),
+                              TextSpan(
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  text: " Terms and Conditions",
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      if (await canLaunch(
+                                          "https://www.search4maid.com/terms.html")) {
+                                        await launch(
+                                            "https://www.search4maid.com/terms.html");
+                                      } else {
+                                        throw 'Could not launch https://www.search4maid.com/terms.html';
+                                      }
+                                    }),
+                              TextSpan(
+                                  text:". It may include direct marketing from Serach4maid or our business partners."
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
                 child: Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -200,12 +586,27 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                     height: 50,
                     child: FlatButton(
                       onPressed: (){
-                        _submit();
-                        scaffoldKey.currentState
-                            .showSnackBar(SnackBar(
-                            content: Text(
-                              "The request has been submitted.",
-                            )));
+                        if(isCheck ==true && isConfirm == true){
+                          _submit();
+                          scaffoldKey.currentState
+                              .showSnackBar(SnackBar(
+                              content: Text(
+                                "The request has been submitted.",
+                              )));
+                        }else if(isCheck ==false){
+                          scaffoldKey.currentState
+                              .showSnackBar(SnackBar(
+                              content: Text(
+                                "Did not agree to send notification to helper.",
+                              )));
+                        }else if(isConfirm == false){
+                          scaffoldKey.currentState
+                              .showSnackBar(SnackBar(
+                              content: Text(
+                                "Please agree to the terms.",
+                              )));
+                        }
+
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),

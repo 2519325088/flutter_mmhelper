@@ -209,42 +209,150 @@ class _ProfileDateilState extends State<ProfileDateil> {
 //                ):Text("No Image"),
               ),
             ),
-            Padding(
+            widget.userSnapshot.documents[0]["role"] ==
+                "Employer"?Padding(
               padding: const EdgeInsets.all(10),
               child: Container(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: GestureDetector(
+                  onTap: () async {
+                    print(haveJob);
+                    if(haveJob==true){
+                      if (widget.profileData.fromAgency !="" && widget.profileData.fromAgency!=null){
+                        Firestore.instance .collection('mb_agency')
+                            .where("id", isEqualTo:widget.profileData.fromAgency)
+                            .getDocuments()
+                            .then((snapshot) async {
+                          if(snapshot.documents !=null && snapshot.documents.length>0){
+                            await Firestore.instance .collection('mb_content')
+                                .where('phone', isEqualTo:snapshot.documents[0]["chat_login"])
+                                .getDocuments()
+                                .then((snapshot1) async{
+                                if(snapshot1.documents !=null && snapshot1.documents.length>0){
+                                  prefs = await SharedPreferences.getInstance();
+                                    var documentReference = Firestore.instance
+                                        .collection('messages')
+                                        .document("${prefs.getString("loginUid")}-${snapshot1.documents[0]["userId"]}")
+                                        .collection("${prefs.getString("loginUid")}-${snapshot1.documents[0]["userId"]}")
+                                        .document(DateTime
+                                        .now()
+                                        .millisecondsSinceEpoch
+                                        .toString());
+
+                                    var documentReference2 = Firestore.instance
+                                        .collection('messages')
+                                        .document("${prefs.getString("loginUid")}-${snapshot1.documents[0]["userId"]}");
+
+                                    await Firestore.instance.runTransaction((transaction) async {
+                                      await transaction.set(
+                                        documentReference2,
+                                        {
+                                          'extra': "",
+                                        },
+                                      );
+                                    });
+
+                                    await Firestore.instance.runTransaction((transaction) async {
+                                      await transaction.set(
+                                        documentReference,
+                                        {
+                                          'idFrom': prefs.getString("loginUid"),
+                                          'idTo': snapshot1.documents[0]["userId"],
+                                          'timestamp': DateTime
+                                              .now()
+                                              .millisecondsSinceEpoch
+                                              .toString(),
+                                          'content': '${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""} wants to talk to you about ${widget.profileData.firstname ?? ""} ${widget.profileData.lastname ?? ""}',
+                                          'type': 0
+                                        },
+                                      );
+                                    });
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return ChatPage(
+                                          peerId: snapshot1.documents[0]["userId"],
+                                          peerAvatar:snapshot1.documents[0]["profileImageUrl"],
+                                          peerName:
+                                          "${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""}");
+                                    }));
+                              }
+                            });
+                          }
+                        });
+                      }else{
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                              return ChatPage(
+                                  peerId: widget.userData.userId,
+                                  peerAvatar:
+                                  widget.userData.profileImageUrl,
+                                  peerName:
+                                  "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                            }));
+                      }
+                    }else{
+//                      if (widget.userSnapshot.documents[0]["role"] ==
+//                          "Employer") {
+                        await showDialog<String>(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return CustomPopup(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                title: "Want to contact the helper?",
+                                message:
+                                "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
+                              );
+                            });
+//                      }else{
+//                        await showDialog<String>(
+//                            context: context,
+//                            barrierDismissible: true,
+//                            builder: (BuildContext context) {
+//                              return CustomPopup(
+//                                onTap: () {
+//                                  Navigator.pop(context);
+//                                },
+//                                title: "Want to contact the helper?",
+//                                message:
+//                                "Sorry, you don't have a post looking for a helper, so you can't contact a helper",
+//                              );
+//                            });
+//                      }
+                    }
+                  },
                   child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    child: FlatButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return AgencyListpage(
-                            nationality: widget.profileData.nationality,
-                            contract: widget.profileData.contract,
-                            protid: widget.profileData.id.toString(),
-                          );
-                        }));
-                      },
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      color: gradientStart,
-                      child: Text(
-                        AppLocalizations.of(context).translate('Hire'),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.normal,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(5)),
+                        gradient: LinearGradient(
+                            colors: [gradientStart, gradientEnd])),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.chat,
+                          size: 20,
+                          color: Colors.white,
                         ),
-                      ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          widget.profileData.fromAgency==""||widget.profileData.fromAgency==null?"Chat":"Chat with Agency",
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        )
+                      ],
                     ),
                   ),
                 ),
               ),
-            ),
+            ):SizedBox(),
             Padding(
               padding: const EdgeInsets.all(0),
               child: Container(
@@ -289,127 +397,68 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       children: <Widget>[
                         IconButton(
                           onPressed: () async {
-                            print(haveJob);
-                            if(haveJob==true){
-                              if (widget.profileData.fromAgency !="" && widget.profileData.fromAgency!=null){
-                                Firestore.instance .collection('mb_agency')
-                                    .where("id", isEqualTo:widget.profileData.fromAgency)
-                                    .getDocuments()
-                                    .then((snapshot) async {
-                                  if(snapshot.documents !=null && snapshot.documents.length>0){
-                                    await Firestore.instance .collection('mb_content')
-                                        .where('phone', isEqualTo:snapshot.documents[0]["chat_login"])
-                                        .getDocuments()
-                                        .then((snapshot1){
-                                      if(snapshot1.documents !=null && snapshot1.documents.length>0){
-                                        Navigator.push(context,
-                                            MaterialPageRoute(builder: (context) {
-                                              return ChatPage(
-                                                  peerId: snapshot1.documents[0]["userId"],
-                                                  peerAvatar:snapshot1.documents[0]["profileImageUrl"],
-                                                  peerName:
-                                                  "${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""}");
-                                            }));
-                                      }
-                                    });
-                                  }
-                                });
-                              }else{
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return ChatPage(
-                                          peerId: widget.userData.userId,
-                                          peerAvatar:
-                                          widget.userData.profileImageUrl,
-                                          peerName:
-                                          "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-                                    }));
-                              }
-                            }else{
-                              if (widget.userSnapshot.documents[0]["role"] ==
-                              "Employer") {
-                                await showDialog<String>(
-                                    context: context,
-                                    barrierDismissible: true,
-                                    builder: (BuildContext context) {
-                                      return CustomPopup(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        title: "Want to contact the helper?",
-                                        message:
-                                        "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
-                                      );
-                                    });
-                              }else{
-                                await showDialog<String>(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return CustomPopup(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      title: "Want to contact the helper?",
-                                      message:
-                                      "Sorry, you don't have a post looking for a helper, so you can't contact a helper",
-                                    );
-                                  });
-                              }
-                            }
+
 
                           },
                           icon: Icon(
-                            Icons.chat,
+                            Icons.library_books,
                             color: gradientStart,
                           ),
                           iconSize: 30,
                         ),
                         GestureDetector(
                           onTap: (){
-                            if (widget.userSnapshot.documents[0]["role"] !=
-                            "Employer") {
-
-                            }else{
-
-                            }
-                            if (widget.profileData.fromAgency !="" && widget.profileData.fromAgency!=null){
-                              Firestore.instance .collection('mb_agency')
-                                  .where("id", isEqualTo:widget.profileData.fromAgency)
-                                  .getDocuments()
-                                  .then((snapshot) async {
-                                if(snapshot.documents !=null && snapshot.documents.length>0){
-                                  await Firestore.instance .collection('mb_content')
-                                      .where('phone', isEqualTo:snapshot.documents[0]["chat_login"])
-                                      .getDocuments()
-                                      .then((snapshot1){
-                                    if(snapshot1.documents !=null && snapshot1.documents.length>0){
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                            return ChatPage(
-                                                peerId: snapshot1.documents[0]["userId"],
-                                                peerAvatar:snapshot1.documents[0]["profileImageUrl"],
-                                                peerName:
-                                                "${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""}");
-                                          }));
-                                    }
-                                  });
-                                }
-                              });
-                            }else{
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return ChatPage(
-                                        peerId: widget.userData.userId,
-                                        peerAvatar:
-                                        widget.userData.profileImageUrl,
-                                        peerName:
-                                        "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-                                  }));
-                            }
+                            Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AgencyListpage(
+                            nationality: widget.profileData.nationality,
+                            contract: widget.profileData.contract,
+                            protid: widget.profileData.id.toString(),
+                          );
+                        }));
+//                            if (widget.userSnapshot.documents[0]["role"] !=
+//                            "Employer") {
+//
+//                            }else{
+//
+//                            }
+//                            if (widget.profileData.fromAgency !="" && widget.profileData.fromAgency!=null){
+//                              Firestore.instance .collection('mb_agency')
+//                                  .where("id", isEqualTo:widget.profileData.fromAgency)
+//                                  .getDocuments()
+//                                  .then((snapshot) async {
+//                                if(snapshot.documents !=null && snapshot.documents.length>0){
+//                                  await Firestore.instance .collection('mb_content')
+//                                      .where('phone', isEqualTo:snapshot.documents[0]["chat_login"])
+//                                      .getDocuments()
+//                                      .then((snapshot1){
+//                                    if(snapshot1.documents !=null && snapshot1.documents.length>0){
+//                                      Navigator.push(context,
+//                                          MaterialPageRoute(builder: (context) {
+//                                            return ChatPage(
+//                                                peerId: snapshot1.documents[0]["userId"],
+//                                                peerAvatar:snapshot1.documents[0]["profileImageUrl"],
+//                                                peerName:
+//                                                "${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""}");
+//                                          }));
+//                                    }
+//                                  });
+//                                }
+//                              });
+//                            }else{
+//                              Navigator.push(context,
+//                                  MaterialPageRoute(builder: (context) {
+//                                    return ChatPage(
+//                                        peerId: widget.userData.userId,
+//                                        peerAvatar:
+//                                        widget.userData.profileImageUrl,
+//                                        peerName:
+//                                        "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+//                                  }));
+//                            }
                           },
                           child: Text(
-                            "Chat",
+                            AppLocalizations.of(context).translate('Hire'),
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
