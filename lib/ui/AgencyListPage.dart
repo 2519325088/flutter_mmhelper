@@ -21,6 +21,36 @@ class _AgencyListpageState extends State<AgencyListpage> {
   final height = window.physicalSize.height;
   Color gradientStart = Color(0xffbf9b30); //Change start gradient color here
   Color gradientEnd = Color(0xffe7d981);
+  bool isonly = false;
+  String agencyId = "";
+
+
+  @override
+  void initState() {
+    getProfile();
+  }
+
+  Future<void> getProfile() async {
+    await Firestore.instance .collection('mb_profile')
+        .where("id",isEqualTo: widget.protid)
+        .getDocuments()
+        .then((snapshot) {
+      if(snapshot.documents.length>0) {
+        if(snapshot.documents[0]["from_agency"]!=""&&snapshot.documents[0]["from_agency"]!=null){
+          isonly = true;
+          agencyId = snapshot.documents[0]["from_agency"];
+          setState(() {});
+        }else{
+          isonly = false;
+          setState(() {});
+        }
+      }else{
+       isonly = false;
+        setState(() {});
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +66,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
         centerTitle: true,
       ),
       body: Container(
-        child: StreamBuilder(
+        child: isonly==false?StreamBuilder(
             stream: Firestore.instance
                 .collection('mb_agency')
                 .where("type", isEqualTo: "contract")
@@ -54,6 +84,25 @@ class _AgencyListpageState extends State<AgencyListpage> {
               child: CircularProgressIndicator(),
             );
           }
+        ):StreamBuilder(
+            stream: Firestore.instance
+                .collection('mb_agency')
+                .where("type", isEqualTo: "contract")
+                .where("id", isEqualTo: agencyId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ?ListView.builder(
+                padding: EdgeInsets.all(10.0),
+                itemBuilder: (context, index) {
+                  return agenxyCard(agencySnapshot:snapshot.data.documents[index]);
+                },
+                itemCount: snapshot.data.documents.length,
+              )
+                  : Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         ),
       ),
     );
@@ -65,6 +114,12 @@ class _AgencyListpageState extends State<AgencyListpage> {
     var aa = double.parse((agencySnapshot["score"]!="" && agencySnapshot["score"]!=null)? agencySnapshot["score"]:"1");
     var price = "";
     var type="";
+    var natype = "";
+    if(widget.nationality=="Philippines"){
+      natype = "Philipino";
+    }else{
+      natype = "Indonesian";
+    }
     if(widget.nationality=="Philippines" && widget.contract =="Terminated / Break"){
       price = agencySnapshot["pricing"]["Philipino"]["Terminated"];
       type = "Terminated";
@@ -403,9 +458,14 @@ class _AgencyListpageState extends State<AgencyListpage> {
                       ),
                     ),
                     onTap: (){
+                      print(agencySnapshot);
+                      print(price);
+                      print(type);
+                      print(widget.protid);
+                      print(natype);
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,);
+                        return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,natype: natype);
                       }));
                     },
                   ),
