@@ -66,10 +66,10 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
       profile_id: widget.proId,
       contract_id: widget.agencySnapshot["contract_code"]+"-"+year+month+day+hour+minute,
     );
-    Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data){
+    await Firestore.instance.collection("mb_contract").add(procontext.toMap()).then((data) async{
       print("this is ${data.documentID}");
       procontext.id = data.documentID;
-      _service.setData(path: APIPath.newContract(data.documentID),
+      await _service.setData(path: APIPath.newContract(data.documentID),
         data: procontext.toMap());
       List datalist= [
         "Submitted",
@@ -87,9 +87,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
           contract_id: data.documentID,
           remark: "",
         );
-        Firestore.instance.collection("mb_contract_status").add(contractstatustext.toMap()).then((datas){
+        await Firestore.instance.collection("mb_contract_status").add(contractstatustext.toMap()).then((datas) async{
           contractstatustext.id = datas.documentID;
-          _service.setData(path: APIPath.newContractStatus(datas.documentID),
+          await _service.setData(path: APIPath.newContractStatus(datas.documentID),
               data: contractstatustext.toMap());
         });
       }

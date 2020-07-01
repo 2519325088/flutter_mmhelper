@@ -397,8 +397,14 @@ class _ProfileDateilState extends State<ProfileDateil> {
                       children: <Widget>[
                         IconButton(
                           onPressed: () async {
-
-
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return AgencyListpage(
+                                nationality: widget.profileData.nationality,
+                                contract: widget.profileData.contract,
+                                protid: widget.profileData.id.toString(),
+                              );
+                            }));
                           },
                           icon: Icon(
                             Icons.library_books,
@@ -410,52 +416,12 @@ class _ProfileDateilState extends State<ProfileDateil> {
                           onTap: (){
                             Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return AgencyListpage(
-                            nationality: widget.profileData.nationality,
-                            contract: widget.profileData.contract,
-                            protid: widget.profileData.id.toString(),
-                          );
-                        }));
-//                            if (widget.userSnapshot.documents[0]["role"] !=
-//                            "Employer") {
-//
-//                            }else{
-//
-//                            }
-//                            if (widget.profileData.fromAgency !="" && widget.profileData.fromAgency!=null){
-//                              Firestore.instance .collection('mb_agency')
-//                                  .where("id", isEqualTo:widget.profileData.fromAgency)
-//                                  .getDocuments()
-//                                  .then((snapshot) async {
-//                                if(snapshot.documents !=null && snapshot.documents.length>0){
-//                                  await Firestore.instance .collection('mb_content')
-//                                      .where('phone', isEqualTo:snapshot.documents[0]["chat_login"])
-//                                      .getDocuments()
-//                                      .then((snapshot1){
-//                                    if(snapshot1.documents !=null && snapshot1.documents.length>0){
-//                                      Navigator.push(context,
-//                                          MaterialPageRoute(builder: (context) {
-//                                            return ChatPage(
-//                                                peerId: snapshot1.documents[0]["userId"],
-//                                                peerAvatar:snapshot1.documents[0]["profileImageUrl"],
-//                                                peerName:
-//                                                "${snapshot1.documents[0]["firstname"] ?? ""} ${snapshot1.documents[0]["lastname"] ?? ""}");
-//                                          }));
-//                                    }
-//                                  });
-//                                }
-//                              });
-//                            }else{
-//                              Navigator.push(context,
-//                                  MaterialPageRoute(builder: (context) {
-//                                    return ChatPage(
-//                                        peerId: widget.userData.userId,
-//                                        peerAvatar:
-//                                        widget.userData.profileImageUrl,
-//                                        peerName:
-//                                        "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-//                                  }));
-//                            }
+                              return AgencyListpage(
+                                nationality: widget.profileData.nationality,
+                                contract: widget.profileData.contract,
+                                protid: widget.profileData.id.toString(),
+                              );
+                            }));
                           },
                           child: Text(
                             AppLocalizations.of(context).translate('Hire'),
