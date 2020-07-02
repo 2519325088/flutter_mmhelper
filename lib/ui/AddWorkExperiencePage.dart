@@ -425,7 +425,7 @@ class _AddWorkExperiencePageState extends State<AddWorkExperiencePage>
                                         DatePicker.showDatePicker(context,
                                             showTitleActions: true,
                                             minTime: DateTime(1950, 1, 1),
-                                            maxTime: DateTime.now(),
+                                            maxTime: DateTime(2050, 1, 1),
                                             /* onChanged: (date) {
                                                     setState(() {
                                                       birthDayDate = date;
