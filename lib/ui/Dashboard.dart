@@ -31,11 +31,12 @@ class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 
-  Dashboard({this.isFromLogin, this.mobileNo, this.querySnapshot});
+  Dashboard({this.isFromLogin, this.mobileNo, this.querySnapshot,this.currentUserId});
 
   QuerySnapshot querySnapshot;
   String mobileNo;
   bool isFromLogin;
+  final String currentUserId;
 }
 
 class _DashboardState extends State<Dashboard> with AfterInitMixin {
@@ -272,6 +273,7 @@ class _DashboardState extends State<Dashboard> with AfterInitMixin {
             languageCode: languageCode,
             userData: userData,
             userSnapshot: widget.querySnapshot,
+            currentUserId: widget.currentUserId,
           );
         }));
       },
