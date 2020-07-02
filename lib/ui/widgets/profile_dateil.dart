@@ -14,6 +14,7 @@ import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
+import 'package:flutter_mmhelper/ui/JobPage.dart';
 
 class ProfileDateil extends StatefulWidget {
   @override
@@ -24,7 +25,8 @@ class ProfileDateil extends StatefulWidget {
   String languageCode;
   FlContent userData;
   QuerySnapshot userSnapshot;
-  ProfileDateil({/*this.proSnapshot,*/ this.profileData, this.languageCode,this.userData,this.userSnapshot});
+  final String currentUserId;
+  ProfileDateil({/*this.proSnapshot,*/ this.profileData, this.languageCode,this.userData,this.userSnapshot,this.currentUserId});
 }
 
 class _ProfileDateilState extends State<ProfileDateil> {
@@ -298,7 +300,11 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             builder: (BuildContext context) {
                               return CustomPopup(
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return JobPage(querySnapshot: widget.userSnapshot,currentUserId: widget.currentUserId,);
+                                      }));
+//                                  Navigator.pop(context);
                                 },
                                 title: "Want to contact the helper?",
                                 message:

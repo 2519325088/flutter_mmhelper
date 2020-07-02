@@ -111,6 +111,7 @@ class _MainPageState extends State<MainPage>
         mobileNo: widget.mobileNo,
         isFromLogin: widget.isFromLogin,
         querySnapshot: querySnapshot,
+        currentUserId: currentUserId,
       ),
       JobPage(
         currentUserId: currentUserId,
