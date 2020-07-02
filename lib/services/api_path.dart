@@ -7,7 +7,7 @@ class APIPath {
   static String newContractStatus(String contentId) => 'mb_contract_status/$contentId';
   static String updateJob(String contentId) => 'fl_job_post/$contentId';
   static String upTrack(String contentId) => 'mb_tracking/$contentId';
-  static String newJob(String contentId) => 'fl_job_post';
+  static String newJob(String contentId) => 'fl_job_post/$contentId';
   static String newQuestionResult(String contentId) => 'mb_question_result/$contentId';
   static String jobList() => 'fl_job_post';
   static String userList() => 'mb_content';
