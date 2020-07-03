@@ -13,7 +13,7 @@ import 'package:flutter_mmhelper/Models/FavouriteModel.dart';
 import 'package:flutter_mmhelper/services/api_path.dart';
 import 'package:flutter_mmhelper/services/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_mmhelper/ui/widgets/CustomPopup.dart';
+import 'package:flutter_mmhelper/ui/widgets/CustomPopupProfilePage.dart';
 import 'package:flutter_mmhelper/ui/JobPage.dart';
 
 class ProfileDateil extends StatefulWidget {
@@ -298,7 +298,7 @@ class _ProfileDateilState extends State<ProfileDateil> {
                             context: context,
                             barrierDismissible: true,
                             builder: (BuildContext context) {
-                              return CustomPopup(
+                              return CustomPopupProfile(
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
@@ -307,8 +307,9 @@ class _ProfileDateilState extends State<ProfileDateil> {
 //                                  Navigator.pop(context);
                                 },
                                 title: "Want to contact the helper?",
-                                message:
-                                "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
+                                titletwo:"想即時同外傭傾計？",
+                                message: "Let’s go to publish a job post before chat! 😜",
+                                messageone:  "無問題！即刻刊登工作內容就用到哩個功能架啦! 😜",
                               );
                             });
 //                      }else{
