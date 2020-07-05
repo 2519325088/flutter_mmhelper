@@ -105,7 +105,7 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
                                 SizedBox(
                                   height: 12,
                                 ),
-                                FlatButton(
+                                /*FlatButton(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 15, horizontal: 20),
                                     shape: StadiumBorder(),
@@ -132,7 +132,7 @@ class _SelectLanguagePageState extends State<SelectLanguagePage> {
                                               : Colors.white,
                                         )
                                       ],
-                                    ))
+                                    ))*/
                               ],
                             ),
                           ),
