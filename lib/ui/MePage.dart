@@ -207,15 +207,15 @@ class _MePageState extends State<MePage> {
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
-                Container(
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black.withOpacity(0.1))),
                   child: ListTile(
                     title: Text("Job offers"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
-                Container(
+                ),*/
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black.withOpacity(0.1))),
                   child: ListTile(
@@ -247,7 +247,7 @@ class _MePageState extends State<MePage> {
                         "${AppLocalizations.of(context).translate('languageTitle')}: ${AppLocalizations.of(context).translate('language')}"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
+                ),*/
                 Container(
                   decoration: BoxDecoration(
                       border: Border(
@@ -272,7 +272,7 @@ class _MePageState extends State<MePage> {
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
                 ),
-                Container(
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border(
                           top: BorderSide.none,
@@ -283,8 +283,8 @@ class _MePageState extends State<MePage> {
                     title: Text("Pricing"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
-                Container(
+                ),*/
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border(
                           top: BorderSide.none,
@@ -295,8 +295,8 @@ class _MePageState extends State<MePage> {
                     title: Text("Referral Program"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
-                Container(
+                ),*/
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border(
                           top: BorderSide.none,
@@ -307,8 +307,8 @@ class _MePageState extends State<MePage> {
                     title: Text("Vouchers"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
-                Container(
+                ),*/
+                /*Container(
                   decoration: BoxDecoration(
                       border: Border(
                           top: BorderSide.none,
@@ -320,7 +320,7 @@ class _MePageState extends State<MePage> {
                     title: Text("FAQ / Tutorials"),
                     trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                ),
+                ),*/
                 Container(
                   decoration: BoxDecoration(
                       border: Border(
