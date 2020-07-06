@@ -92,7 +92,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
     listJobData = [];
     gridListData = [];
     Firestore.instance
-        .collection(APIPath.jobList())
+        .collection(APIPath.jobList()).orderBy("create_time",descending: true)
         .getDocuments()
         .then((snapshot) async {
       if (snapshot != null &&
@@ -160,6 +160,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
   List<String> jobTypeStringList = [];
   List<String> accommodationStringList = [];
   List<String> searchText = [];
+  RangeValues rangeValues = RangeValues(0, 10000);
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +180,7 @@ class _JobPageState extends State<JobPage> with AfterInitMixin {
                     contractStringList: contractStringList,
                     jobTypeStringList: jobTypeStringList,
                     accommodationStringList: accommodationStringList,
+                    rangeValues: rangeValues,
                   );
                 }));
               }),
