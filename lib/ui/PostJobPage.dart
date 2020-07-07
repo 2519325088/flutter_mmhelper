@@ -333,7 +333,7 @@ class _PostJobPageState extends State<PostJobPage> with AfterInitMixin {
                       TimeOfDay.now().minute);
                   Firestore.instance.collection("fl_job_post").add(postJob.toMap()).then((datas){
                     postJob.id = datas.documentID;
-                    _service.addData(path: APIPath.newJob(datas.documentID),
+                    _service.setData(path: APIPath.newJob(datas.documentID),
                         data: postJob.toMap())
                         .then((onValue) async {
                       //Navigator.pop(context);

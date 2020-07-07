@@ -20,6 +20,7 @@ class JobSearchPage extends StatefulWidget {
   List<String> jobTypeStringList = [];
   List<String> accommodationStringList = [];
   List<String> searchText = [];
+  RangeValues rangeValues = RangeValues(0, 10000);
 
   JobSearchPage(
       {this.onChanged,
@@ -27,7 +28,7 @@ class JobSearchPage extends StatefulWidget {
       this.searchText,
       this.contractStringList,
       this.jobTypeStringList,
-      this.accommodationStringList});
+      this.accommodationStringList,this.rangeValues});
 }
 
 class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
@@ -36,7 +37,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
   List<Widget> contractWidget = [];
   List<Widget> jobTypeWidget = [];
   List<Widget> accommodationWidget = [];
-
+  
   List<JobDetailData> listOfCard = [];
   String languageCode;
   bool isLoading = true;
@@ -60,6 +61,8 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
       initData();
     });
   }
+
+  RangeValues _values = RangeValues(0.3, 0.7);
 
   initData() {
     setState(() {
@@ -126,7 +129,8 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
     if (widget.contractStringList.length == 0 &&
         widget.jobTypeStringList.length == 0 &&
         widget.accommodationStringList.length == 0 &&
-        widget.searchText[0] == "") {
+        widget.searchText[0] == ""&&
+    widget.rangeValues ==  RangeValues(0, 10000)) {
       widget.onChanged(widget.listJobData);
     } else {
       widget.listJobData.forEach((element) {
@@ -146,6 +150,13 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
               isAdd = true;
               listOfCard.add(element);
             }
+          }
+        }
+        if (!isAdd) {
+          if (int.parse(element.salary) >= widget.rangeValues.start &&
+              int.parse(element.salary) <= widget.rangeValues.end) {
+            isAdd = true;
+            listOfCard.add(element);
           }
         }
       });
@@ -268,6 +279,66 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
                       widgetList: accommodationWidget,
                       title: AppLocalizations.of(context)
                           .translate('accommodation')),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Salary Range",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Card(
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Text(widget.rangeValues.start
+                                          .round()
+                                          .toString()),
+                                      Expanded(
+                                        child: RangeSlider(
+                                          activeColor:
+                                              Theme.of(context).primaryColor,
+                                          inactiveColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.2),
+                                          values: widget.rangeValues,
+                                          divisions: 100,
+                                          min: 0.0,
+                                          max: 10000.0,
+                                          labels: RangeLabels(
+                                              widget.rangeValues.start
+                                                  .round()
+                                                  .toString(),
+                                              widget.rangeValues.end
+                                                  .round()
+                                                  .toString()),
+                                          onChanged: (RangeValues newValues) {
+                                            setState(() {
+                                              widget.rangeValues = newValues;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Text(widget.rangeValues.end.round().toString()),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -296,7 +367,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              title??"",
+              title ?? "",
               style: TextStyle(fontSize: 20),
             ),
           ),

@@ -48,7 +48,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   Color gradientStart = Color(0xffbf9b30);
-
   List<Widget> eduWidget = [];
   List<Widget> religionWidget = [];
   List<Widget> maritalStatusWidget = [];
@@ -59,7 +58,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<Widget> nationalityWidget = [];
   List<Widget> workingSkillWidget = [];
   List<Widget> languageWidget = [];
-
+  String fromRadio;
   List<ProfileData> listOfCard = [];
   String languageCode;
   bool isLoading = true;
@@ -235,12 +234,12 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         widget.workingSkillStringList.length == 0 &&
         widget.languageStringList.length == 0 &&
         widget.nationalityStringList.length == 0 &&
-        widget.searchText[0] == "") {
+        widget.searchText[0] == "" &&
+        fromRadio == null) {
       widget.onChanged(widget.listProfileData);
     } else {
       widget.listProfileData.forEach((element) {
         bool isAdd = false;
-
         if (widget.eduStringList.contains(element.education) ||
             widget.religionStringList.contains(element.religion) ||
             widget.maritalStringList.contains(element.marital) ||
@@ -302,6 +301,41 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         }
       });
       print(listOfCard.length);
+      if (listOfCard != null && listOfCard.length != 0) {
+        print("radio ${fromRadio}");
+        for (int i = 0; i < listOfCard.length; i++) {
+          if (fromRadio != null && fromRadio != "2") {
+            if (fromRadio == "1") {
+              if (listOfCard[i].fromAgency == null) {
+                listOfCard.remove(listOfCard[i]);
+              }
+            } else if (fromRadio == "0") {
+              if (listOfCard[i].fromAgency != null) {
+                listOfCard.remove(listOfCard[i]);
+              }
+            }
+          }
+        }
+      } else {
+        print("radio ${fromRadio}");
+        if (fromRadio != null) {
+          for (int i = 0; i < widget.listProfileData.length; i++) {
+            if (fromRadio == "1") {
+              if (widget.listProfileData[i].fromAgency == null) {
+                listOfCard.add(widget.listProfileData[i]);
+              }
+            } else if (fromRadio == "0") {
+              if (widget.listProfileData[i].fromAgency == null) {
+              } else {
+                listOfCard.add(widget.listProfileData[i]);
+              }
+            } else {
+              listOfCard.add(widget.listProfileData[i]);
+            }
+          }
+        }
+      }
+
       widget.onChanged(listOfCard);
     }
     Navigator.pop(context);
@@ -470,6 +504,75 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
                         ),
                         controller: searchController,
                       )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "From",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Card(
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                                value: "0",
+                                                groupValue: fromRadio,
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    fromRadio = newValue;
+                                                  });
+                                                }),
+                                            Text("From Helpers"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            Radio(
+                                                value: "1",
+                                                groupValue: fromRadio,
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    fromRadio = newValue;
+                                                  });
+                                                }),
+                                            Text("From Agency"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Radio(
+                                            value: "2",
+                                            groupValue: fromRadio,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                fromRadio = newValue;
+                                              });
+                                            }),
+                                        Text("From Both"),
+                                      ],
+                                    )
+                                  ],
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   chipsCardWidget(
                       widgetList: eduWidget,
                       title:
