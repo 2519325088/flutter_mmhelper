@@ -74,6 +74,7 @@ class _JobSearchPageState extends State<JobSearchPage> with AfterInitMixin {
     searchController.text = widget.searchText[0];
 
     listContractData.forEach((f) {
+      print(f);
       contractWidget.add(ChipsWidget(
         languageCode: languageCode,
         dataList: f,

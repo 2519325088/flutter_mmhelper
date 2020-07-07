@@ -70,6 +70,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
   List<DataList> listJobTypeData = [];
   List<DataList> listJobCapData = [];
   List<DataList> listContractData = [];
+  List<DataList> listQuitReasonData = [];
   List<DataList> listNationalityData = [];
   List<DataList> listWorkSkillData = [];
   List<DataList> listLangData = [];
@@ -195,6 +196,20 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
         width: 5,
       ));
     });
+
+    listQuitReasonData.forEach((f) {
+      contractWidget.add(ChipsWidget(
+        languageCode: languageCode,
+        dataList: f,
+        typeStringList: widget.contractStringList,
+        isSelected: widget.contractStringList.contains(f.nameId),
+      ));
+      contractWidget.add(SizedBox(
+        width: 5,
+      ));
+    });
+
+
     listWorkSkillData.forEach((f) {
       workingSkillWidget.add(ChipsWidget(
         languageCode: languageCode,
@@ -668,6 +683,7 @@ class _SearchPageState extends State<SearchPage> with AfterInitMixin {
     listMaritalData = appLanguage.listMaritalData;
     listChildrenData = appLanguage.listChildrenData;
     listContractData = appLanguage.listContractData;
+    listQuitReasonData = appLanguage.listQuitReasonData;
     listJobTypeData = appLanguage.listJobTypeData;
     listJobCapData = appLanguage.listJobCapData;
     listWorkSkillData = appLanguage.listWorkSkillData;
