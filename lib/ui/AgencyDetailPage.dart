@@ -33,11 +33,11 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
   bool isCheck = false;
   bool isConfirm = false;
 
-//  @override
-//  void initState() {
-//    super.initState();
-//    _isCheck = false;
-//  }
+  @override
+  void initState() {
+    super.initState();
+    print("this is ${widget.agencySnapshot["FCSR_service2"]}");
+  }
 
   void _changed(isCheck1) {
     setState(() {
@@ -244,7 +244,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                       },
                       itemCount: widget.agencySnapshot["Terminated_text"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        String type_text = widget.agencySnapshot["Terminated_text"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -273,7 +273,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                       },
                       itemCount: widget.agencySnapshot["Overseas_text"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        String type_text = widget.agencySnapshot["Overseas_text"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -331,7 +331,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                       },
                       itemCount: widget.agencySnapshot["FCSR_text"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String type_text = widget.agencySnapshot["Finished_text"][index];
+                        String type_text = widget.agencySnapshot["FCSR_text"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -355,7 +355,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         ),
                       ),
                     ),
-                    (widget.type=="Terminated"||widget.type=="Overseas") && widget.natype=="Philipino"?ListView.separated(
+                    widget.type=="Terminated" && widget.natype=="Philipino"?ListView.separated(
                       shrinkWrap: true,
                       physics:const ScrollPhysics(),
                       padding: EdgeInsets.all(10),
@@ -369,9 +369,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                           ),
                         );
                       },
-                      itemCount: widget.agencySnapshot["service_1"]["Philipino"].length,
+                      itemCount: widget.agencySnapshot["Terminated_service2"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String workinfo = widget.agencySnapshot["service_1"]["Philipino"][index];
+                        String workinfo = widget.agencySnapshot["Terminated_service2"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -384,7 +384,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         );
                       },
                     ):Text(""),
-                    (widget.type=="Finished"||widget.type=="FCSR")&& widget.natype=="Philipino"?ListView.separated(
+                    widget.type=="Finished"&& widget.natype=="Philipino"?ListView.separated(
                       shrinkWrap: true,
                       physics:const ScrollPhysics(),
                       padding: EdgeInsets.all(10),
@@ -398,9 +398,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                           ),
                         );
                       },
-                      itemCount: widget.agencySnapshot["service_2"]["Philipino"].length,
+                      itemCount: widget.agencySnapshot["Finished_service2"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String workinfo = widget.agencySnapshot["service_2"]["Philipino"][index];
+                        String workinfo = widget.agencySnapshot["Finished_service2"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -413,7 +413,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         );
                       },
                     ):Text(""),
-                    (widget.type=="Terminated"||widget.type=="Overseas") && widget.natype=="Indonesian"?ListView.separated(
+                    widget.type=="Overseas" && widget.natype=="Philipino"?ListView.separated(
                       shrinkWrap: true,
                       physics:const ScrollPhysics(),
                       padding: EdgeInsets.all(10),
@@ -427,9 +427,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                           ),
                         );
                       },
-                      itemCount: widget.agencySnapshot["service_1"]["Indonesian"].length,
+                      itemCount: widget.agencySnapshot["Overseas_service2"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String workinfo = widget.agencySnapshot["service_1"]["Indonesian"][index];
+                        String workinfo = widget.agencySnapshot["Overseas_service2"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -442,7 +442,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         );
                       },
                     ):Text(""),
-                    (widget.type=="Finished"||widget.type=="FCSR")&& widget.natype=="Indonesian"?ListView.separated(
+                    widget.type=="FCSR"&& widget.natype=="Philipino"?ListView.separated(
                       shrinkWrap: true,
                       physics:const ScrollPhysics(),
                       padding: EdgeInsets.all(10),
@@ -456,9 +456,9 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                           ),
                         );
                       },
-                      itemCount: widget.agencySnapshot["service_2"]["Indonesian"].length,
+                      itemCount: widget.agencySnapshot["FCSR_service2"].length,
                       itemBuilder: (BuildContext context, int index) {
-                        String workinfo = widget.agencySnapshot["service_2"]["Indonesian"][index];
+                        String workinfo = widget.agencySnapshot["FCSR_service2"][index];
                         return Padding(
                           padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           child: Text(
@@ -471,6 +471,124 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         );
                       },
                     ):Text(""),
+
+                    widget.type=="Terminated" && widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Terminated_service1"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["Terminated_service1"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="Finished"&& widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Finished_service1"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["Finished_service1"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="Overseas" && widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["Overseas_service1"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["Overseas_service1"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+                    widget.type=="FCSR"&& widget.natype=="Indonesian"?ListView.separated(
+                      shrinkWrap: true,
+                      physics:const ScrollPhysics(),
+                      padding: EdgeInsets.all(10),
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            height: 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Divider(),
+                          ),
+                        );
+                      },
+                      itemCount: widget.agencySnapshot["FCSR_service1"].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String workinfo = widget.agencySnapshot["FCSR_service1"][index];
+                        return Padding(
+                          padding:const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child: Text(
+                            workinfo,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ):Text(""),
+
                   ],
                 ),
               ),
