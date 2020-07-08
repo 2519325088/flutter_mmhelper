@@ -441,7 +441,7 @@ class _AgencyListpageState extends State<AgencyListpage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        price,
+                        "HKD ${price}",
                         style: TextStyle(
                           fontSize: width<500?18:20,
                           fontWeight: FontWeight.w700,
@@ -458,11 +458,6 @@ class _AgencyListpageState extends State<AgencyListpage> {
                       ),
                     ),
                     onTap: (){
-                      print(agencySnapshot);
-                      print(price);
-                      print(type);
-                      print(widget.protid);
-                      print(natype);
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return AgencyDetailPage(agencySnapshot: agencySnapshot,price: price,type: type,proId: widget.protid,natype: natype);

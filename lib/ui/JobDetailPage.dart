@@ -42,11 +42,13 @@ class _JobDetailPageState extends State<JobDetailPage> {
   bool isLoginUser = true;
   bool isShowAlert = true;
   SharedPreferences prefs;
+  bool haveprofile = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getProfile();
     getPhoneUserId().then((value) {
       print(widget.userData.userId);
       print(value);
@@ -70,6 +72,24 @@ class _JobDetailPageState extends State<JobDetailPage> {
     weeklyHolidayCtr.text = widget.jobDetailData.weeklyHoliday;
     skillCtr.text = widget.jobDetailData.skillRequirement ;
     moreJobDesCtr.text = widget.jobDetailData.moreDescription;
+  }
+
+
+  Future<void> getProfile() async {
+    prefs = await SharedPreferences.getInstance();
+    print(prefs.getString("loginUid"));
+    await Firestore.instance .collection('mb_profile')
+        .where("id",isEqualTo: prefs.getString("loginUid"))
+        .getDocuments()
+        .then((snapshot) {
+      if(snapshot.documents.length>0) {
+        haveprofile = true;
+        setState(() {});
+      }else{
+        haveprofile  = false;
+        setState(() {});
+      }
+    });
   }
 
   Future<String> getPhoneUserId() async {
@@ -209,76 +229,103 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       ),
                     ),
                     widget.userData.userId != widget.currentUser
-                        ? GestureDetector(
-                            onTap: () async {
-                              if (widget.isAvailable) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ChatPage(
-                                      peerId: widget.userData.userId,
-                                      peerAvatar:
-                                          widget.userData.profileImageUrl,
-                                      peerName:
-                                          "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-                                }));
-                              } else {
-                                if (widget.userSnapshot.documents[0]["role"] !=
-                                    "Employer") {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ChatPage(
-                                        peerId: widget.userData.userId,
-                                        peerAvatar:
-                                            widget.userData.profileImageUrl,
-                                        peerName:
-                                            "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
-                                  }));
-                                } else {
-                                  await showDialog<String>(
-                                      context: context,
-                                      barrierDismissible: true,
-                                      builder: (BuildContext context) {
-                                        return CustomPopup(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          title: "Want to contact the helper?",
-                                          message:
-                                              "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
-                                        );
-                                      });
-                                }
-                              }
-                            },
-                            child: Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(5),
-                                      bottomRight: Radius.circular(5)),
-                                  gradient: LinearGradient(
-                                      colors: [gradientStart, gradientEnd])),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.chat,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Request to Connect",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  )
-                                ],
-                              ),
+                        ? (widget.userSnapshot.documents[0]["role"] !=
+    "Employer"?GestureDetector(
+                      onTap: () async {
+                        if (haveprofile==true) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return ChatPage(
+                                    peerId: widget.userData.userId,
+                                    peerAvatar:
+                                    widget.userData.profileImageUrl,
+                                    peerName:
+                                    "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+                              }));
+                        } else {
+                          if (widget.userSnapshot.documents[0]["role"] !=
+                              "Employer") {
+                            await showDialog<String>(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return CustomPopup(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    title: "Want to contact your employer?",
+                                    message:
+                                    "Before contacting your employer, you need to create and publish a profile!",
+                                  );
+                                });
+//                                  Navigator.push(context,
+//                                      MaterialPageRoute(builder: (context) {
+//                                    return ChatPage(
+//                                        peerId: widget.userData.userId,
+//                                        peerAvatar:
+//                                            widget.userData.profileImageUrl,
+//                                        peerName:
+//                                            "${widget.userData.firstname ?? ""} ${widget.userData.lastname ?? ""}");
+//                                  }))
+                          } else {
+                            await showDialog<String>(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return CustomPopup(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    title: "Want to contact your employer?",
+                                    message:
+                                    "Before contacting your employer, you need to create and publish a profile!",
+                                  );
+                                });
+//                                  await showDialog<String>(
+//                                      context: context,
+//                                      barrierDismissible: true,
+//                                      builder: (BuildContext context) {
+//                                        return CustomPopup(
+//                                          onTap: () {
+//                                            Navigator.pop(context);
+//                                          },
+//                                          title: "Want to contact the helper?",
+//                                          message:
+//                                              "Before contacting the helper, you need to create and publish a finding FOREIGN helper job post!",
+//                                        );
+//                                      });
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(5),
+                                bottomRight: Radius.circular(5)),
+                            gradient: LinearGradient(
+                                colors: [gradientStart, gradientEnd])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.chat,
+                              size: 20,
+                              color: Colors.white,
                             ),
-                          )
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Request to Connect",
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                    ):SizedBox())
                         : SizedBox()
                   ],
                 ),

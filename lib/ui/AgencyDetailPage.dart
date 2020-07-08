@@ -155,7 +155,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         padding: const EdgeInsets.all(10),
                         child: Center(
                             child: Text(
-                              widget.price,
+                              "HKD ${widget.price}",
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.w800,
@@ -194,7 +194,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage>{
                         padding: const EdgeInsets.all(10),
                         child: Center(
                             child: Text(
-                              "2020-04-24",
+                              widget.type == "Finished"?"4-8 weeks":"10 - 16 weeks",
                               style: TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.w800,
